@@ -1,27 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin</title>
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <style>
+        .auth-container { max-width: 400px; margin: 60px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px #eee; padding: 32px; }
+        .auth-container h2 { text-align: center; margin-bottom: 24px; }
+        .auth-container label { display: block; margin-bottom: 6px; }
+        .auth-container input { width: 100%; padding: 10px; margin-bottom: 16px; border-radius: 6px; border: 1px solid #ccc; }
+        .auth-container button { width: 100%; padding: 10px; background: var(--blue); color: #fff; border: none; border-radius: 6px; font-weight: bold; }
+        .auth-container .link { text-align: center; margin-top: 12px; }
+        .auth-container .error { color: var(--red); margin-bottom: 12px; text-align: center; }
+    </style>
 </head>
 <body>
-    <h2>Admin Login</h2>
-    <form method="POST" action="{{ route('admin.login') }}">
-        @csrf
-        <div>
+    <div class="auth-container">
+        <h2>Login Admin</h2>
+        <form method="POST" action="{{ route('admin.login') }}">
+            @csrf
             <label>Email</label>
             <input type="email" name="email" required autofocus>
-        </div>
-        <div>
             <label>Password</label>
             <input type="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="link">
+            Belum punya akun? <a href="{{ route('admin.register') }}">Register</a>
         </div>
-        <button type="submit">Login</button>
-    </form>
-    <a href="{{ route('admin.register') }}">Register</a>
-    @if($errors->any())
-        <div>
-            <strong>{{ $errors->first() }}</strong>
-        </div>
-    @endif
+        @if($errors->any())
+            <div class="error">
+                {{ $errors->first() }}
+            </div>
+        @endif
+    </div>
 </body>
 </html>
