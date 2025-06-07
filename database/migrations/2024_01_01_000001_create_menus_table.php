@@ -11,8 +11,7 @@ class CreateMenusTable extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['makanan', 'minuman']);
-            $table->decimal('price', 10, 2);
+            $table->integer('price'); // Ubah dari decimal ke integer
             $table->timestamps();
         });
     }
