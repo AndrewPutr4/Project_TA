@@ -35,11 +35,15 @@
                         <label>Nama Menu</label>
                         <input type="text" name="name" class="form-control" value="{{ $menu->name }}" required style="width:100%;padding:8px;">
                     </div>
+                    {{-- Hapus field jenis --}}
                     <div style="margin-bottom:16px;">
-                        <label>Jenis</label>
-                        <select name="type" class="form-control" required style="width:100%;padding:8px;">
-                            <option value="makanan" {{ $menu->type == 'makanan' ? 'selected' : '' }}>Makanan</option>
-                            <option value="minuman" {{ $menu->type == 'minuman' ? 'selected' : '' }}>Minuman</option>
+                        <label>Kategori</label>
+                        <select name="category_id" class="form-control" required style="width:100%;padding:8px;">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ $menu->category_id == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                     <div style="margin-bottom:16px;">

@@ -38,7 +38,7 @@
                     <thead>
                         <tr>
                             <th>Nama</th>
-                            <th>Jenis</th>
+                            <th>Kategori</th>
                             <th>Harga</th>
                             <th>Aksi</th>
                         </tr>
@@ -47,7 +47,8 @@
                         @foreach($menus as $menu)
                         <tr>
                             <td>{{ $menu->name }}</td>
-                            <td>{{ ucfirst($menu->type) }}</td>
+                            <td>{{ $menu->category ? $menu->category->name : '-' }}</td>
+
                             <td>Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
                             <td>
                                 <a href="{{ route('admin.menus.edit', $menu) }}" style="color:var(--blue);margin-right:8px;"><i class='bx bx-edit'></i>Edit</a>
@@ -60,7 +61,7 @@
                         @endforeach
                         @if($menus->isEmpty())
                         <tr>
-                            <td colspan="4" style="text-align:center;">Belum ada menu.</td>
+                            <td colspan="5" style="text-align:center;">Belum ada menu.</td>
                         </tr>
                         @endif
                     </tbody>

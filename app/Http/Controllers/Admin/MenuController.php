@@ -5,25 +5,27 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Menu;
+use App\Models\Category;
 
 class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::all();
+        $menus = Menu::with('category')->get();
         return view('admin.menus.index', compact('menus'));
     }
 
     public function create()
     {
-        return view('admin.menus.create');
+        $categories = Category::all();
+        return view('admin.menus.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required',
-            'type' => 'required', // makanan/minuman
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
         ]);
         Menu::create($request->all());
@@ -32,14 +34,15 @@ class MenuController extends Controller
 
     public function edit(Menu $menu)
     {
-        return view('admin.menus.edit', compact('menu'));
+        $categories = Category::all();
+        return view('admin.menus.edit', compact('menu', 'categories'));
     }
 
     public function update(Request $request, Menu $menu)
     {
         $request->validate([
             'name' => 'required',
-            'type' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric',
         ]);
         $menu->update($request->all());

@@ -43,7 +43,7 @@
                     </div>
                     <div style="margin-bottom:16px;">
                         <label>Harga</label>
-                        <input type="number" name="price" class="form-control" required style="width:100%;padding:8px;">
+                        <input type="text" name="price" class="form-control" required style="width:100%;padding:8px;" placeholder="Contoh: 100000 atau 100.000" pattern="[0-9,\.]*" inputmode="decimal">
                     </div>
                     <button type="submit" class="btn-download" style="background:var(--blue);color:white;">Simpan</button>
                     <a href="{{ route('admin.menus.index') }}" class="btn-download" style="background:var(--red);color:white;">Batal</a>
