@@ -27,6 +27,12 @@
                     <span class="text">Menu Makanan & Minuman</span>
                 </a>
             </li>
+            <li>
+                <a href="{{ route('admin.kasir.index') }}">
+                    <i class='bx bxs-user-plus'></i>
+                    <span class="text">Register Kasir</span>
+                </a>
+            </li>
             <li class="{{ request()->routeIs('admin.shifts.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.shifts.index') }}">
                     <i class='bx bxs-doughnut-chart' ></i>

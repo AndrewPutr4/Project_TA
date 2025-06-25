@@ -37,6 +37,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Gambar</th>
                             <th>Nama</th>
                             <th>Kategori</th>
                             <th>Harga</th>
@@ -46,9 +47,15 @@
                     <tbody>
                         @foreach($menus as $menu)
                         <tr>
+                            <td>
+                                @if($menu->image && file_exists(public_path('storage/'.$menu->image)))
+                                    <img src="{{ asset('storage/'.$menu->image) }}" alt="Gambar Menu" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+                                @else
+                                    <span style="color:#aaa;">-</span>
+                                @endif
+                            </td>
                             <td>{{ $menu->name }}</td>
                             <td>{{ $menu->category ? $menu->category->name : '-' }}</td>
-
                             <td>Rp {{ number_format($menu->price, 0, ',', '.') }}</td>
                             <td>
                                 <a href="{{ route('admin.menus.edit', $menu) }}" style="color:var(--blue);margin-right:8px;"><i class='bx bx-edit'></i>Edit</a>

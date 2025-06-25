@@ -25,6 +25,10 @@
                 <i class='bx bx-plus'></i>
                 <span class="text">Tambah Shift</span>
             </a>
+            <a href="{{ route('admin.kasir.register') }}" class="btn-download" style="background:var(--green);color:white;margin-left:8px;">
+                <i class='bx bx-user-plus'></i>
+                <span class="text">Registrasi Kasir</span>
+            </a>
         </div>
         <div class="table-data">
             <div class="order">
