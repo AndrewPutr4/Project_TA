@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Middleware\KasirMiddleware;
 
 // Halaman utama
 Route::get('/', function (\Illuminate\Http\Request $request) {
@@ -53,14 +54,16 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 // Kasir Auth Routes
 Route::prefix('kasir')->name('kasir.')->group(function () {
     // Login Kasir
-    Route::get('login', [App\Http\Controllers\Kasir\AuthController::class, 'showLoginForm'])->name('login');
+    Route::get('login', [App\Http\Controllers\Kasir\AuthController::class, 'showLoginForm'])
+        ->name('login');
     Route::post('login', [App\Http\Controllers\Kasir\AuthController::class, 'login']);
 
     // Logout Kasir
-    Route::post('logout', [App\Http\Controllers\Kasir\AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', [App\Http\Controllers\Kasir\AuthController::class, 'logout'])
+        ->name('logout');
 
     // Halaman kasir (hanya untuk kasir yang sudah login)
-    Route::middleware(['auth', 'kasir'])->group(function () {
+    Route::middleware([KasirMiddleware::class])->group(function () {
         Route::get('dashboard', function () {
             if (!session('shift_active')) {
                 return redirect()->route('kasir.shift')->with('message', 'Silakan mulai shift terlebih dahulu.');

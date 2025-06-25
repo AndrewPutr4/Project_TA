@@ -25,18 +25,19 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            session(['shift_active' => true]); // Tambahkan baris ini
             // Redirect langsung ke dashboard kasir
-            return redirect()->route('kasir.dashboard');
+            return redirect()->route('kasir.shift');
         }
         return back()->withErrors(['Email atau password salah, atau bukan akun kasir.']);
     }
 
     public function logout(Request $request)
     {
+        session()->forget('shift_active'); // Pindahkan ke atas
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        session()->forget('shift_active');
         return redirect()->route('kasir.login');
     }
 }

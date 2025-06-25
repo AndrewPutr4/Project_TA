@@ -33,6 +33,12 @@
 				</a>
 			</li>
 			<li>
+                <a href="{{ route('admin.kasir.index') }}">
+                    <i class='bx bxs-user-plus'></i>
+                    <span class="text">Register Kasir</span>
+                </a>
+            </li>
+			<li>
 				<a href="{{ route('admin.shifts.index') }}">
 					<i class='bx bxs-doughnut-chart' ></i>
 					<span class="text">Shift Kasir</span>

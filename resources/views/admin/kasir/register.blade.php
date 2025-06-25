@@ -44,7 +44,7 @@
         <table style="width:100%;border-collapse:collapse;min-width:600px;">
             <thead>
                 <tr style="background:#f5f5f5;">
-                    <th style="padding:12px 10px;text-align:left;">#</th>
+                    <th style="padding:12px 10px;text-align:left;">No</th>
                     <th style="padding:12px 10px;text-align:left;">Nama</th>
                     <th style="padding:12px 10px;text-align:left;">Email</th>
                     <th style="padding:12px 10px;text-align:left;">Aksi</th>
@@ -63,7 +63,7 @@
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Yakin hapus kasir ini?')" style="background:#e74c3c;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;">Hapus</button>
                             </form>
-                            <button onclick="showEdit({{ $kasir->id }}, '{{ addslashes($kasir->name) }}', '{{ addslashes($kasir->email) }}')" style="background:#f1c40f;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;">Edit</button>
+                            <button onclick="showEdit('{{ $kasir->id }}', '{{ addslashes($kasir->name) }}', '{{ addslashes($kasir->email) }}')" style="background:#f1c40f;color:#fff;border:none;padding:6px 16px;border-radius:4px;cursor:pointer;">Edit</button>
                         </div>
                     </td>
                 </tr>

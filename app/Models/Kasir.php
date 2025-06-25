@@ -9,7 +9,7 @@ class Kasir extends Authenticatable
     protected $guard = 'kasir';
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'kasir_id', 'role',
     ];
 
     protected $hidden = [
