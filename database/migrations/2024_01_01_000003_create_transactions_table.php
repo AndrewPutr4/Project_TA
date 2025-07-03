@@ -9,9 +9,11 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->string('customer_name');
-            $table->decimal('total', 10, 2);
+            $table->string('id', 110)->primary();
+            $table->string('payment_name', 191);
+            $table->string('snap_token', 255);
+            $table->dateTime('expiry', 3);
+            $table->enum('status', ['PENDING_PAYMENT', 'PAID', 'CANCELED']);
             $table->timestamps();
         });
     }
