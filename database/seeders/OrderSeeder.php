@@ -29,7 +29,7 @@ class OrderSeeder extends Seeder
                 'customer_phone' => '08123456789' . $i,
                 'customer_address' => 'Jl. Contoh No. ' . $i . ', Denpasar, Bali',
                 'subtotal' => 0, // Will be calculated
-                'delivery_fee' => 5000,
+                //'delivery_fee' => 5000,
                 'service_fee' => 2000,
                 'total' => 0, // Will be calculated
                 'status' => collect(['pending', 'confirmed', 'preparing', 'delivered'])->random(),

@@ -2,15 +2,47 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'order_date', 'table_number', 'total', 'status'
+        'order_number',
+        'customer_name',
+        'customer_phone',
+        'customer_address',
+        'table_number',
+        'notes',
+        'items', // Pastikan kolom 'items' ada di migrasi Anda
+        'subtotal',
+        'service_fee',
+        //'delivery_fee',
+        'total',
+        'status',
+        'payment_status',
     ];
 
-    public function items()
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'items' => 'array', // Memberitahu Laravel untuk otomatis mengubah JSON ke array
+    ];
+
+    /**
+     * Mendefinisikan relasi "has many" ke model OrderItem.
+     */
+    public function itemsRelation()
     {
         return $this->hasMany(OrderItem::class);
     }

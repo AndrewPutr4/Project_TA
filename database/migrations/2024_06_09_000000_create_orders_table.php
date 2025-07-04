@@ -13,26 +13,23 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->unique()->nullable();
+            $table->string('order_number')->unique();
             $table->string('customer_name');
-            $table->string('customer_phone', 20);
-            $table->text('customer_address');
-            $table->json('items');
-            $table->unsignedBigInteger('subtotal');
-            $table->unsignedInteger('delivery_fee')->default(0);
-            $table->unsignedInteger('service_fee')->default(0);
-            $table->unsignedBigInteger('total');
-            $table->string('status', 191)->default('pending');
-            $table->string('payment_status', 191)->nullable();
+            $table->string('customer_phone');
+            $table->text('customer_address')->nullable();
+            $table->integer('table_number')->nullable();
             $table->text('notes')->nullable();
-            $table->dateTime('order_date', 3)->useCurrent();
-            $table->unsignedBigInteger('table_number')->nullable();
-            $table->timestamps();
+            $table->json('items');
+            $table->decimal('subtotal', 10, 2);
+            $table->decimal('service_fee', 10, 2)->default(0);
 
-            // Indexes for better performance
-            $table->index('status');
-            $table->index('order_date');
-            $table->index('customer_phone');
+            // ✅ KOLOM YANG HILANG DITAMBAHKAN DI SINI
+            //$table->decimal('delivery_fee', 10, 2)->default(0);
+
+            $table->decimal('total', 10, 2);
+            $table->string('status')->default('pending');
+            $table->string('payment_status')->default('unpaid');
+            $table->timestamps();
         });
     }
 
