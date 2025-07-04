@@ -35,15 +35,11 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'kasir' => [
-            'driver' => 'session',
-            'provider' => 'kasirs',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -62,20 +58,12 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
-        'kasirs' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Kasir::class,
-        ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class, // Sudah benar
     ],
+],
 
     /*
     |--------------------------------------------------------------------------

@@ -82,8 +82,7 @@
                     <div class="product-card" data-product-id="{{ $food->id }}">
                         <div class="product-image">
                             <img src="{{ $food->image ? asset('storage/' . $food->image) : asset('storage/menus/no-image.png') }}" 
-                                 alt="{{ $food->name }}"
-                                 onerror="this.src='{{ asset('storage/menus/no-image.png') }}';">
+                                 alt="{{ $food->name }}">
                             <div class="product-overlay">
                                 <button class="quick-add-btn" 
                                         data-food-id="{{ $food->id }}" 

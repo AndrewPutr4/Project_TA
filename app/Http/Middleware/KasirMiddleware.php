@@ -12,6 +12,7 @@ class KasirMiddleware
         if (Auth::check() && Auth::user()->role === 'kasir') {
             return $next($request);
         }
-        abort(403, 'Unauthorized');
+
+        return redirect()->route('kasir.login'); // pastikan route ini ada
     }
 }

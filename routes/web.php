@@ -6,6 +6,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Kasir;
+use App\Models\Category;
+use App\Models\Menu;
+use App\Http\Middleware\KasirMiddleware;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +21,11 @@ use App\Http\Controllers\Kasir;
 // RUTE UNTUK PENGUNJUNG (CUSTOMER)
 //======================================================================
 
-// Halaman Utama, sekarang ditangani oleh HomeController untuk kerapian
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Rute untuk Keranjang Belanja (diakses via browser)
+// Rute untuk Keranjang Belanja
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Fallback jika JS mati
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
@@ -32,17 +35,12 @@ Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('orde
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
 Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
 
-
 //======================================================================
 // RUTE API (UNTUK JAVASCRIPT/AJAX)
 //======================================================================
-// ✅ PERBAIKAN: Menghapus '/' di depan URL dan 'api.' di dalam nama rute
 Route::prefix('api')->name('api.')->group(function () {
-    // URL akan menjadi: /api/cart/add
-    // Nama rute akan menjadi: api.cart.add
     Route::post('cart/add', [CartController::class, 'addApi'])->name('cart.add');
 });
-
 
 //======================================================================
 // RUTE UNTUK ADMIN
@@ -56,7 +54,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('register', [Admin\AuthController::class, 'register']);
 
     // Rute yang dilindungi otentikasi admin
-    Route::middleware('auth:web')->group(function () { // Pastikan menggunakan guard 'web' untuk admin
+    Route::middleware('auth:web')->group(function () {
         Route::get('dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('menus', Admin\MenuController::class);
         Route::resource('shifts', Admin\ShiftController::class);
@@ -69,20 +67,43 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-
 //======================================================================
-// RUTE UNTUK KASIR
+// RUTE UNTUK KASIR (DARI FILE LAMA)
 //======================================================================
 Route::prefix('kasir')->name('kasir.')->group(function () {
-    // Rute otentikasi kasir
+    // Kasir Auth
     Route::get('login', [Kasir\AuthController::class, 'showLoginForm'])->name('login');
     Route::post('login', [Kasir\AuthController::class, 'login']);
     Route::post('logout', [Kasir\AuthController::class, 'logout'])->name('logout');
 
-    // Rute yang dilindungi otentikasi kasir
-    Route::middleware('auth:kasir')->group(function () { // Gunakan guard 'kasir'
-        Route::get('dashboard', [Kasir\AuthController::class, 'index'])->name('dashboard');
-        // ... rute kasir lainnya
+    // Kasir Protected Routes
+    Route::middleware([KasirMiddleware::class])->group(function () {
+        // Dashboard
+        Route::get('dashboard', function () {
+            if (!session('shift_active')) {
+                return redirect()->route('kasir.shift')->with('message', 'Silakan mulai shift terlebih dahulu.');
+            }
+
+            $categories = \App\Models\Category::all();
+            $selectedCategory = null;
+            $foods = \App\Models\Menu::all();
+
+            return view('kasir.dashboard', compact('categories', 'foods', 'selectedCategory'));
+        })->name('dashboard');
+
+        // Shift Management
+        Route::get('shift', function () {
+            return view('kasir.shift');
+        })->name('shift');
+
+        Route::post('shift/start', function () {
+            session(['shift_active' => true]);
+            return redirect()->route('kasir.shift')->with('message', 'Shift dimulai.');
+        })->name('shift.start');
+
+        Route::post('shift/end', function () {
+            session()->forget('shift_active');
+            return redirect()->route('kasir.shift')->with('message', 'Shift diakhiri.');
+        })->name('shift.end');
     });
 });
-
