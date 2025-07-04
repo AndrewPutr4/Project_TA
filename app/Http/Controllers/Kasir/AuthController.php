@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Shift; // Tambahkan ini
 
 class AuthController extends Controller
 {
@@ -25,16 +26,30 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            session(['shift_active' => true]); // Tambahkan baris ini
-            // Redirect langsung ke dashboard kasir
-            return redirect()->route('kasir.shift');
+            
+            // Buat shift baru saat login
+            Shift::create([
+                'kasir_name' => Auth::user()->name,
+                'start_time' => now()->format('H:i:s'),
+                // end_time bisa null atau diisi saat logout
+                'end_time' => null 
+            ]);
+
+            session(['shift_active' => true]);
+            return redirect()->route('kasir.dashboard');
         }
         return back()->withErrors(['Email atau password salah, atau bukan akun kasir.']);
     }
 
     public function logout(Request $request)
     {
-        session()->forget('shift_active'); // Pindahkan ke atas
+        // Update end_time saat logout
+        $shift = Shift::where('kasir_name', Auth::user()->name)->whereNull('end_time')->first();
+        if ($shift) {
+            $shift->update(['end_time' => now()->format('H:i:s')]);
+        }
+        
+        session()->forget('shift_active');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

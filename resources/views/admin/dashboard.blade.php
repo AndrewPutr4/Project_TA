@@ -798,61 +798,30 @@
             <div class="table-data">
                 <div class="order">
                     <div class="head">
-                        <h3>Recent Orders</h3>
-                        <div>
-                            <i class='bx bx-search'></i>
-                            <i class='bx bx-filter'></i>
-                        </div>
+                        <h3>Kasir yang Sedang Bertugas</h3>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Customer</th>
-                                <th>Order Date</th>
+                                <th>Nama Kasir</th>
+                                <th>Waktu Mulai</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($activeShifts as $shift)
                             <tr>
                                 <td>
-                                    <img src="{{ asset('img/people.png') }}" alt="User">
-                                    <p>John Doe</p>
+                                    <p>{{ $shift->kasir_name }}</p>
                                 </td>
-                                <td>01-10-2021</td>
-                                <td><span class="status completed">Completed</span></td>
+                                <td>{{ \Carbon\Carbon::parse($shift->start_time)->format('H:i') }}</td>
+                                <td><span class="status process">Aktif</span></td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>
-                                    <img src="{{ asset('img/people.png') }}" alt="User">
-                                    <p>Jane Smith</p>
-                                </td>
-                                <td>02-10-2021</td>
-                                <td><span class="status pending">Pending</span></td>
+                                <td colspan="3" style="text-align:center;">Tidak ada kasir yang sedang bertugas.</td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <img src="{{ asset('img/people.png') }}" alt="User">
-                                    <p>Mike Johnson</p>
-                                </td>
-                                <td>03-10-2021</td>
-                                <td><span class="status process">Processing</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="{{ asset('img/people.png') }}" alt="User">
-                                    <p>Sarah Wilson</p>
-                                </td>
-                                <td>04-10-2021</td>
-                                <td><span class="status pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <img src="{{ asset('img/people.png') }}" alt="User">
-                                    <p>David Brown</p>
-                                </td>
-                                <td>05-10-2021</td>
-                                <td><span class="status completed">Completed</span></td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
