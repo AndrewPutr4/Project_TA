@@ -26,16 +26,20 @@ class MenuController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_available' => 'nullable|boolean',
         ]);
         $price = preg_replace('/[^\d]/', '', $request->price);
 
         $data = [
             'name' => $request->name,
+            'description' => $request->description,
             'category_id' => $request->category_id,
             'price' => $price,
+            'is_available' => $request->has('is_available') ? (bool)$request->is_available : true,
         ];
 
         if ($request->hasFile('image')) {
@@ -56,21 +60,27 @@ class MenuController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_available' => 'nullable|boolean',
         ]);
 
         $price = preg_replace('/[^\d]/', '', $request->price);
 
         $data = [
             'name' => $request->name,
+            'description' => $request->description,
             'category_id' => $request->category_id,
             'price' => $price,
+            'is_available' => $request->has('is_available') ? (bool)$request->is_available : true,
         ];
 
         if ($request->hasFile('image')) {
-            Storage::disk('public')->delete($menu->image);
+            if ($menu->image) {
+                Storage::disk('public')->delete($menu->image);
+            }
             $data['image'] = $request->file('image')->store('menus', 'public');
         }
 

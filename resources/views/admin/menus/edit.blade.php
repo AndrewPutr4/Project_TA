@@ -642,6 +642,15 @@
                         </div>
                     </div>
 
+                    <div class="form-group" style="--delay: 1.5">
+                        <label for="description">Deskripsi Menu</label>
+                        <textarea id="description"
+                                  name="description"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Deskripsi singkat menu">{{ $menu->description }}</textarea>
+                    </div>
+
                     <div class="form-group" style="--delay: 2">
                         <label for="category">Kategori Menu</label>
                         <select id="category" name="category_id" class="form-control" required>
@@ -656,17 +665,19 @@
                     <div class="form-group" style="--delay: 3">
                         <label for="price">Harga Menu</label>
                         <div class="price-input-container validation-icon">
-                            <input type="text" 
+                            <input type="number"
                                    id="price"
-                                   name="price" 
-                                   class="form-control" 
-                                   value="{{ $menu->price }}" 
-                                   required 
-                                   placeholder="25000"
+                                   name="price"
+                                   class="form-control"
+                                   value="{{ old('price', number_format($menu->price, 2, '.', '')) }}"
+                                   required
+                                   placeholder="15000.00"
+                                   min="0"
+                                   step="0.01"
                                    autocomplete="off">
                         </div>
                         <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">
-                            💡 Masukkan harga dalam rupiah (contoh: 25000 untuk Rp 25.000)
+                            💡 Masukkan harga dalam rupiah, gunakan titik untuk desimal (contoh: 25000.00 untuk Rp 25.000)
                         </small>
                     </div>
 
@@ -695,6 +706,13 @@
                         <div class="file-upload-note">
                             <small>Biarkan kosong jika tidak ingin mengubah gambar. Format yang didukung: JPG, PNG, GIF (Maksimal 2MB)</small>
                         </div>
+                    </div>
+
+                    <div class="form-group" style="--delay: 4.5">
+                        <label for="is_available">
+                            <input type="checkbox" id="is_available" name="is_available" value="1" {{ $menu->is_available ? 'checked' : '' }}>
+                            Tersedia untuk dipesan
+                        </label>
                     </div>
 
                     <div class="form-actions">

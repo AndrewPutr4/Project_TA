@@ -1,0 +1,471 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.customer-app-container {
+  max-width: 414px;
+  margin: 0 auto;
+  background: #ffffff;
+  min-height: 100vh;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header Styles */
+.header {
+  background: linear-gradient(135deg, #ff6b6b, #ffa500);
+  padding: 20px 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  position: relative;
+  border-radius: 0 0 25px 25px;
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+}
+
+.location-info {
+  position: relative;
+  z-index: 1;
+}
+
+.location-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2px;
+}
+
+.location-text {
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.1);
+}
+
+.search-icon {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-icon:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Category Styles */
+.category-section {
+  padding: 25px 20px;
+  background: #f8fafc;
+}
+
+.category-list {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-list::-webkit-scrollbar {
+  display: none;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 85px;
+  height: 85px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.category-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.category-item:hover::before {
+  opacity: 1;
+}
+
+.category-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-makanan {
+  background: linear-gradient(135deg, #ffe5b4, #ffd89b);
+  color: #b45f06;
+  border: 2px solid #ffb400;
+  box-shadow: 0 4px 15px rgba(255, 180, 0, 0.2);
+}
+
+.category-minuman {
+  background: linear-gradient(135deg, #b4eaff, #a8e6cf);
+  color: #007b8a;
+  border: 2px solid #00b4d8;
+  box-shadow: 0 4px 15px rgba(0, 180, 216, 0.2);
+}
+
+.category-default {
+  background: linear-gradient(135deg, #ffffff, #f1f5f9);
+  color: #475569;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.category-active {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.category-icon {
+  font-size: 28px;
+  margin-bottom: 5px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Food List Styles */
+.food-section {
+  padding: 0 20px 100px;
+  background: #ffffff;
+}
+
+.food-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  padding-top: 10px;
+}
+
+.food-card {
+  background: white;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+}
+
+.food-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 107, 107, 0.02) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.food-card:hover::before {
+  opacity: 1;
+}
+
+.food-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.menu-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.food-card:hover .menu-image {
+  transform: scale(1.05);
+}
+
+.food-rating {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
+.food-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1e293b;
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.food-desc {
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.food-price {
+  font-weight: 700;
+  font-size: 16px;
+  color: #dc2626;
+  margin-bottom: 12px;
+}
+
+.add-menu-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ff6b6b, #ffa500);
+  color: white;
+  border: none;
+  padding: 12px 0;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.add-menu-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.add-menu-btn:active {
+  transform: translateY(0);
+}
+
+.add-menu-btn.added {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 414px;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0 25px;
+  border-top: 1px solid #e2e8f0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 25px 25px 0 0;
+}
+
+.bottom-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 24px;
+  color: #94a3b8;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.bottom-nav a.active {
+  background: linear-gradient(135deg, #ff6b6b, #ffa500);
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.bottom-nav a:not(.active):hover {
+  background: #f1f5f9;
+  color: #475569;
+  transform: translateY(-2px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #dc2626;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+}
+
+.empty-state .food-card {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Search Bar */
+.search-bar {
+  padding: 15px 20px;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+  display: none;
+}
+
+.search-bar.active {
+  display: block;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ff6b6b;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .customer-app-container {
+    max-width: 100%;
+  }
+
+  .food-list {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+  }
+
+  .header {
+    padding: 15px 15px 25px;
+  }
+
+  .category-section {
+    padding: 20px 15px;
+  }
+
+  .food-section {
+    padding: 0 15px 100px;
+  }
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
