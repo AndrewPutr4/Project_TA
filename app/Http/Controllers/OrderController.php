@@ -4,21 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Menu;
+use App\Models\Menu; // You only need the Menu model here
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
     /**
-     * Memproses checkout dari pelanggan dan menyimpan pesanan ke database.
+     * Processes the checkout from the customer and saves the order to the database.
      */
     public function checkout(Request $request)
     {
-        // 1. Validasi data yang dikirim dari form di halaman keranjang
+        // 1. Validate data from the cart form
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
@@ -27,17 +24,17 @@ class OrderController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // 2. Ambil item dari keranjang (session)
+        // 2. Get items from the cart session
         $cart = session('cart', []);
         if (empty($cart)) {
-            return redirect()->route('cart.index')->with('error', 'Keranjang Anda kosong!');
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty!');
         }
 
-        // 3. Gunakan Database Transaction
+        // 3. Use a Database Transaction for safety
         DB::beginTransaction();
 
         try {
-            // 4. Hitung subtotal dan siapkan data item
+            // 4. Calculate subtotal and prepare item data
             $subtotal = 0;
             $itemsForDb = [];
 
@@ -58,12 +55,12 @@ class OrderController extends Controller
                 }
             }
             
+            // Define fees and calculate total
             $serviceFee = 2000;
             $total = $subtotal + $serviceFee;
             
-            // 5. Buat entri baru di tabel 'orders'
+            // 5. Create a new entry in the 'orders' table
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(Str::random(8)),
                 'customer_name' => $validated['customer_name'],
                 'customer_phone' => $validated['customer_phone'],
                 'customer_address' => $validated['customer_address'],
@@ -71,56 +68,42 @@ class OrderController extends Controller
                 'notes' => $validated['notes'],
                 'subtotal' => $subtotal,
                 'service_fee' => $serviceFee,
-                //'delivery_fee' => 0,
                 'total' => $total,
                 'status' => 'pending',
                 'payment_status' => 'unpaid',
+                'order_date' => now(),
             ]);
 
-            // 6. Buat entri untuk setiap item di tabel 'order_items'
-            foreach ($itemsForDb as $itemData) {
-                $order->itemsRelation()->create($itemData);
-            }
+            // 6. ✅ FIX: Use the correct 'orderItems' relationship to create multiple items at once.
+            $order->orderItems()->createMany($itemsForDb);
             
-            // 7. Commit transaksi
+            // 7. Commit the transaction
             DB::commit();
 
-            // 8. Kosongkan keranjang
+            // 8. Clear the cart
             session()->forget('cart');
 
-            // 9. Redirect ke halaman sukses
+            // 9. Redirect to the success page with order details
             return redirect()->route('order.success')->with([
-                'success' => 'Pesanan berhasil dibuat!',
+                'success' => 'Order created successfully!',
                 'order_id' => $order->id,
                 'order_number' => $order->order_number
             ]);
 
-        } catch (ValidationException $e) {
-            // Jika validasi gagal, kembali dengan error validasi
-            DB::rollBack();
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        
         } catch (\Exception $e) {
-            // Jika terjadi error lain, batalkan semua query
+            // If any error occurs, roll back all database queries
             DB::rollBack();
 
-            // Log error untuk developer (selalu penting)
-            Log::error('Checkout Error: ' . $e->getMessage() . ' on line ' . $e->getLine() . ' in ' . $e->getFile());
+            // Log the detailed error for debugging
+            Log::error('Checkout Error: ' . $e->getMessage());
 
-            // ✅ PERBAIKAN: Tampilkan error detail jika dalam mode debug
-            // Cek file .env Anda, pastikan APP_DEBUG=true
-            if (config('app.debug')) {
-                // Saat development, tampilkan pesan error yang jelas
-                return back()->with('error', 'DEBUG MODE: ' . $e->getMessage())->withInput();
-            } else {
-                // Saat production, tampilkan pesan umum yang aman
-                return back()->with('error', 'Terjadi kesalahan internal. Silakan coba lagi nanti.')->withInput();
-            }
+            // Show a user-friendly error message
+            return back()->with('error', 'An internal error occurred. Please try again.')->withInput();
         }
     }
 
     /**
-     * Menampilkan halaman sukses setelah checkout.
+     * Shows the success page after checkout.
      */
     public function success()
     {
@@ -131,11 +114,12 @@ class OrderController extends Controller
     }
 
     /**
-     * Menampilkan detail pesanan.
+     * Shows the details of a specific order for the customer.
      */
     public function show($id)
     {
-        $order = Order::with('itemsRelation')->findOrFail($id);
+        // ✅ FIX: Use the correct 'orderItems' relationship for eager loading.
+        $order = Order::with('orderItems')->findOrFail($id);
         return view('order.show', compact('order'));
     }
 }

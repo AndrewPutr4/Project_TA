@@ -19,13 +19,9 @@ return new class extends Migration
             $table->text('customer_address')->nullable();
             $table->integer('table_number')->nullable();
             $table->text('notes')->nullable();
-            $table->json('items');
+            $table->date('order_date')->nullable();
             $table->decimal('subtotal', 10, 2);
             $table->decimal('service_fee', 10, 2)->default(0);
-
-            // ✅ KOLOM YANG HILANG DITAMBAHKAN DI SINI
-            //$table->decimal('delivery_fee', 10, 2)->default(0);
-
             $table->decimal('total', 10, 2);
             $table->string('status')->default('pending');
             $table->string('payment_status')->default('unpaid');

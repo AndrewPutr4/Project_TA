@@ -25,6 +25,18 @@ class OrderItem extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'menu_options' => 'array',
+        'price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+        'order_date' => 'datetime',
+    ];
+
+    /**
      * Mendefinisikan relasi "belongs to" ke model Order.
      */
     public function order()
@@ -38,5 +50,13 @@ class OrderItem extends Model
     public function menu()
     {
         return $this->belongsTo(Menu::class);
+    }
+
+    /**
+     * Alias untuk kompatibilitas
+     */
+    public function getMenuPriceAttribute()
+    {
+        return $this->price;
     }
 }

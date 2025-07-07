@@ -105,5 +105,20 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
             session()->forget('shift_active');
             return redirect()->route('kasir.shift')->with('message', 'Shift diakhiri.');
         })->name('shift.end');
+
+        // Order Management - DISESUAIKAN DENGAN STRUKTUR ANDA
+        Route::get('orders', [Kasir\OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('orders.show');
+        Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
+        Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('orders.stats');
+
+        // Transaction Management - TAMBAHAN BARU
+        Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('transactions.show');
+        Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('transactions.create');
+        Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
+        Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('transactions.receipt');
+        Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
     });
 });
