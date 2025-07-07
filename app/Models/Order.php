@@ -21,7 +21,6 @@ class Order extends Model
         'customer_address',
         'table_number',
         'notes',
-        'items', // Pastikan kolom 'items' ada di migrasi Anda
         'subtotal',
         'service_fee',
         //'delivery_fee',
@@ -36,7 +35,6 @@ class Order extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'items' => 'array', // Memberitahu Laravel untuk otomatis mengubah JSON ke array
     ];
 
     /**

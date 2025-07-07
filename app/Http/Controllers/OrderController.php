@@ -69,7 +69,6 @@ class OrderController extends Controller
                 'customer_address' => $validated['customer_address'],
                 'table_number' => $validated['table_number'],
                 'notes' => $validated['notes'],
-                'items' => json_encode($itemsForDb),
                 'subtotal' => $subtotal,
                 'service_fee' => $serviceFee,
                 //'delivery_fee' => 0,
