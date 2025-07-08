@@ -17,31 +17,33 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $query = Transaction::with(['order', 'kasir'])
-                           ->orderBy('created_at', 'desc');
+                       ->orderBy('created_at', 'desc');
 
-        // Filter berdasarkan tanggal
-        if ($request->filled('date')) {
-            $query->byDate($request->date);
-        }
+    if ($request->filled('date')) {
+        $query->byDate($request->date);
+    }
 
-        // Filter berdasarkan payment method
-        if ($request->filled('payment_method')) {
-            $query->byPaymentMethod($request->payment_method);
-        }
+    if ($request->filled('payment_method')) {
+        $query->byPaymentMethod($request->payment_method);
+    }
 
-        // Filter pencarian
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('transaction_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('customer_phone', 'like', "%{$search}%");
-            });
-        }
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('transaction_number', 'like', "%{$search}%")
+              ->orWhere('customer_name', 'like', "%{$search}%")
+              ->orWhere('customer_phone', 'like', "%{$search}%");
+        });
+    }
 
-        $transactions = $query->paginate(20);
+    $transactions = $query->paginate(20);
 
-        return view('kasir.transactions.index', compact('transactions'));
+    // Ini adalah variabel untuk view lama Anda
+    $orders = Order::with('orderItems')->latest()->get();
+
+    // ✅ PERBAIKAN UTAMA ADA DI SINI
+    // Kirim 'transactions' DAN 'orders' ke view.
+    return view('kasir.transactions.index', compact('transactions', 'orders'));
     }
 
     /**

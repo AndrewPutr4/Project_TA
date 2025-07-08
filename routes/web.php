@@ -68,7 +68,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 //======================================================================
-// RUTE UNTUK KASIR (DARI FILE LAMA)
+// RUTE UNTUK KASIR (DARI FILE LAMA + YANG BARU DIADAPTASI)
 //======================================================================
 Route::prefix('kasir')->name('kasir.')->group(function () {
     // Kasir Auth
@@ -106,14 +106,14 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
             return redirect()->route('kasir.shift')->with('message', 'Shift diakhiri.');
         })->name('shift.end');
 
-        // Order Management - DISESUAIKAN DENGAN STRUKTUR ANDA
+        // Order Management
         Route::get('orders', [Kasir\OrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('orders.show');
         Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
         Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('orders.stats');
 
-        // Transaction Management - TAMBAHAN BARU
+        // Transaction Management (SUDAH ADA DI VERSI LAMA)
         Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('transactions.index');
         Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('transactions.show');
         Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('transactions.create');
