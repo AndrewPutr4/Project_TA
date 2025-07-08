@@ -5,19 +5,63 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str; // <-- 1. Pastikan Str di-import
 
 class Order extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    /**
+     * ✅ 2. Konfigurasi untuk menggunakan UUID sebagai Primary Key.
+     * Baris-baris ini sangat penting.
+     */
+    public $incrementing = false; // Memberitahu Laravel bahwa ID bukan angka yang berurutan.
+    protected $keyType = 'string'; // Memberitahu Laravel bahwa tipe ID adalah string.
+    protected $primaryKey = 'id'; // (Opsional, tapi baik untuk kejelasan)
+
+    /**
+     * ✅ 3. Gunakan $fillable untuk keamanan.
+     * Ini adalah daftar kolom yang boleh diisi melalui Order::create().
+     * 'id' dan 'order_number' tidak ada di sini karena dibuat otomatis.
+     */
+    protected $fillable = [
+        'customer_name',
+        'customer_phone',
+        'customer_address',
+        'table_number',
+        'notes',
+        'subtotal',
+        'service_fee',
+        'total',
+        'status',
+        'payment_status',
+        'order_date',
+    ];
 
     protected $casts = [
         'order_date' => 'date',
-        'subtotal' => 'decimal:2',
-        'service_fee' => 'decimal:2',
-        'total' => 'decimal:2',
+        // 'subtotal', 'service_fee', dan 'total' lebih baik disimpan sebagai integer (sen)
+        // untuk menghindari masalah pembulatan desimal.
     ];
+
+    /**
+     * ✅ 4. Logika Pembuatan ID dan Nomor Pesanan Otomatis.
+     * Ini adalah inti dari perbaikan. Kode ini akan berjalan otomatis
+     * setiap kali Anda memanggil Order::create().
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($order) {
+            // Jika ID belum ada, buat UUID baru.
+            if (empty($order->id)) {
+                $order->id = (string) Str::uuid();
+            }
+            // Buat juga nomor pesanan yang unik.
+            $order->order_number = 'ORD-' . now()->format('Ymd') . '-' . substr(str_replace('-', '', $order->id), 0, 6);
+        });
+    }
 
     /**
      * Relasi utama ke OrderItems
@@ -25,14 +69,6 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
-    }
-
-    /**
-     * Alias untuk kompatibilitas dengan kode lama
-     */
-    public function itemsRelation(): HasMany
-    {
-        return $this->orderItems();
     }
 
     /**
@@ -44,7 +80,7 @@ class Order extends Model
     }
 
     /**
-     * Accessor for status badge CSS class.
+     * Accessor untuk status badge CSS class.
      */
     public function getStatusBadgeAttribute(): string
     {
@@ -61,7 +97,7 @@ class Order extends Model
     }
 
     /**
-     * Accessor for payment status badge CSS class.
+     * Accessor untuk payment status badge CSS class.
      */
     public function getPaymentStatusBadgeAttribute(): string
     {

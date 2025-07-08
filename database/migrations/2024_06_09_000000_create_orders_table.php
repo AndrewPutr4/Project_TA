@@ -12,19 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
+            // ✅ Jadikan UUID sebagai primary key, ini akan otomatis unik
+            $table->uuid('id')->primary();
+
+            // Kolom untuk nomor pesanan yang bisa dibaca manusia (jika perlu)
             $table->string('order_number')->unique();
+
             $table->string('customer_name');
             $table->string('customer_phone');
             $table->text('customer_address')->nullable();
             $table->integer('table_number')->nullable();
             $table->text('notes')->nullable();
-            $table->date('order_date')->nullable();
-            $table->decimal('subtotal', 10, 2);
-            $table->decimal('service_fee', 10, 2)->default(0);
-            $table->decimal('total', 10, 2);
+            $table->unsignedBigInteger('subtotal');
+            $table->unsignedBigInteger('service_fee');
+            $table->unsignedBigInteger('total');
             $table->string('status')->default('pending');
             $table->string('payment_status')->default('unpaid');
+            $table->timestamp('order_date');
             $table->timestamps();
         });
     }

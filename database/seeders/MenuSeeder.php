@@ -22,7 +22,7 @@ class MenuSeeder extends Seeder
         DB::table('categories')->insert([
             [
                 'id' => 1, 
-                'name' => 'Bakso', 
+                'name' => 'Makanan', 
                 'icon' => '🍲', 
                 'description' => 'Berbagai macam bakso dan sup',
                 'is_active' => true,

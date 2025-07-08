@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('order_id')->constrained('orders')->onDelete('cascade');
             $table->unsignedBigInteger('product_id')->nullable();
-            $table->foreignId('menu_id')->constrained('menus')->onDelete('restrict');
+            $table->foreignId('menu_id')->constrained('menus')->onDelete('cascade');
             $table->string('menu_name');
             $table->text('menu_description')->nullable();
             $table->unsignedBigInteger('price');
