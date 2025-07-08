@@ -160,75 +160,64 @@ class TransactionController extends Controller
     }
 
     public function storeFromCashier(Request $request)
-    {
-        // Validasi input dari kasir
-        $validator = Validator::make($request->all(), [
-            'order_id' => 'required|uuid|exists:orders,id',
-            'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'nullable|string|max:20',
-            'subtotal' => 'required|numeric|min:0',
-            'tax' => 'required|numeric|min:0',
-            'service_fee' => 'required|numeric|min:0',
-            'discount' => 'nullable|numeric|min:0',
-            'total' => 'required|numeric|min:0',
-            'cash_received' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,card,qris,transfer',
-            'notes' => 'nullable|string',
+{
+    // 1. Validasi data dan simpan ke dalam variabel
+    $validatedData = $request->validate([
+        'order_id' => 'required|uuid|exists:orders,id',
+        'customer_name' => 'required|string|max:255',
+        'customer_phone' => 'nullable|string|max:20',
+        'subtotal' => 'required|numeric|min:0',
+        'tax' => 'required|numeric|min:0',
+        'service_fee' => 'required|numeric|min:0',
+        'discount' => 'nullable|numeric|min:0',
+        'total' => 'required|numeric|min:0',
+        'cash_received' => 'required|numeric|min:0',
+        'payment_method' => 'required|in:cash,card,qris,transfer',
+        'notes' => 'nullable|string',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        $kasirId = $request->user()->id;
+        $changeAmount = $validatedData['cash_received'] - $validatedData['total'];
+
+        // 2. Buat array data baru untuk transaksi
+        // Gabungkan data yang sudah divalidasi dengan data tambahan (kasir_id, dll.)
+        $transactionData = array_merge($validatedData, [
+            'transaction_number' => Transaction::generateTransactionNumber(),
+            'kasir_id' => $kasirId,
+            'change_amount' => $changeAmount > 0 ? $changeAmount : 0,
+            'status' => 'completed',
+            'transaction_date' => now(),
+            'discount' => $validatedData['discount'] ?? 0, // Pastikan nilai default jika null
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // 3. Gunakan array yang sudah bersih untuk membuat transaksi
+        $transaction = Transaction::create($transactionData);
 
-        DB::beginTransaction();
-        try {
-            $kasirId = $request->user()->id; // Mengambil ID kasir yang sedang login
-
-            // Menghitung kembalian
-            $changeAmount = $request->cash_received - $request->total;
-
-            $transaction = Transaction::create([
-                'transaction_number' => Transaction::generateTransactionNumber(),
-                'order_id' => $request->order_id,
-                'kasir_id' => $kasirId,
-                'customer_name' => $request->customer_name,
-                'customer_phone' => $request->customer_phone,
-                'subtotal' => $request->subtotal,
-                'tax' => $request->tax,
-                'service_fee' => $request->service_fee,
-                'discount' => $request->discount ?? 0,
-                'total' => $request->total,
-                'cash_received' => $request->cash_received,
-                'change_amount' => $changeAmount > 0 ? $changeAmount : 0,
-                'payment_method' => $request->payment_method,
-                'status' => 'completed',
-                'notes' => $request->notes,
-                'transaction_date' => now(),
+        // Update status order terkait
+        $order = Order::find($validatedData['order_id']);
+        if ($order) {
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'completed'
             ]);
-
-            // Update status order terkait
-            $order = Order::find($request->order_id);
-            if ($order) {
-                $order->update([
-                    'payment_status' => 'paid',
-                    'status' => 'completed'
-                ]);
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'message' => 'Transaksi berhasil dibuat!',
-                'data' => $transaction
-            ], 201);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error creating transaction from cashier: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Terjadi kesalahan saat membuat transaksi.',
-                'error' => $e->getMessage()
-            ], 500);
         }
+
+        DB::commit();
+
+        return response()->json([
+            'message' => 'Transaksi berhasil dibuat!',
+            'data' => $transaction
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error creating transaction from cashier: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Terjadi kesalahan saat membuat transaksi.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 }
