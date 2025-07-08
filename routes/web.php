@@ -120,5 +120,6 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
         Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('transactions.receipt');
         Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
+        Route::post('transactions/create', [Kasir\TransactionController::class, 'storeFromCashier'])->name('transactions.storeFromCashier');
     });
 });

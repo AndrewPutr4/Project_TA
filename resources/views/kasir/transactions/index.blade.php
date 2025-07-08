@@ -6,59 +6,19 @@
 <div class="transactions-container">
     <!-- Header -->
     <div class="page-header">
-        <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Orderan Pelanggan</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>No. Order</th>
-                            <th>Nama Pelanggan</th>
-                            <th>No. Meja</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Waktu Pesan</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{-- Loop untuk setiap pesanan --}}
-                        @forelse ($orders as $order)
-                        <tr>
-                            <td>{{ $order->order_number }}</td>
-                            <td>{{ $order->customer_name }}</td>
-                            <td>{{ $order->table_number ?? 'Take Away' }}</td>
-                            <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
-                            <td>
-                                {{-- Contoh badge untuk status --}}
-                                @if($order->status == 'pending')
-                                    <span class="badge badge-warning">{{ ucfirst($order->status) }}</span>
-                                @elseif($order->status == 'completed')
-                                    <span class="badge badge-success">{{ ucfirst($order->status) }}</span>
-                                @else
-                                    <span class="badge badge-secondary">{{ ucfirst($order->status) }}</span>
-                                @endif
-                            </td>
-                            <td>{{ $order->created_at->format('d M Y, H:i') }}</td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-sm">
-                                    <i class="fas fa-eye"></i> Detail
-                                </a>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="text-center">Belum ada pesanan masuk.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <div class="header-content">
+            <h1 class="page-title">Daftar Transaksi</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="refreshTransactions()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23,4 23,10 17,10"></polyline>
+                        <polyline points="1,20 1,14 7,14"></polyline>
+                        <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4L18.36,18.36A9,9,0,0,1,3.51,15"></path>
+                    </svg>
+                    Refresh
+                </button>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Stats Cards -->
