@@ -81,7 +81,7 @@ class MenuSeeder extends Seeder
                 'name' => 'Bakso Keju',
                 'description' => 'Bakso dengan isian keju mozzarella',
                 'price' => 20000,
-                'image' => null,
+                'image' => 'menus/3rDSxR0522H0Iq2BysgvqMFhpj3onXKXgxXUUJTA.jpg',
                 'category_id' => 1,
                 'is_available' => true,
                 'created_at' => now(),

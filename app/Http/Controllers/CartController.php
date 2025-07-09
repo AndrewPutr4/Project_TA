@@ -23,7 +23,7 @@ class CartController extends Controller
         $total = $subtotal + $deliveryFee + $serviceFee;
 
         // ✅ PASTIKAN NAMA VIEW BENAR: 'cart' bukan 'cart.blade.php'
-        return view('cart', compact('cartItems', 'subtotal', 'deliveryFee', 'serviceFee', 'total'));
+        return view('customer.cart', compact('cartItems', 'subtotal', 'deliveryFee', 'serviceFee', 'total'));
     }
 
     /**
