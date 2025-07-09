@@ -8,9 +8,46 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class TransactionController extends Controller
 {
+     public function __construct()
+    {
+        // Set konfigurasi Midtrans
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized = config('services.midtrans.is_sanitized');
+        Config::$is3ds = config('services.midtrans.is_3ds');
+    }
+
+    public function createMidtransSnapToken(Order $order)
+    {
+        // Hitung total dengan pajak
+        $subtotal = $order->subtotal;
+        $serviceFee = $order->service_fee ?? 0;
+        $tax = $subtotal * 0.1; // 10% tax
+        $total = $subtotal + $serviceFee + $tax;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->order_number,
+                'gross_amount' => $total,
+            ],
+            'customer_details' => [
+                'first_name' => $order->customer_name,
+                'phone' => $order->customer_phone,
+            ],
+        ];
+
+        try {
+            $snapToken = Snap::getSnapToken($params);
+            return response()->json(['snap_token' => $snapToken]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
     /**
      * Display a listing of transactions
      */
