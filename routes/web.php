@@ -6,10 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Kasir;
-use App\Models\Category;
-use App\Models\Menu;
 use App\Http\Middleware\KasirMiddleware;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,7 +65,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 //======================================================================
-// RUTE UNTUK KASIR (DARI FILE LAMA + YANG BARU DIADAPTASI)
+// RUTE UNTUK KASIR
 //======================================================================
 Route::prefix('kasir')->name('kasir.')->group(function () {
     // Kasir Auth
@@ -78,18 +75,8 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
 
     // Kasir Protected Routes
     Route::middleware([KasirMiddleware::class])->group(function () {
-        // Dashboard
-        Route::get('dashboard', function () {
-            if (!session('shift_active')) {
-                return redirect()->route('kasir.shift')->with('message', 'Silakan mulai shift terlebih dahulu.');
-            }
-
-            $categories = \App\Models\Category::all();
-            $selectedCategory = null;
-            $foods = \App\Models\Menu::all();
-
-            return view('kasir.dashboard', compact('categories', 'foods', 'selectedCategory'));
-        })->name('dashboard');
+        // Dashboard (Menggunakan Controller baru)
+        Route::get('dashboard', [Kasir\DashboardController::class, 'index'])->name('dashboard');
 
         // Shift Management
         Route::get('shift', function () {
@@ -112,14 +99,18 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
         Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('orders.stats');
+        
+        // == RUTE BARU UNTUK TAKEAWAY ==
+        Route::post('orders/takeaway', [Kasir\OrderController::class, 'storeTakeawayOrder'])->name('orders.storeTakeaway');
 
-        // Transaction Management (SUDAH ADA DI VERSI LAMA)
+        // Transaction Management
         Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('transactions.index');
         Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('transactions.show');
         Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('transactions.create');
         Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
         Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('transactions.receipt');
         Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
+        
         // Midtrans Snap Token
         Route::post('orders/{order}/midtrans-snap-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])->name('transactions.createMidtransSnapToken');
     });
