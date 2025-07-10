@@ -39,7 +39,7 @@ class HomeController extends Controller
         
         $foods = Menu::query()->get();
         
-        return view('customer.home', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods'));
+        return view('customer.welcome', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods'));
     }
 
     public function search(Request $request)
