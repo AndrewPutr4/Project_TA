@@ -30,13 +30,20 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 // Rute untuk Proses Checkout
 Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
 Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
-Route::get('/order/{id}', [OrderController::class, 'show'])->name('order.show');
+Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+Route::get('/checkout', function() {
+    return view('customer.checkout'); // Tambahkan 'customer.' di depan
+})->name('checkout');
+
+
 
 //======================================================================
 // RUTE API (UNTUK JAVASCRIPT/AJAX)
 //======================================================================
 Route::prefix('api')->name('api.')->group(function () {
     Route::post('cart/add', [CartController::class, 'addApi'])->name('cart.add');
+    Route::get('cart/count', [CartController::class, 'getCartCount'])->name('cart.count');
 });
 
 //======================================================================

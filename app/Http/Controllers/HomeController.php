@@ -37,9 +37,11 @@ class HomeController extends Controller
         $cart = session()->get('cart', []);
         $cartCount = array_sum(array_column($cart, 'quantity'));
         
-        $foods = Menu::query()->get();
-        
-        return view('customer.welcome', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods'));
+        // Misal kategori makanan id=1, minuman id=2 (ubah sesuai data Anda)
+        $foods = Menu::where('category_id', 1)->get();
+        $drinks = Menu::where('category_id', 2)->get();
+
+        return view('customer.welcome', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods', 'drinks'));
     }
 
     public function search(Request $request)

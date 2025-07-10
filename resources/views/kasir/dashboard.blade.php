@@ -34,7 +34,7 @@
                 @endforeach
             </nav>
         </aside>
-
+        
         <main class="products-panel">
              <div class="products-grid">
                 @forelse($foods as $food)
