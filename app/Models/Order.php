@@ -5,29 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str; // <-- 1. Pastikan Str di-import
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
     use HasFactory;
 
     /**
-     * ✅ 2. Konfigurasi untuk menggunakan UUID sebagai Primary Key.
-     * Baris-baris ini sangat penting.
+     * Konfigurasi untuk menggunakan UUID sebagai Primary Key.
      */
-    public $incrementing = false; // Memberitahu Laravel bahwa ID bukan angka yang berurutan.
-    protected $keyType = 'string'; // Memberitahu Laravel bahwa tipe ID adalah string.
-    protected $primaryKey = 'id'; // (Opsional, tapi baik untuk kejelasan)
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $primaryKey = 'id';
 
     /**
-     * ✅ 3. Gunakan $fillable untuk keamanan.
-     * Ini adalah daftar kolom yang boleh diisi melalui Order::create().
-     * 'id' dan 'order_number' tidak ada di sini karena dibuat otomatis.
+     * Mass assignable attributes (tanpa customer_phone dan customer_address).
      */
     protected $fillable = [
         'customer_name',
-        'customer_phone',
-        'customer_address',
         'table_number',
         'notes',
         'subtotal',
@@ -36,35 +32,41 @@ class Order extends Model
         'status',
         'payment_status',
         'order_date',
-    ];
-
-    protected $casts = [
-        'order_date' => 'date',
-        // 'subtotal', 'service_fee', dan 'total' lebih baik disimpan sebagai integer (sen)
-        // untuk menghindari masalah pembulatan desimal.
+        'order_number',
     ];
 
     /**
-     * ✅ 4. Logika Pembuatan ID dan Nomor Pesanan Otomatis.
-     * Ini adalah inti dari perbaikan. Kode ini akan berjalan otomatis
-     * setiap kali Anda memanggil Order::create().
+     * Attribute casting.
+     */
+    protected $casts = [
+        'order_date' => 'datetime',
+        'subtotal' => 'decimal:2',
+        'service_fee' => 'decimal:2',
+        'total' => 'decimal:2',
+    ];
+
+    /**
+     * Boot method untuk auto-generate ID dan order number.
      */
     protected static function boot()
     {
         parent::boot();
-
+        
         static::creating(function ($order) {
-            // Jika ID belum ada, buat UUID baru.
+            // Generate UUID untuk ID jika belum ada
             if (empty($order->id)) {
                 $order->id = (string) Str::uuid();
             }
-            // Buat juga nomor pesanan yang unik.
-            $order->order_number = 'ORD-' . now()->format('Ymd') . '-' . substr(str_replace('-', '', $order->id), 0, 6);
+            
+            // Generate order number jika belum ada
+            if (empty($order->order_number)) {
+                $order->order_number = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(substr(str_replace('-', '', $order->id), 0, 6));
+            }
         });
     }
 
     /**
-     * Relasi utama ke OrderItems
+     * Relasi ke OrderItems
      */
     public function orderItems(): HasMany
     {
@@ -74,7 +76,7 @@ class Order extends Model
     /**
      * Relasi ke Transaction
      */
-    public function transaction()
+    public function transaction(): HasOne
     {
         return $this->hasOne(Transaction::class);
     }
@@ -92,7 +94,6 @@ class Order extends Model
             'completed' => 'bg-green-100 text-green-800',
             'cancelled' => 'bg-red-100 text-red-800',
         ];
-
         return $badges[$this->status] ?? 'bg-gray-100 text-gray-800';
     }
 
@@ -106,8 +107,15 @@ class Order extends Model
             'paid'     => 'bg-green-100 text-green-800',
             'refunded' => 'bg-gray-100 text-gray-800',
         ];
-
         return $badges[$this->payment_status] ?? 'bg-gray-100 text-gray-800';
+    }
+
+    /**
+     * Accessor untuk order type berdasarkan table_number
+     */
+    public function getOrderTypeAttribute(): string
+    {
+        return $this->table_number ? 'dine_in' : 'takeaway';
     }
 
     /**
@@ -133,16 +141,36 @@ class Order extends Model
     }
 
     /**
-     * Scope untuk pencarian
+     * Scope untuk pencarian (tanpa customer_phone)
      */
     public function scopeSearch($query, $search)
     {
         if ($search) {
             return $query->where(function($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('customer_phone', 'like', "%{$search}%");
+                  ->orWhere('customer_name', 'like', "%{$search}%");
             });
+        }
+        return $query;
+    }
+
+    /**
+     * Scope untuk filter hari ini
+     */
+    public function scopeToday($query)
+    {
+        return $query->whereDate('created_at', now()->toDateString());
+    }
+
+    /**
+     * Scope untuk filter berdasarkan order type
+     */
+    public function scopeByOrderType($query, $orderType)
+    {
+        if ($orderType === 'dine_in') {
+            return $query->whereNotNull('table_number');
+        } elseif ($orderType === 'takeaway') {
+            return $query->whereNull('table_number');
         }
         return $query;
     }

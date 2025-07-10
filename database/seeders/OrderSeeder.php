@@ -29,8 +29,6 @@ class OrderSeeder extends Seeder
             // Create the order.
             $order = Order::create([
                 'customer_name' => 'Customer ' . $i,
-                'customer_phone' => '08123456789' . $i,
-                'customer_address' => 'Jl. Contoh No. ' . $i . ', Denpasar, Bali',
                 'subtotal' => 0, // Will be calculated later
                 'service_fee' => 2000,
                 'total' => 0, // Will be calculated later

@@ -12,7 +12,7 @@
         <header class="pos-header">
             <div class="header-info">
                 <h1 class="store-name">SISTEM KASIR</h1>
-                <span class="store-subtitle">Point of Sale - Takeaway</span>
+                <span class="store-subtitle">Point of Sale - Kasir Menu</span>
             </div>
             <form method="GET" action="{{ route('kasir.dashboard') }}" class="search-bar">
                 <div class="search-input-group">
@@ -62,13 +62,31 @@
         <div class="panel-header"><h3>Detail Transaksi</h3></div>
         
         <div class="customer-info">
-             <div class="form-group">
+            <div class="form-group">
+                <label class="mb-1">Jenis Pesanan</label>
+                <div>
+                    <label style="margin-right: 1.5em;">
+                        <input type="radio" name="order_type" value="takeaway" id="order_type_takeaway" checked>
+                        Takeaway
+                    </label>
+                    <label>
+                        <input type="radio" name="order_type" value="dine_in" id="order_type_dinein">
+                        Dine In
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="customer_name_input">Nama Pelanggan</label>
                 <input type="text" id="customer_name_input" placeholder="Wajib diisi" class="form-input">
             </div>
-            <div class="form-group">
-                <label for="customer_phone_input">No. Telepon</label>
-                <input type="text" id="customer_phone_input" placeholder="Wajib diisi" class="form-input">
+            <div class="form-group" id="table_number_group" style="display:none;">
+                <label for="table_number_input">Nomor Meja</label>
+                <select id="table_number_input" class="form-input">
+                    <option value="">Pilih Meja</option>
+                    @for($i=1; $i<=10; $i++)
+                        <option value="{{ $i }}">Meja {{ $i }}</option>
+                    @endfor
+                </select>
             </div>
         </div>
 
@@ -138,6 +156,50 @@
     .action-btn.secondary { background: #e5e7eb; color: #374151; }
     .action-btn.primary { background: var(--primary-color); color: white; }
     .action-btn:disabled { background-color: #9ca3af; color: #e5e7eb; cursor: not-allowed; }
+
+    @media (max-width: 900px) {
+        .pos-system {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+        .order-panel {
+            position: static;
+            border-left: none;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+            min-width: 0;
+            max-width: 100vw;
+        }
+        .products-section {
+            min-width: 0;
+        }
+        .products-panel {
+            max-height: none;
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .pos-header, .panel-header, .customer-info, .order-summary, .order-actions {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        .products-panel, .order-items-container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem;
+        }
+        .order-panel {
+            font-size: 0.95rem;
+        }
+        .action-btn {
+            padding: 0.7rem;
+            font-size: 0.95rem;
+        }
+    }
 </style>
 
 {{-- JavaScript untuk Logika POS --}}
@@ -231,20 +293,41 @@ document.addEventListener('DOMContentLoaded', function () {
         if (confirm('Apakah Anda yakin ingin membersihkan semua item?')) {
             orderItems = [];
             document.getElementById('customer_name_input').value = '';
-            document.getElementById('customer_phone_input').value = '';
             renderOrder();
         }
     });
 
-    processBtn.addEventListener('click', async () => {
-        const customerName = document.getElementById('customer_name_input').value;
-        const customerPhone = document.getElementById('customer_phone_input').value;
+    // === Tambahan untuk order type dan nomor meja ===
+    const orderTypeTakeaway = document.getElementById('order_type_takeaway');
+    const orderTypeDinein = document.getElementById('order_type_dinein');
+    const tableNumberGroup = document.getElementById('table_number_group');
+    const tableNumberInput = document.getElementById('table_number_input');
 
-        if (!customerName.trim() || !customerPhone.trim()) {
-            alert('Nama dan nomor telepon pelanggan wajib diisi.');
+    function updateOrderTypeUI() {
+        if (orderTypeDinein.checked) {
+            tableNumberGroup.style.display = '';
+        } else {
+            tableNumberGroup.style.display = 'none';
+            tableNumberInput.value = '';
+        }
+    }
+    orderTypeTakeaway.addEventListener('change', updateOrderTypeUI);
+    orderTypeDinein.addEventListener('change', updateOrderTypeUI);
+    updateOrderTypeUI();
+
+    processBtn.addEventListener('click', async () => {
+        const customerName = document.getElementById('customer_name_input').value.trim();
+        const orderType = orderTypeDinein.checked ? 'dine_in' : 'takeaway';
+        const tableNumber = tableNumberInput.value;
+
+        if (!customerName) {
+            alert('Nama pelanggan wajib diisi.');
             return;
         }
-
+        if (orderType === 'dine_in' && !tableNumber) {
+            alert('Nomor meja wajib dipilih untuk Dine In.');
+            return;
+        }
         if (orderItems.length === 0) {
             alert('Keranjang masih kosong.');
             return;
@@ -255,14 +338,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const payload = {
             customer_name: customerName,
-            customer_phone: customerPhone,
+            order_type: orderType,
             items: orderItems.map(item => ({ id: item.id, quantity: item.quantity })),
         };
+        if (orderType === 'dine_in') {
+            payload.table_number = tableNumber;
+        }
 
         try {
-            // PERBAIKAN: Mengambil token CSRF dari meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
             const response = await fetch('{{ route("kasir.orders.storeTakeaway") }}', {
                 method: 'POST',
                 headers: {

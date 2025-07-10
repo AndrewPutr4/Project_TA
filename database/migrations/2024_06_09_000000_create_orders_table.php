@@ -17,9 +17,7 @@ return new class extends Migration
 
             // Kolom untuk nomor pesanan yang bisa dibaca manusia (jika perlu)
             $table->string('order_number')->unique();
-
             $table->string('customer_name');
-            $table->string('customer_phone');
             $table->text('customer_address')->nullable();
             $table->integer('table_number')->nullable();
             $table->text('notes')->nullable();

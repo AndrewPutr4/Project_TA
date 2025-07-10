@@ -98,6 +98,8 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('orders.show');
         Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
         Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::post('/orders/{order}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
         Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('orders.stats');
         
         // == RUTE BARU UNTUK TAKEAWAY ==
