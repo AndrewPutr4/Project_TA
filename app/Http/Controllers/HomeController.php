@@ -10,11 +10,13 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        // Ambil kategori yang aktif
         $categories = Category::active()->get();
         
+        // Query dasar untuk menu
         $menusQuery = Menu::with('category')->available();
         
-        // Filter by category
+        // Filter berdasarkan kategori
         if ($request->has('category') && $request->category) {
             $menusQuery->where('category_id', $request->category);
             $selectedCategory = Category::find($request->category);
@@ -22,7 +24,7 @@ class HomeController extends Controller
             $selectedCategory = null;
         }
         
-        // Search functionality
+        // Fungsi pencarian
         if ($request->has('search') && $request->search) {
             $search = $request->search;
             $menusQuery->where(function($query) use ($search) {
@@ -33,13 +35,18 @@ class HomeController extends Controller
         
         $menus = $menusQuery->orderBy('name')->get();
         
-        // Get cart from session
+        // Ambil data keranjang dari session
         $cart = session()->get('cart', []);
         $cartCount = array_sum(array_column($cart, 'quantity'));
         
-        // Misal kategori makanan id=1, minuman id=2 (ubah sesuai data Anda)
-        $foods = Menu::where('category_id', 1)->get();
-        $drinks = Menu::where('category_id', 2)->get();
+        // ✅ Mengambil makanan dan minuman berdasarkan nama kategori
+        $foods = Menu::whereHas('category', function ($query) {
+            $query->where('name', 'Makanan');
+        })->get();
+
+        $drinks = Menu::whereHas('category', function ($query) {
+            $query->where('name', 'Minuman');
+        })->get();
 
         return view('customer.welcome', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods', 'drinks'));
     }

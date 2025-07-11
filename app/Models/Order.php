@@ -20,7 +20,7 @@ class Order extends Model
     protected $primaryKey = 'id';
 
     /**
-     * Mass assignable attributes (tanpa customer_phone dan customer_address).
+     * Mass assignable attributes.
      */
     protected $fillable = [
         'customer_name',
@@ -30,6 +30,7 @@ class Order extends Model
         'service_fee',
         'total',
         'status',
+        'payment_method', // <-- DITAMBAHKAN
         'payment_status',
         'order_date',
         'order_number',

@@ -7,23 +7,19 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     
-    <!-- Favicons -->
     <link href="{{ asset('assets/img/favicon.png') }}" rel="icon">
     <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
     
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- Vendor CSS Files -->
     <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/aos/aos.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     
-    <!-- Main CSS File -->
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
 </head>
 
@@ -58,7 +54,6 @@
                                 </div>
                             @endif
 
-                            <!-- Cart Items Display -->
                             <div class="cart-items mb-4">
                                 <h4 class="mb-3">
                                     <i class="bi bi-bag-check"></i> Pesanan Anda
@@ -105,7 +100,6 @@
                                         @endforeach
                                     </div>
 
-                                    <!-- Order Summary -->
                                     <div class="order-summary mt-4 p-3 bg-light rounded">
                                         <div class="d-flex justify-content-between mb-2">
                                             <span>Subtotal:</span>
@@ -122,7 +116,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Customer Information Form - SIMPLIFIED -->
                                     <form action="{{ route('order.checkout') }}" method="POST" id="checkout-form" class="mt-4">
                                         @csrf
                                         <div class="customer-info">
@@ -176,6 +169,25 @@
                                             </div>
                                         </div>
 
+                                        <div class="payment-method mt-4">
+                                            <h4 class="mb-3">
+                                                <i class="bi bi-credit-card"></i> Metode Pembayaran
+                                            </h4>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="radio" name="payment_method" id="cash" value="cash" checked>
+                                                <label class="form-check-label" for="cash">
+                                                    <i class="bi bi-cash"></i> Bayar Tunai (Cash)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="payment_method" id="cashless" value="cashless">
+                                                <label class="form-check-label" for="cashless">
+                                                    <i class="bi bi-qr-code-scan"></i> Qris (Cashless)
+                                                </label>
+                                            </div>
+                                        </div>
+
+
                                         <div class="d-grid gap-2 mt-4">
                                             <button type="submit" class="btn btn-warning btn-lg fw-bold" id="place-order-btn">
                                                 <i class="bi bi-check-circle"></i> Pesan Sekarang
@@ -184,7 +196,6 @@
                                         </div>
                                     </form>
                                 @endif
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -192,7 +203,6 @@
         </section>
     </main>
 
-    <!-- Footer -->
     <footer id="footer" class="footer dark-background">
         <div class="container">
             <div class="row gy-3">
@@ -237,7 +247,6 @@
         </div>
     </footer>
 
-    <!-- Vendor JS Files -->
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
     <script src="{{ asset('assets/vendor/aos/aos.js') }}"></script>
@@ -245,7 +254,6 @@
     <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
     <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
 
-    <!-- Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <style>
@@ -320,7 +328,7 @@
             background: #fffbf0 !important;
         }
         
-        .customer-info {
+        .customer-info, .payment-method {
             border-top: 2px solid #f8f9fa;
             padding-top: 1.5rem;
         }

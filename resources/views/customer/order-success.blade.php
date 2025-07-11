@@ -76,11 +76,13 @@
                         
                         <!-- Action Buttons -->
                         <div class="action-buttons">
-                            <a href="{{ route('home') }}" class="btn btn-warning btn-lg me-2">
+                            {{-- Corrected route from 'home' to 'customer.welcome' --}}
+                            <a href="{{ route('customer.welcome') }}" class="btn btn-warning btn-lg me-2">
                                 <i class="bi bi-arrow-left me-1"></i> Pesan Lagi
                             </a>
-                            @if(session('order_id'))
-                                <a href="{{ route('orders.show', session('order_id')) }}" class="btn btn-outline-primary btn-lg">
+                            {{-- Corrected route from 'orders.show' to 'order.show' and session key --}}
+                            @if(session('order_number'))
+                                <a href="{{ route('order.show', session('order_number')) }}" class="btn btn-outline-primary btn-lg">
                                     <i class="bi bi-receipt me-1"></i> Lihat Detail
                                 </a>
                             @endif

@@ -20,6 +20,9 @@ use App\Http\Middleware\KasirMiddleware;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/welcome', [HomeController::class, 'index'])->name('customer.welcome');
+
+
 // Rute untuk Keranjang Belanja
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -28,12 +31,16 @@ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remov
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
 // Rute untuk Proses Checkout
-Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('order.checkout');
-Route::get('/order/success', [OrderController::class, 'success'])->name('order.success');
+Route::post('/order/checkout', [OrderController::class, 'processCheckout'])->name('order.checkout');
+Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
+// RUTE BARU UNTUK RIWAYAT PESANAN
+Route::get('/my-orders', [OrderController::class, 'history'])->name('orders.history');
+
+
 Route::get('/checkout', function() {
-    return view('customer.checkout'); // Tambahkan 'customer.' di depan
+    return view('customer.checkout');
 })->name('checkout');
 
 
@@ -119,6 +126,7 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
         Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('transactions.receipt');
         Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
+        
         
         // Midtrans Snap Token
         Route::post('orders/{order}/midtrans-snap-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])->name('transactions.createMidtransSnapToken');
