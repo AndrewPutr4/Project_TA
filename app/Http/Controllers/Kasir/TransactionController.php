@@ -117,30 +117,42 @@ class TransactionController extends Controller
             'notes' => 'nullable|string|max:500',
         ]);
 
-        // Validation for cash payment
-        if ($request->payment_method === 'cash') {
+        DB::beginTransaction();
+        try {
+            // Kalkulasi nilai-nilai yang dibutuhkan
             $subtotal = $order->subtotal;
             $serviceFee = $order->service_fee ?? 0;
-            $tax = $subtotal * 0.1;
+            $tax = $subtotal * 0.1; // Asumsi pajak 10%
             $discount = $request->discount ?? 0;
-            $total = $subtotal + $serviceFee + $tax - $discount;
+            $totalAmount = ($subtotal + $serviceFee + $tax) - $discount;
 
-            if ($request->cash_received < $total) {
-                return back()->withErrors(['cash_received' => 'Cash received is less than the total amount.'])
+            // Validasi pembayaran tunai
+            if ($request->payment_method === 'cash' && $request->cash_received < $totalAmount) {
+                return back()->withErrors(['cash_received' => 'Uang tunai yang diterima kurang dari total.'])
                              ->withInput();
             }
-        }
 
-         DB::beginTransaction();
-        try {
-            // ✅ THE FINAL FIX: Get the user ID directly from the request.
-            // This is the standard, type-safe way to get the authenticated user in a controller.
-            $kasirId = $request->user()->id;
+            // ✅ KODE YANG DIPERBAIKI SESUAI TABEL ANDA
+            $transaction = Transaction::create([
+                'order_id' => $order->id,
+                'kasir_id' => $request->user()->id,
+                'transaction_number' => 'TRX-' . time() . '-' . $order->id,
+                'customer_name' => $order->customer_name,
+                'customer_phone' => $order->customer_phone,
+                'subtotal' => $subtotal, // Mengisi kolom subtotal
+                'tax' => $tax, // Mengisi kolom tax
+                'service_fee' => $serviceFee, // Mengisi kolom service_fee
+                'discount' => $discount,
+                'total' => $totalAmount,
+                'cash_received' => $request->payment_method === 'cash' ? $request->cash_received : $totalAmount,
+                'change_amount' => $request->payment_method === 'cash' ? $request->cash_received - $totalAmount : 0, // Menggunakan 'change_amount'
+                'payment_method' => $request->payment_method,
+                'status' => 'completed',
+                'notes' => $request->notes,
+                'transaction_date' => now(),
+            ]);
 
-            // Create the transaction using the corrected function call
-            $transaction = Transaction::createFromOrder($order, $request->all(), $kasirId);
-
-            // Update order status
+            // Update status pesanan
             $order->update([
                 'payment_status' => 'paid',
                 'status' => 'completed'
@@ -149,12 +161,12 @@ class TransactionController extends Controller
             DB::commit();
 
             return redirect()->route('kasir.transactions.receipt', $transaction)
-                             ->with('success', 'Payment processed successfully!');
+                             ->with('success', 'Pembayaran berhasil diproses!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Transaction processing error: ' . $e->getMessage());
-            return back()->with('error', 'An error occurred while processing the payment: ' . $e->getMessage())
+            Log::error('Error saat memproses transaksi: ' . $e->getMessage() . ' di baris ' . $e->getLine());
+            return back()->with('error', 'Terjadi kesalahan. Silakan coba lagi. Detail: ' . $e->getMessage())
                          ->withInput();
         }
     }
