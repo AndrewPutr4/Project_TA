@@ -37,8 +37,8 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
             
-            <a class="btn-getstarted" href="{{ route('cart.index') }}">
-                <i class="bi bi-cart"></i> Keranjang
+            <a class="btn-getstarted" href="{{ route('customer.welcome') }}">
+                <i class="bi bi-cart"></i> kembali ke menu
             </a>
         </div>
     </header>
