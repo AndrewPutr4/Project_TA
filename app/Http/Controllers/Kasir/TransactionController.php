@@ -13,7 +13,7 @@ use Midtrans\Snap;
 
 class TransactionController extends Controller
 {
-     public function __construct()
+    public function __construct()
     {
         // Set konfigurasi Midtrans
         Config::$serverKey = config('services.midtrans.server_key');
@@ -54,7 +54,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $query = Transaction::with(['order', 'kasir'])
-                       ->orderBy('created_at', 'desc');
+                            ->orderBy('created_at', 'desc');
 
     if ($request->filled('date')) {
         $query->byDate($request->date);
@@ -91,7 +91,7 @@ class TransactionController extends Controller
         // Pastikan order sudah ready dan belum dibayar
         if ($order->status !== 'ready' || $order->payment_status === 'paid') {
             return redirect()->route('kasir.orders.index')
-                           ->with('error', 'Order tidak dapat diproses untuk pembayaran.');
+                            ->with('error', 'Order tidak dapat diproses untuk pembayaran.');
         }
 
         $order->load('orderItems');
@@ -129,14 +129,14 @@ class TransactionController extends Controller
             // Validasi pembayaran tunai
             if ($request->payment_method === 'cash' && $request->cash_received < $totalAmount) {
                 return back()->withErrors(['cash_received' => 'Uang tunai yang diterima kurang dari total.'])
-                             ->withInput();
+                                     ->withInput();
             }
 
             // ✅ KODE YANG DIPERBAIKI SESUAI TABEL ANDA
             $transaction = Transaction::create([
                 'order_id' => $order->id,
                 'kasir_id' => $request->user()->id,
-                'transaction_number' => 'TRX-' . time() . '-' . $order->id,
+                'transaction_number' => 'TRX-' . date('ymd') . '-' . strtoupper(substr($order->id, 0, 4)),
                 'customer_name' => $order->customer_name,
                 'customer_phone' => $order->customer_phone,
                 'subtotal' => $subtotal, // Mengisi kolom subtotal
@@ -198,11 +198,15 @@ class TransactionController extends Controller
         $stats = [
             'total_transactions' => Transaction::whereDate('transaction_date', $today)->count(),
             'total_revenue' => Transaction::whereDate('transaction_date', $today)
-                                        ->where('status', 'completed')
-                                        ->sum('total'),
+                                            ->where('status', 'completed')
+                                            ->sum('total'),
             'cash_transactions' => Transaction::whereDate('transaction_date', $today)
                                             ->where('payment_method', 'cash')
                                             ->count(),
+            // 👇 PERBAIKAN ADA DI SINI
+            'digital_transactions' => Transaction::whereDate('transaction_date', $today)
+                                             ->whereIn('payment_method', ['card', 'qris', 'transfer'])
+                                             ->count(),
         ];
 
         return response()->json($stats);
