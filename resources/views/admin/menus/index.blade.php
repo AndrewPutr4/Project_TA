@@ -425,39 +425,174 @@
         font-weight: 500;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1100px) {
         .menu-container {
-            padding: 20px 15px;
+            padding: 16px 4vw;
         }
-
         .page-header {
-            padding: 25px 20px;
+            padding: 24px 12px;
+            border-radius: 14px;
         }
-
+        .stats-row {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .stat-card {
+            padding: 18px 12px;
+            border-radius: 12px;
+        }
+        .menu-card {
+            border-radius: 12px;
+        }
+        .card-header {
+            padding: 18px 12px;
+        }
+        .table-container {
+            padding: 0;
+        }
+    }
+    @media (max-width: 800px) {
+        .menu-container {
+            padding: 8px 2vw;
+        }
+        .page-header {
+            padding: 14px 4px;
+            border-radius: 10px;
+        }
         .page-header h1 {
-            font-size: 2rem;
+            font-size: 1.3rem;
         }
-
+        .stats-row {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+        .stat-card {
+            padding: 12px 6px;
+            border-radius: 8px;
+        }
+        .menu-card {
+            border-radius: 8px;
+        }
+        .card-header {
+            padding: 10px 4px;
+        }
+        .menu-table th, .menu-table td {
+            padding: 8px 4px;
+            font-size: 0.95rem;
+        }
+        .menu-image, .no-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+        }
+    }
+    @media (max-width: 600px) {
+        .menu-container {
+            padding: 2px 0;
+            min-width: 0;
+            max-width: 100vw;
+        }
+        .page-header {
+            padding: 8px 2px;
+            border-radius: 0;
+            margin-bottom: 10px;
+        }
         .page-header .header-content {
             flex-direction: column;
             align-items: flex-start;
+            gap: 8px;
         }
-
-        .menu-table th,
-        .menu-table td {
-            padding: 15px 10px;
-            font-size: 0.85rem;
+        .page-header h1 {
+            font-size: 1.1rem;
+            gap: 6px;
         }
-
+        .stats-row {
+            grid-template-columns: 1fr;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .stat-card {
+            padding: 8px 2px;
+            border-radius: 6px;
+        }
+        .menu-card {
+            border-radius: 0;
+        }
+        .card-header {
+            padding: 6px 2px;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .menu-table th, .menu-table td {
+            padding: 5px 2px;
+            font-size: 0.88rem;
+        }
+        .menu-image, .no-image {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+        }
         .action-buttons {
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
-
-        .btn-edit,
-        .btn-delete {
+        .btn-edit, .btn-delete {
+            width: 100%;
+            justify-content: center;
             font-size: 0.8rem;
-            padding: 8px 12px;
+            padding: 6px 0;
+        }
+        .empty-state {
+            padding: 30px 5px;
+        }
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .table-container {
+            overflow-x: auto;
+            padding: 0;
+        }
+    }
+    /* Table responsive: stack cells on very small screens */
+    @media (max-width: 480px) {
+        .menu-table, .menu-table thead, .menu-table tbody, .menu-table th, .menu-table td, .menu-table tr {
+            display: block;
+        }
+        .menu-table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        .menu-table tr {
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 6px 0;
+        }
+        .menu-table td {
+            border: none;
+            position: relative;
+            padding-left: 48%;
+            min-height: 36px;
+            text-align: left;
+            font-size: 0.92rem;
+        }
+        .menu-table td:before {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            width: 45%;
+            white-space: nowrap;
+            font-weight: bold;
+            color: #495057;
+            content: attr(data-label) ": ";
+        }
+        .action-buttons {
+            flex-direction: row;
+            gap: 6px;
         }
     }
 
@@ -534,28 +669,28 @@
 
     <!-- Menu Table -->
     <div class="menu-card">
-        <div class="card-header">
-            <h3>
+        <div class="card-header" style="display:flex;align-items:center;gap:12px;">
+            <h3 style="margin:0;display:flex;align-items:center;gap:8px;">
                 <i class='bx bxs-grid'></i>
                 Daftar Menu
             </h3>
-            <div class="menu-count">{{ $menus->count() }} Menu</div>
+            <div class="menu-count" style="margin-left:auto;">{{ $menus->total() }} Menu</div>
         </div>
-        <div class="table-container">
-            <table class="menu-table">
+        <div class="table-container" style="overflow-x:auto;">
+            <table class="menu-table" style="min-width:700px;">
                 <thead>
                     <tr>
-                        <th style="width: 100px;">Gambar</th>
+                        <th style="width: 90px;">Gambar</th>
                         <th>Nama Menu</th>
-                        <th style="width: 150px;">Kategori</th>
-                        <th style="width: 150px;">Harga</th>
-                        <th style="width: 200px;">Aksi</th>
+                        <th style="width: 120px;">Kategori</th>
+                        <th style="width: 110px;">Harga</th>
+                        <th style="width: 160px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($menus as $menu)
                     <tr>
-                        <td>
+                        <td data-label="Gambar">
                             @if($menu->image && file_exists(public_path('storage/'.$menu->image)))
                                 <img src="{{ asset('storage/'.$menu->image) }}" alt="Gambar {{ $menu->name }}" class="menu-image">
                             @else
@@ -564,25 +699,25 @@
                                 </div>
                             @endif
                         </td>
-                        <td>
+                        <td data-label="Nama Menu">
                             <div class="menu-name">{{ $menu->name }}</div>
                             @if($menu->description)
                                 <div class="menu-description">{{ Str::limit($menu->description, 50) }}</div>
                             @endif
                         </td>
-                        <td>
+                        <td data-label="Kategori">
                             @if($menu->category)
                                 <span class="category-badge">{{ $menu->category->name }}</span>
                             @else
                                 <span style="color: #adb5bd; font-style: italic;">Tidak ada kategori</span>
                             @endif
                         </td>
-                        <td>
+                        <td data-label="Harga">
                             <div class="price-tag">
                                 Rp {{ number_format($menu->price, 0, ',', '.') }}
                             </div>
                         </td>
-                        <td>
+                        <td data-label="Aksi">
                             <div class="action-buttons">
                                 <a href="{{ route('admin.menus.edit', $menu) }}" class="btn-edit">
                                     <i class='bx bx-edit'></i>
@@ -616,10 +751,93 @@
                     @endforelse
                 </tbody>
             </table>
+            {{-- PAGINATION --}}
+            @if(method_exists($menus, 'links') && $menus->hasPages())
+            <div style="padding: 18px 0 8px 0; display: flex; justify-content: center;">
+                <div class="custom-pagination">
+                    {!! str_replace(
+                        ['<ul class="pagination">', '</ul>'],
+                        ['<ul class="pagination" style="margin:0;display:flex;gap:6px;justify-content:center;">', '</ul>'],
+                        $menus->onEachSide(1)->links()->render()
+                    ) !!}
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
-
+<style>
+.custom-pagination nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+.custom-pagination .pagination {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+}
+.custom-pagination .pagination li {
+    display: inline-block;
+    vertical-align: middle;
+}
+.custom-pagination .pagination li span,
+.custom-pagination .pagination li a {
+    min-width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #667eea;
+    background: #f5f7fa;
+    border: 1px solid #e9ecef;
+    margin: 0 2px;
+    transition: all 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+.custom-pagination .pagination li.active span,
+.custom-pagination .pagination li span[aria-current="page"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border: none;
+}
+.custom-pagination .pagination li a:hover {
+    background: #e0e7ff;
+    color: #4f46e5;
+    border-color: #c7d2fe;
+}
+.custom-pagination .pagination li.disabled span,
+.custom-pagination .pagination li.disabled a {
+    color: #b0b0b0;
+    background: #f8f9fa;
+    cursor: not-allowed;
+    border: 1px solid #e9ecef;
+}
+@media (max-width: 600px) {
+    .custom-pagination .pagination {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    .custom-pagination .pagination li span,
+    .custom-pagination .pagination li a {
+        min-width: 28px;
+        height: 28px;
+        font-size: 0.95rem;
+        border-radius: 6px;
+    }
+}
+</style>
 <script>
 // Add loading animation to buttons
 document.querySelectorAll('.btn-add, .btn-edit, .btn-delete').forEach(btn => {
@@ -700,6 +918,14 @@ window.addEventListener('scroll', function() {
         if (scrollBtn) {
             scrollBtn.remove();
         }
+    }
+});
+
+// Tambahan: scroll horizontal pada table jika overflow
+window.addEventListener('DOMContentLoaded', function() {
+    const tableContainer = document.querySelector('.table-container');
+    if(tableContainer) {
+        tableContainer.style.overflowX = 'auto';
     }
 });
 </script>

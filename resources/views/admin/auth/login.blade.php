@@ -196,6 +196,10 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                 </div>
                 
+                <div style="text-align:right; margin-bottom:16px;">
+                    <a href="{{ route('admin.password.request') }}" style="color:var(--primary-color);font-size:0.97rem;text-decoration:none;">Lupa Password?</a>
+                </div>
+                
                 <button type="submit" class="btn">
                     <i class="fas fa-sign-in-alt"></i> Login
                 </button>

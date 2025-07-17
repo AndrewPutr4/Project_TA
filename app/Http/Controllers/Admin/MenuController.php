@@ -12,7 +12,8 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::with('category')->get();
+        // Ganti get() menjadi paginate(5) agar paging aktif
+        $menus = Menu::with('category')->paginate(5);
         return view('admin.menus.index', compact('menus'));
     }
 
@@ -28,11 +29,11 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required',
+            'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_available' => 'nullable|boolean',
         ]);
-        $price = preg_replace('/[^\d]/', '', $request->price);
+        $price = $request->price; // Tidak perlu preg_replace jika input sudah angka
 
         $data = [
             'name' => $request->name,
@@ -62,12 +63,12 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required',
+            'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_available' => 'nullable|boolean',
         ]);
 
-        $price = preg_replace('/[^\d]/', '', $request->price);
+        $price = $request->price; // Tidak perlu preg_replace jika input sudah angka
 
         $data = [
             'name' => $request->name,

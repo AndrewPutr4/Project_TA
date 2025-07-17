@@ -45,12 +45,13 @@
             top: 0;
             left: 0;
             width: var(--sidebar-width);
-            height: 100%;
-            background: var(--primary);
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             z-index: 2000;
             transition: var(--transition);
             display: flex;
             flex-direction: column;
+            box-shadow: 2px 0 16px rgba(102,126,234,0.08);
         }
         #sidebar.hide {
             width: var(--sidebar-collapsed-width);
@@ -64,6 +65,8 @@
             font-size: 1.5rem;
             font-weight: 700;
             white-space: nowrap;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         #sidebar .brand i {
             font-size: 2rem;
@@ -74,43 +77,122 @@
             display: none;
         }
         #sidebar .side-menu {
-            padding: 20px 10px;
+            padding: 20px 10px 10px 10px;
             flex-grow: 1;
+        }
+        #sidebar .side-menu li {
+            margin-bottom: 6px;
         }
         #sidebar .side-menu li a,
         #sidebar .side-menu li button {
             display: flex;
             align-items: center;
             width: 100%;
-            padding: 14px;
+            padding: 13px 18px;
             border-radius: var(--border-radius);
-            font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.85);
             white-space: nowrap;
             background: none;
             border: none;
             cursor: pointer;
-            transition: var(--transition);
+            transition: background 0.18s, color 0.18s;
             text-align: left;
+            font-weight: 500;
+            gap: 12px;
+            position: relative;
         }
         #sidebar .side-menu li a i,
         #sidebar .side-menu li button i {
-            min-width: 40px;
-            font-size: 1.4rem;
+            min-width: 32px;
+            font-size: 1.3rem;
             display: flex;
             justify-content: center;
         }
         #sidebar .side-menu li.active a,
         #sidebar .side-menu li a:hover,
         #sidebar .side-menu li button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(102,126,234,0.08);
         }
-        /* #sidebar.hide .side-menu .text {
+        #sidebar .side-menu li.active a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 5px;
+            border-radius: 4px;
+            background: #fff;
+        }
+        #sidebar.hide .side-menu .text {
             display: none;
-        } */
+        }
         #sidebar .side-menu.bottom {
             margin-top: auto;
+            padding-bottom: 18px;
+        }
+        #sidebar .side-menu.bottom li {
+            margin-bottom: 0;
+        }
+        /* Scrollbar sidebar */
+        #sidebar .side-menu {
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #b3b3e6 #f8f9fa;
+        }
+        #sidebar .side-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+        #sidebar .side-menu::-webkit-scrollbar-thumb {
+            background: #b3b3e6;
+            border-radius: 8px;
+        }
+        #sidebar .side-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        @media (max-width: 1200px) {
+            #sidebar {
+                width: 200px;
+            }
+            #content {
+                width: calc(100% - 200px);
+                left: 200px;
+            }
+        }
+        @media (max-width: 900px) {
+            #sidebar {
+                width: 90vw;
+                min-width: 160px;
+                max-width: 320px;
+                left: 0;
+                top: 0;
+                height: 100vh;
+                z-index: 3000;
+                box-shadow: 2px 0 16px rgba(102,126,234,0.12);
+            }
+            #sidebar.hide {
+                left: -90vw;
+            }
+            #content {
+                left: 0;
+                width: 100vw;
+            }
+        }
+        @media (max-width: 600px) {
+            #content, main {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            body {
+                background: #f8f9fa !important;
+            }
         }
 
         /* --- CONTENT --- */
@@ -295,14 +377,36 @@
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">@yield('title', 'Page')</a>
             <div style="margin-left: auto;"></div>
-            <a href="#" class="profile">
+            <div class="profile" id="profileBtn" style="cursor:pointer;">
                 <img src="{{ asset('img/people.png') }}" alt="Profile">
-            </a>
+                <span style="font-weight:600; color:#444; margin-left:8px;">{{ auth()->user()->name ?? 'Admin' }}</span>
+            </div>
         </nav>
         <main>
             @yield('content')
         </main>
     </section>
+
+    <!-- Modal Profile (Nama & Ganti Password) -->
+    <div id="profileModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.18); align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:18px; max-width:340px; margin:auto; padding:2.2rem 1.5rem 1.5rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center; position:relative;">
+            <button onclick="closeProfileModal()" style="position:absolute;top:12px;right:18px;background:none;border:none;font-size:1.5rem;color:#888;cursor:pointer;">&times;</button>
+            <!-- Hapus gambar profile di sini -->
+            <h4 style="margin:0 0 0.5rem 0; font-size:1.2rem; font-weight:700; color:#333;">{{ auth()->user()->name ?? 'Admin' }}</h4>
+            <form method="POST" action="{{ route('admin.profile.password') }}" style="margin-top:1.5rem;">
+                @csrf
+                <div style="margin-bottom:1.2rem; text-align:left;">
+                    <label for="new_password" style="font-weight:600; color:#555; font-size:0.98rem;">Password Baru</label>
+                    <input type="password" id="new_password" name="new_password" required minlength="6" placeholder="Minimal 6 karakter" style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid #e9ecef;margin-top:6px;">
+                </div>
+                <div style="margin-bottom:1.5rem; text-align:left;">
+                    <label for="new_password_confirmation" style="font-weight:600; color:#555; font-size:0.98rem;">Konfirmasi Password</label>
+                    <input type="password" id="new_password_confirmation" name="new_password_confirmation" required minlength="6" placeholder="Ulangi password baru" style="width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid #e9ecef;margin-top:6px;">
+                </div>
+                <button type="submit" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;border-radius:10px;padding:0.7rem 1.5rem;font-weight:600;font-size:1rem;cursor:pointer;">Update Password</button>
+            </form>
+        </div>
+    </div>
 
     <script>
         const sidebar = document.getElementById('sidebar');
@@ -312,6 +416,33 @@
                 sidebar.classList.toggle('hide');
             });
         }
+        // Profile modal logic
+        const profileBtn = document.getElementById('profileBtn');
+        const profileModal = document.getElementById('profileModal');
+        if(profileBtn && profileModal) {
+            profileBtn.addEventListener('click', () => {
+                profileModal.style.display = 'flex';
+            });
+            window.closeProfileModal = function() {
+                profileModal.style.display = 'none';
+            };
+            profileModal.addEventListener('click', function(e) {
+                if(e.target === profileModal) closeProfileModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if(e.key === 'Escape') closeProfileModal();
+            });
+        }
+        // Optional: close sidebar on mobile when clicking outside
+        document.addEventListener('click', function(e) {
+            if(window.innerWidth <= 900) {
+                const sidebar = document.getElementById('sidebar');
+                const menuButton = document.querySelector('#content nav .bx-menu');
+                if (!sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+                    sidebar.classList.add('hide');
+                }
+            }
+        });
     </script>
     @stack('scripts')
 </body>

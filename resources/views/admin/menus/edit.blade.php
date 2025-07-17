@@ -589,6 +589,96 @@
         justify-content: center;
         box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
     }
+
+    /* Modal Konfirmasi Kembali */
+    #backConfirmModal {
+        display:none;
+        position:fixed;
+        z-index:9999;
+        left:0;
+        top:0;
+        width:100vw;
+        height:100vh;
+        background:rgba(0,0,0,0.35);
+        align-items:center;
+        justify-content:center;
+    }
+
+    #backConfirmModal .modal-content {
+        background:#fff;
+        border-radius:18px;
+        max-width:350px;
+        margin:auto;
+        padding:2rem 1.5rem;
+        box-shadow:0 8px 32px rgba(0,0,0,0.18);
+        text-align:center;
+        position:relative;
+    }
+
+    #backConfirmModal .modal-content .modal-icon {
+        font-size:2.5rem;
+        color:#ff9800;
+        margin-bottom:0.7rem;
+    }
+
+    #backConfirmModal .modal-content h5 {
+        font-weight:700;
+        color:#333;
+    }
+
+    #backConfirmModal .modal-content p {
+        color:#666;
+        margin-bottom:1.5rem;
+    }
+
+    #backConfirmModal .modal-content .btn {
+        min-width:90px;
+    }
+
+    /* Modal Konfirmasi Update */
+    #updateConfirmModal {
+        display:none;
+        position:fixed;
+        z-index:9999;
+        left:0;
+        top:0;
+        width:100vw;
+        height:100vh;
+        background:rgba(0,0,0,0.35);
+        align-items:center;
+        justify-content:center;
+    }
+
+    #updateConfirmModal .modal-content {
+        background:#fff;
+        border-radius:18px;
+        max-width:350px;
+        margin:auto;
+        padding:2rem 1.5rem;
+        box-shadow:0 8px 32px rgba(0,0,0,0.18);
+        text-align:center;
+        position:relative;
+    }
+
+    #updateConfirmModal .modal-content .modal-icon {
+        font-size:2.5rem;
+        color:#17a2b8;
+        margin-bottom:0.7rem;
+    }
+
+    #updateConfirmModal .modal-content h5 {
+        font-weight:700;
+        color:#333;
+    }
+
+    #updateConfirmModal .modal-content p {
+        color:#666;
+        margin-bottom:1.5rem;
+    }
+
+    #updateConfirmModal .modal-content .btn {
+        min-width:90px;
+    }
 </style>
 
 <main>
@@ -619,12 +709,26 @@
                     <p>Perbarui informasi menu yang sudah ada</p>
                 </div>
 
+                {{-- Notifikasi sukses/error --}}
+                @if(session('success'))
+                    <div class="alert alert-success" id="notif-success">
+                        <strong>Berhasil!</strong> {{ session('success') }}
+                        <button type="button" class="btn btn-sm btn-outline-primary ms-3" onclick="window.location.reload()">Edit Lagi</button>
+                    </div>
+                @endif
+                @if($errors->any())
+                    <div class="alert alert-danger" id="notif-error">
+                        <strong>Error:</strong> {{ $errors->first() }}
+                        <button type="button" class="btn btn-sm btn-outline-primary ms-3" onclick="window.location.reload()">Kembali Mengedit</button>
+                    </div>
+                @endif
+
                 <div class="menu-info-card">
                     <h4>Menu yang sedang diedit:</h4>
                     <p><strong>{{ $menu->name }}</strong> - Terakhir diupdate: {{ $menu->updated_at->format('d M Y, H:i') }}</p>
                 </div>
 
-                <form method="POST" action="{{ route('admin.menus.update', $menu) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('admin.menus.update', $menu) }}" enctype="multipart/form-data" id="editMenuForm">
                     @csrf
                     @method('PUT')
                     
@@ -669,15 +773,15 @@
                                    id="price"
                                    name="price"
                                    class="form-control"
-                                   value="{{ old('price', number_format($menu->price, 2, '.', '')) }}"
+                                   value="{{ old('price', $menu->price) }}"
                                    required
-                                   placeholder="15000.00"
+                                   placeholder="15000"
                                    min="0"
-                                   step="0.01"
+                                   step="1"
                                    autocomplete="off">
                         </div>
                         <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">
-                            💡 Masukkan harga dalam rupiah, gunakan titik untuk desimal (contoh: 25000.00 untuk Rp 25.000)
+                            💡 Masukkan harga dalam rupiah tanpa titik/koma (contoh: 25000 untuk Rp 25.000)
                         </small>
                     </div>
 
@@ -716,9 +820,10 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-download btn-update">
+                        <button type="submit" class="btn-download btn-update" id="btnUpdateMenu">
                             <i class='bx bx-save'></i>
-                            Update Menu
+                            <span id="btnUpdateText">Update Menu</span>
+                            <span id="btnUpdateLoading" style="display:none;"><i class="bx bx-loader-alt bx-spin"></i> Mengupdate...</span>
                         </button>
                         <a href="{{ route('admin.menus.index') }}" class="btn-download btn-back">
                             <i class='bx bx-arrow-back'></i>
@@ -735,6 +840,32 @@
 <div id="imageModal" class="image-modal" onclick="closeImageModal()">
     <img class="image-modal-content" id="modalImage">
     <button class="image-modal-close" onclick="closeImageModal()">&times;</button>
+</div>
+
+<!-- Modal Konfirmasi Kembali -->
+<div id="backConfirmModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:18px; max-width:350px; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center; position:relative;">
+        <div style="font-size:2.5rem; color:#ff9800; margin-bottom:0.7rem;">&#9888;</div>
+        <h5 style="font-weight:700; color:#333;">Perubahan Belum Disimpan</h5>
+        <p style="color:#666; margin-bottom:1.5rem;">Anda memiliki perubahan pada form ini.<br>Yakin ingin kembali tanpa menyimpan?</p>
+        <div style="display:flex; gap:1rem; justify-content:center;">
+            <button id="backConfirmYes" class="btn btn-danger" style="min-width:90px;">Ya, Kembali</button>
+            <button id="backConfirmNo" class="btn btn-primary" style="min-width:90px;">Batal</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Konfirmasi Update -->
+<div id="updateConfirmModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:18px; max-width:350px; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center; position:relative;">
+        <div style="font-size:2.5rem; color:#17a2b8; margin-bottom:0.7rem;">&#9888;</div>
+        <h5 style="font-weight:700; color:#333;">Konfirmasi Simpan Perubahan</h5>
+        <p style="color:#666; margin-bottom:1.5rem;">Anda yakin ingin menyimpan perubahan pada menu ini?</p>
+        <div style="display:flex; gap:1rem; justify-content:center;">
+            <button id="updateConfirmYes" class="btn btn-success" style="min-width:90px;">Ya, Simpan</button>
+            <button id="updateConfirmNo" class="btn btn-primary" style="min-width:90px;">Batal</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -754,6 +885,21 @@ function closeImageModal() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeImageModal();
+    }
+});
+
+// Tombol loading UX saat submit
+document.getElementById('editMenuForm').addEventListener('submit', function(e) {
+    const btn = document.getElementById('btnUpdateMenu');
+    document.getElementById('btnUpdateText').style.display = 'none';
+    document.getElementById('btnUpdateLoading').style.display = '';
+    btn.disabled = true;
+});
+
+// Jika ada notifikasi sukses/error, scroll ke atas otomatis
+window.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('notif-success') || document.getElementById('notif-error')) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 });
 
@@ -786,25 +932,37 @@ document.querySelectorAll('.form-control').forEach(input => {
     });
 });
 
-// Price formatting
+// Price formatting (hanya preview, tidak mengubah value input)
 document.getElementById('price').addEventListener('input', function(e) {
     let value = e.target.value.replace(/[^\d]/g, '');
-    if (value) {
-        // Keep original value for form submission
-        e.target.value = value;
-        
-        // Show formatted preview
+    // Jangan ubah value input, hanya update preview
+    if (!document.querySelector('.price-preview')) {
+        const preview = document.createElement('small');
+        preview.className = 'price-preview';
+        preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
+        e.target.parentElement.appendChild(preview);
+    }
+    let formatted = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '0';
+    document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
+});
+
+// Inisialisasi preview saat load jika ada value
+window.addEventListener('load', () => {
+    document.getElementById('name').focus();
+    
+    // Initialize price preview if there's existing value
+    const priceInput = document.getElementById('price');
+    if (priceInput.value) {
+        // Trigger preview tanpa mengubah value
+        let value = priceInput.value.replace(/[^\d]/g, '');
+        let formatted = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '0';
         if (!document.querySelector('.price-preview')) {
             const preview = document.createElement('small');
             preview.className = 'price-preview';
             preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
-            e.target.parentElement.appendChild(preview);
+            priceInput.parentElement.appendChild(preview);
         }
-        let formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
-    } else {
-        const preview = document.querySelector('.price-preview');
-        if (preview) preview.remove();
     }
 });
 
@@ -876,7 +1034,16 @@ window.addEventListener('load', () => {
     // Initialize price preview if there's existing value
     const priceInput = document.getElementById('price');
     if (priceInput.value) {
-        priceInput.dispatchEvent(new Event('input'));
+        // Trigger preview tanpa mengubah value
+        let value = priceInput.value.replace(/[^\d]/g, '');
+        let formatted = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '0';
+        if (!document.querySelector('.price-preview')) {
+            const preview = document.createElement('small');
+            preview.className = 'price-preview';
+            preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
+            priceInput.parentElement.appendChild(preview);
+        }
+        document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
     }
 });
 
@@ -898,11 +1065,10 @@ document.getElementById('category').addEventListener('change', function() {
     }
 });
 
-// Add change detection
-let originalFormData = new FormData(document.querySelector('form'));
 let hasChanges = false;
 
-document.querySelectorAll('.form-control').forEach(input => {
+// Deteksi perubahan pada form
+document.querySelectorAll('.form-control, input[type="checkbox"]').forEach(input => {
     input.addEventListener('input', function() {
         hasChanges = true;
         // Add visual indicator for changes
@@ -929,17 +1095,61 @@ document.querySelectorAll('.form-control').forEach(input => {
     });
 });
 
-// Warn before leaving if there are unsaved changes
+// Tombol kembali dengan validasi perubahan
+document.querySelector('.btn-back').addEventListener('click', function(e) {
+    if (hasChanges) {
+        e.preventDefault();
+        document.getElementById('backConfirmModal').style.display = 'flex';
+    }
+    // Jika tidak ada perubahan, langsung kembali
+});
+
+// Modal konfirmasi kembali
+document.getElementById('backConfirmYes').onclick = function() {
+    hasChanges = false;
+    window.location.href = "{{ route('admin.menus.index') }}";
+};
+document.getElementById('backConfirmNo').onclick = function() {
+    document.getElementById('backConfirmModal').style.display = 'none';
+};
+
+// Modal konfirmasi update
+const editMenuForm = document.getElementById('editMenuForm');
+const btnUpdateMenu = document.getElementById('btnUpdateMenu');
+let allowSubmit = false;
+
+btnUpdateMenu.addEventListener('click', function(e) {
+    if (hasChanges && !allowSubmit) {
+        e.preventDefault();
+        document.getElementById('updateConfirmModal').style.display = 'flex';
+    }
+    // Jika tidak ada perubahan, submit langsung
+});
+
+// Modal update: Ya, Simpan
+document.getElementById('updateConfirmYes').onclick = function() {
+    allowSubmit = true;
+    document.getElementById('updateConfirmModal').style.display = 'none';
+    // Hapus event beforeunload agar browser tidak menampilkan native dialog
+    window.onbeforeunload = null;
+    hasChanges = false;
+    editMenuForm.submit();
+};
+// Modal update: Batal
+document.getElementById('updateConfirmNo').onclick = function() {
+    document.getElementById('updateConfirmModal').style.display = 'none';
+};
+
+// Hanya tampilkan warning native browser jika user benar-benar meninggalkan halaman (bukan submit/kembali dengan konfirmasi)
 window.addEventListener('beforeunload', function(e) {
     if (hasChanges) {
         e.preventDefault();
         e.returnValue = '';
     }
 });
-
-// Remove warning after successful form submission
-document.querySelector('form').addEventListener('submit', function() {
+editMenuForm.addEventListener('submit', function() {
     hasChanges = false;
+    window.onbeforeunload = null;
 });
 </script>
 @endsection

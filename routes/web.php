@@ -132,3 +132,22 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::post('orders/{order}/midtrans-snap-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])->name('transactions.createMidtransSnapToken');
     });
 });
+
+// Tambahkan di dalam group admin (atau sesuaikan middleware/namespace)
+Route::post('/admin/profile/password', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('admin.profile.password');
+
+// Tambahkan route untuk forgot password admin (form permintaan reset password)
+Route::get('/admin/password/forgot', function () {
+    return view('admin.auth.forgot-password');
+})->name('admin.password.request');
+
+Route::post('/admin/password/email', [\App\Http\Controllers\Admin\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('admin.password.email');
+
+// Form input kode reset dan password baru
+Route::get('/admin/password/reset', function () {
+    return view('admin.auth.reset-password');
+})->name('admin.password.reset.form');
+
+Route::post('/admin/password/reset', [\App\Http\Controllers\Admin\Auth\ForgotPasswordController::class, 'resetPassword'])
+    ->name('admin.password.reset');
