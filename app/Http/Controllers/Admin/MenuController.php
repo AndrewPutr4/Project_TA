@@ -3,18 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ganti get() menjadi paginate(5) agar paging aktif
-        $menus = Menu::with('category')->paginate(5);
-        return view('admin.menus.index', compact('menus'));
+        // Get all menus for statistics (not paginated)
+        $allMenus = Menu::with('category')->get();
+        
+        // Get paginated menus for display
+        $menus = Menu::with('category')
+            ->when($request->search, function($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                           ->orWhere('description', 'like', "%{$search}%");
+            })
+            ->when($request->category, function($query, $category) {
+                return $query->where('category_id', $category);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(5); // 10 items per page
+        
+        // Get categories for filter
+        $categories = Category::all();
+        
+        return view('admin.menus.index', compact('menus', 'allMenus', 'categories'));
     }
 
     public function create()
@@ -25,30 +42,31 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'nullable|boolean',
+            'is_available' => 'boolean'
         ]);
-        $price = $request->price; // Tidak perlu preg_replace jika input sudah angka
-
-        $data = [
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'price' => $price,
-            'is_available' => $request->has('is_available') ? (bool)$request->is_available : true,
-        ];
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('menus', 'public');
+            $validated['image'] = $request->file('image')->store('menus', 'public');
         }
 
-        Menu::create($data);
-        return redirect()->route('admin.menus.index');
+        $validated['slug'] = Str::slug($validated['name']);
+        $validated['is_available'] = $request->has('is_available');
+
+        Menu::create($validated);
+
+        return redirect()->route('admin.menus.index')
+                        ->with('success', 'Menu berhasil ditambahkan!');
+    }
+
+    public function show(Menu $menu)
+    {
+        return view('admin.menus.show', compact('menu'));
     }
 
     public function edit(Menu $menu)
@@ -59,39 +77,42 @@ class MenuController extends Controller
 
     public function update(Request $request, Menu $menu)
     {
-        $request->validate([
-            'name' => 'required',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_available' => 'nullable|boolean',
+            'is_available' => 'boolean'
         ]);
 
-        $price = $request->price; // Tidak perlu preg_replace jika input sudah angka
-
-        $data = [
-            'name' => $request->name,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-            'price' => $price,
-            'is_available' => $request->has('is_available') ? (bool)$request->is_available : true,
-        ];
-
         if ($request->hasFile('image')) {
+            // Delete old image
             if ($menu->image) {
                 Storage::disk('public')->delete($menu->image);
             }
-            $data['image'] = $request->file('image')->store('menus', 'public');
+            $validated['image'] = $request->file('image')->store('menus', 'public');
         }
 
-        $menu->update($data);
-        return redirect()->route('admin.menus.index');
+        $validated['slug'] = Str::slug($validated['name']);
+        $validated['is_available'] = $request->has('is_available');
+
+        $menu->update($validated);
+
+        return redirect()->route('admin.menus.index')
+                        ->with('success', 'Menu berhasil diperbarui!');
     }
 
     public function destroy(Menu $menu)
     {
+        // Delete image if exists
+        if ($menu->image) {
+            Storage::disk('public')->delete($menu->image);
+        }
+
         $menu->delete();
-        return redirect()->route('admin.menus.index');
+
+        return redirect()->route('admin.menus.index')
+                        ->with('success', 'Menu berhasil dihapus!');
     }
 }

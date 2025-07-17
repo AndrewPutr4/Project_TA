@@ -137,17 +137,24 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
 Route::post('/admin/profile/password', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('admin.profile.password');
 
 // Tambahkan route untuk forgot password admin (form permintaan reset password)
+// Forgot password form
 Route::get('/admin/password/forgot', function () {
     return view('admin.auth.forgot-password');
 })->name('admin.password.request');
 
+// Proses cek email
 Route::post('/admin/password/email', [\App\Http\Controllers\Admin\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])
     ->name('admin.password.email');
 
-// Form input kode reset dan password baru
-Route::get('/admin/password/reset', function () {
-    return view('admin.auth.reset-password');
-})->name('admin.password.reset.form');
+// Form input password baru (email via query string)
+Route::get('/admin/password/reset', [\App\Http\Controllers\Admin\Auth\ForgotPasswordController::class, 'showResetForm'])
+    ->name('admin.password.reset.form');
 
+// Proses ganti password
 Route::post('/admin/password/reset', [\App\Http\Controllers\Admin\Auth\ForgotPasswordController::class, 'resetPassword'])
     ->name('admin.password.reset');
+
+// Alias agar tidak error jika ada view/redirect ke route('password.reset')
+Route::get('/password/reset', function () {
+    return redirect()->route('admin.password.reset.form');
+})->name('password.reset');

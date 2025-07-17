@@ -131,6 +131,185 @@
         font-size: 1.2rem;
     }
 
+    /* Search and Filter Section */
+    .filter-section {
+        background: white;
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 15px 20px 15px 50px;
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1.2rem;
+    }
+
+    .filter-select {
+        min-width: 200px;
+    }
+
+    .filter-select select {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        font-size: 1rem;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .filter-select select:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-filter {
+        padding: 15px 25px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-filter:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-clear {
+        padding: 15px 25px;
+        background: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-clear:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        color: white;
+        text-decoration: none;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .stat-card:nth-child(1) {
+        border-left-color: #667eea;
+    }
+
+    .stat-card:nth-child(2) {
+        border-left-color: #56ab2f;
+    }
+
+    .stat-card:nth-child(3) {
+        border-left-color: #f093fb;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .stat-card:nth-child(1) .stat-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .stat-card:nth-child(2) .stat-icon {
+        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+    }
+
+    .stat-card:nth-child(3) .stat-icon {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .stat-info h3 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0 0 5px 0;
+        color: #495057;
+    }
+
+    .stat-info p {
+        margin: 0;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
     .menu-card {
         background: white;
         border-radius: 20px;
@@ -150,6 +329,9 @@
         padding: 25px 30px;
         border-bottom: 1px solid #e9ecef;
         position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .card-header h3 {
@@ -169,7 +351,16 @@
         border-radius: 20px;
         font-size: 0.85rem;
         font-weight: 600;
-        margin-left: auto;
+    }
+
+    .pagination-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-left: 10px;
     }
 
     .table-container {
@@ -353,246 +544,158 @@
         margin-bottom: 30px;
     }
 
-    .stats-row {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .stat-card {
+    /* Custom Pagination Styles */
+    .pagination-container {
         background: white;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        padding: 25px 30px;
+        border-top: 1px solid #e9ecef;
         display: flex;
+        justify-content: between;
         align-items: center;
-        gap: 15px;
-        transition: all 0.3s ease;
-        border-left: 4px solid transparent;
+        flex-wrap: wrap;
+        gap: 20px;
     }
 
-    .stat-card:nth-child(1) {
-        border-left-color: #667eea;
-    }
-
-    .stat-card:nth-child(2) {
-        border-left-color: #56ab2f;
-    }
-
-    .stat-card:nth-child(3) {
-        border-left-color: #f093fb;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    }
-
-    .stat-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: white;
-    }
-
-    .stat-card:nth-child(1) .stat-icon {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .stat-card:nth-child(2) .stat-icon {
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-    }
-
-    .stat-card:nth-child(3) .stat-icon {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-
-    .stat-info h3 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin: 0 0 5px 0;
-        color: #495057;
-    }
-
-    .stat-info p {
-        margin: 0;
+    .pagination-info-text {
         color: #6c757d;
+        font-size: 0.9rem;
         font-weight: 500;
     }
 
-    @media (max-width: 1100px) {
-        .menu-container {
-            padding: 16px 4vw;
-        }
-        .page-header {
-            padding: 24px 12px;
-            border-radius: 14px;
-        }
-        .stats-row {
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        .stat-card {
-            padding: 18px 12px;
-            border-radius: 12px;
-        }
-        .menu-card {
-            border-radius: 12px;
-        }
-        .card-header {
-            padding: 18px 12px;
-        }
-        .table-container {
-            padding: 0;
-        }
+    .pagination {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 5px;
     }
-    @media (max-width: 800px) {
+
+    .pagination .page-item {
+        margin: 0;
+    }
+
+    .pagination .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        color: #495057;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .pagination .page-link:hover {
+        border-color: #667eea;
+        color: #667eea;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    .pagination .page-item.active .page-link {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: #667eea;
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #adb5bd;
+        border-color: #e9ecef;
+        cursor: not-allowed;
+        background: #f8f9fa;
+    }
+
+    .pagination .page-item.disabled .page-link:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* Per Page Selector */
+    .per-page-selector {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .per-page-selector select {
+        padding: 8px 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        background: white;
+        color: #495057;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .per-page-selector select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    @media (max-width: 768px) {
         .menu-container {
-            padding: 8px 2vw;
+            padding: 20px 15px;
         }
+
         .page-header {
-            padding: 14px 4px;
-            border-radius: 10px;
+            padding: 25px 20px;
         }
+
         .page-header h1 {
-            font-size: 1.3rem;
+            font-size: 2rem;
         }
-        .stats-row {
-            grid-template-columns: 1fr;
-            gap: 8px;
-        }
-        .stat-card {
-            padding: 12px 6px;
-            border-radius: 8px;
-        }
-        .menu-card {
-            border-radius: 8px;
-        }
-        .card-header {
-            padding: 10px 4px;
-        }
-        .menu-table th, .menu-table td {
-            padding: 8px 4px;
-            font-size: 0.95rem;
-        }
-        .menu-image, .no-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-        }
-    }
-    @media (max-width: 600px) {
-        .menu-container {
-            padding: 2px 0;
-            min-width: 0;
-            max-width: 100vw;
-        }
-        .page-header {
-            padding: 8px 2px;
-            border-radius: 0;
-            margin-bottom: 10px;
-        }
+
         .page-header .header-content {
             flex-direction: column;
             align-items: flex-start;
-            gap: 8px;
         }
-        .page-header h1 {
-            font-size: 1.1rem;
-            gap: 6px;
-        }
-        .stats-row {
-            grid-template-columns: 1fr;
-            gap: 4px;
-            margin-bottom: 10px;
-        }
-        .stat-card {
-            padding: 8px 2px;
-            border-radius: 6px;
-        }
-        .menu-card {
-            border-radius: 0;
-        }
-        .card-header {
-            padding: 6px 2px;
+
+        .filter-section {
             flex-direction: column;
-            gap: 4px;
+            align-items: stretch;
         }
-        .menu-table th, .menu-table td {
-            padding: 5px 2px;
-            font-size: 0.88rem;
+
+        .search-box {
+            min-width: auto;
         }
-        .menu-image, .no-image {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-        }
-        .action-buttons {
-            flex-direction: column;
-            gap: 4px;
-        }
-        .btn-edit, .btn-delete {
-            width: 100%;
-            justify-content: center;
-            font-size: 0.8rem;
-            padding: 6px 0;
-        }
-        .empty-state {
-            padding: 30px 5px;
-        }
-        .empty-state-icon {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .table-container {
-            overflow-x: auto;
-            padding: 0;
-        }
-    }
-    /* Table responsive: stack cells on very small screens */
-    @media (max-width: 480px) {
-        .menu-table, .menu-table thead, .menu-table tbody, .menu-table th, .menu-table td, .menu-table tr {
-            display: block;
-        }
-        .menu-table thead tr {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
-        .menu-table tr {
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            padding: 6px 0;
-        }
+
+        .menu-table th,
         .menu-table td {
-            border: none;
-            position: relative;
-            padding-left: 48%;
-            min-height: 36px;
-            text-align: left;
-            font-size: 0.92rem;
+            padding: 15px 10px;
+            font-size: 0.85rem;
         }
-        .menu-table td:before {
-            position: absolute;
-            left: 8px;
-            top: 8px;
-            width: 45%;
-            white-space: nowrap;
-            font-weight: bold;
-            color: #495057;
-            content: attr(data-label) ": ";
-        }
+
         .action-buttons {
-            flex-direction: row;
-            gap: 6px;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .pagination-container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
         }
     }
 
@@ -636,6 +739,34 @@
         </div>
     </div>
 
+    <!-- Search and Filter Section -->
+    <div class="filter-section">
+        <form method="GET" action="{{ route('admin.menus.index') }}" class="search-box">
+            <i class='bx bx-search'></i>
+            <input type="text" name="search" placeholder="Cari menu..." value="{{ request('search') }}">
+            <input type="hidden" name="category" value="{{ request('category') }}">
+        </form>
+        
+        <form method="GET" action="{{ route('admin.menus.index') }}" class="filter-select">
+            <select name="category" onchange="this.form.submit()">
+                <option value="">Semua Kategori</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+            <input type="hidden" name="search" value="{{ request('search') }}">
+        </form>
+
+        @if(request('search') || request('category'))
+            <a href="{{ route('admin.menus.index') }}" class="btn-clear">
+                <i class='bx bx-x'></i>
+                Clear Filter
+            </a>
+        @endif
+    </div>
+
     <!-- Statistics Row -->
     <div class="stats-row">
         <div class="stat-card">
@@ -643,7 +774,7 @@
                 <i class='bx bxs-food-menu'></i>
             </div>
             <div class="stat-info">
-                <h3>{{ $menus->count() }}</h3>
+                <h3>{{ $allMenus->count() }}</h3>
                 <p>Total Menu</p>
             </div>
         </div>
@@ -652,7 +783,7 @@
                 <i class='bx bxs-category'></i>
             </div>
             <div class="stat-info">
-                <h3>{{ $menus->pluck('category_id')->unique()->count() }}</h3>
+                <h3>{{ $allMenus->pluck('category_id')->unique()->count() }}</h3>
                 <p>Kategori</p>
             </div>
         </div>
@@ -661,7 +792,7 @@
                 <i class='bx bxs-dollar-circle'></i>
             </div>
             <div class="stat-info">
-                <h3>Rp {{ number_format($menus->avg('price') ?? 0, 0, ',', '.') }}</h3>
+                <h3>Rp {{ number_format($allMenus->avg('price') ?? 0, 0, ',', '.') }}</h3>
                 <p>Harga Rata-rata</p>
             </div>
         </div>
@@ -669,28 +800,36 @@
 
     <!-- Menu Table -->
     <div class="menu-card">
-        <div class="card-header" style="display:flex;align-items:center;gap:12px;">
-            <h3 style="margin:0;display:flex;align-items:center;gap:8px;">
+        <div class="card-header">
+            <h3>
                 <i class='bx bxs-grid'></i>
                 Daftar Menu
             </h3>
-            <div class="menu-count" style="margin-left:auto;">{{ $menus->total() }} Menu</div>
+            <div style="display: flex; align-items: center;">
+                <div class="menu-count">{{ $menus->total() }} Menu</div>
+                @if($menus->hasPages())
+                    <div class="pagination-info">
+                        Halaman {{ $menus->currentPage() }} dari {{ $menus->lastPage() }}
+                    </div>
+                @endif
+            </div>
         </div>
-        <div class="table-container" style="overflow-x:auto;">
-            <table class="menu-table" style="min-width:700px;">
+        
+        <div class="table-container">
+            <table class="menu-table">
                 <thead>
                     <tr>
-                        <th style="width: 90px;">Gambar</th>
+                        <th style="width: 100px;">Gambar</th>
                         <th>Nama Menu</th>
-                        <th style="width: 120px;">Kategori</th>
-                        <th style="width: 110px;">Harga</th>
-                        <th style="width: 160px;">Aksi</th>
+                        <th style="width: 150px;">Kategori</th>
+                        <th style="width: 150px;">Harga</th>
+                        <th style="width: 200px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($menus as $menu)
                     <tr>
-                        <td data-label="Gambar">
+                        <td>
                             @if($menu->image && file_exists(public_path('storage/'.$menu->image)))
                                 <img src="{{ asset('storage/'.$menu->image) }}" alt="Gambar {{ $menu->name }}" class="menu-image">
                             @else
@@ -699,25 +838,25 @@
                                 </div>
                             @endif
                         </td>
-                        <td data-label="Nama Menu">
+                        <td>
                             <div class="menu-name">{{ $menu->name }}</div>
                             @if($menu->description)
                                 <div class="menu-description">{{ Str::limit($menu->description, 50) }}</div>
                             @endif
                         </td>
-                        <td data-label="Kategori">
+                        <td>
                             @if($menu->category)
                                 <span class="category-badge">{{ $menu->category->name }}</span>
                             @else
                                 <span style="color: #adb5bd; font-style: italic;">Tidak ada kategori</span>
                             @endif
                         </td>
-                        <td data-label="Harga">
+                        <td>
                             <div class="price-tag">
                                 Rp {{ number_format($menu->price, 0, ',', '.') }}
                             </div>
                         </td>
-                        <td data-label="Aksi">
+                        <td>
                             <div class="action-buttons">
                                 <a href="{{ route('admin.menus.edit', $menu) }}" class="btn-edit">
                                     <i class='bx bx-edit'></i>
@@ -739,105 +878,101 @@
                         <td colspan="5">
                             <div class="empty-state">
                                 <div class="empty-state-icon">🍽️</div>
-                                <h4>Belum ada menu</h4>
-                                <p>Mulai tambahkan menu makanan dan minuman pertama Anda</p>
-                                <a href="{{ route('admin.menus.create') }}" class="btn-add">
-                                    <i class='bx bx-plus'></i>
-                                    Tambah Menu Pertama
-                                </a>
+                                @if(request('search') || request('category'))
+                                    <h4>Tidak ada menu yang ditemukan</h4>
+                                    <p>Coba ubah kata kunci pencarian atau filter kategori</p>
+                                    <a href="{{ route('admin.menus.index') }}" class="btn-clear">
+                                        <i class='bx bx-refresh'></i>
+                                        Reset Filter
+                                    </a>
+                                @else
+                                    <h4>Belum ada menu</h4>
+                                    <p>Mulai tambahkan menu makanan dan minuman pertama Anda</p>
+                                    <a href="{{ route('admin.menus.create') }}" class="btn-add">
+                                        <i class='bx bx-plus'></i>
+                                        Tambah Menu Pertama
+                                    </a>
+                                @endif
                             </div>
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
-            {{-- PAGINATION --}}
-            @if(method_exists($menus, 'links') && $menus->hasPages())
-            <div style="padding: 18px 0 8px 0; display: flex; justify-content: center;">
-                <div class="custom-pagination">
-                    {!! str_replace(
-                        ['<ul class="pagination">', '</ul>'],
-                        ['<ul class="pagination" style="margin:0;display:flex;gap:6px;justify-content:center;">', '</ul>'],
-                        $menus->onEachSide(1)->links()->render()
-                    ) !!}
-                </div>
-            </div>
-            @endif
         </div>
+
+        <!-- Pagination Section -->
+        @if($menus->hasPages())
+        <div class="pagination-container">
+            <div class="pagination-info-text">
+                Menampilkan {{ $menus->firstItem() }} sampai {{ $menus->lastItem() }} dari {{ $menus->total() }} menu
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <!-- Per Page Selector -->
+                <div class="per-page-selector">
+                    <span>Tampilkan:</span>
+                    <form method="GET" action="{{ route('admin.menus.index') }}" style="display: inline;">
+                        <select name="per_page" onchange="this.form.submit()">
+                            <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                            <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                            <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                            <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                        </select>
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                    </form>
+                </div>
+
+                <!-- Pagination Links -->
+                <nav>
+                    <ul class="pagination">
+                        {{-- Previous Page Link --}}
+                        @if ($menus->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class='bx bx-chevron-left'></i></span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $menus->appends(request()->query())->previousPageUrl() }}">
+                                    <i class='bx bx-chevron-left'></i>
+                                </a>
+                            </li>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($menus->appends(request()->query())->getUrlRange(1, $menus->lastPage()) as $page => $url)
+                            @if ($page == $menus->currentPage())
+                                <li class="page-item active">
+                                    <span class="page-link">{{ $page }}</span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($menus->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $menus->appends(request()->query())->nextPageUrl() }}">
+                                    <i class='bx bx-chevron-right'></i>
+                                </a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class='bx bx-chevron-right'></i></span>
+                            </li>
+                        @endif
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
-<style>
-.custom-pagination nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-}
-.custom-pagination .pagination {
-    display: flex !important;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    justify-content: center;
-    align-items: center;
-}
-.custom-pagination .pagination li {
-    display: inline-block;
-    vertical-align: middle;
-}
-.custom-pagination .pagination li span,
-.custom-pagination .pagination li a {
-    min-width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #667eea;
-    background: #f5f7fa;
-    border: 1px solid #e9ecef;
-    margin: 0 2px;
-    transition: all 0.2s;
-    text-decoration: none;
-    box-sizing: border-box;
-}
-.custom-pagination .pagination li.active span,
-.custom-pagination .pagination li span[aria-current="page"] {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    border: none;
-}
-.custom-pagination .pagination li a:hover {
-    background: #e0e7ff;
-    color: #4f46e5;
-    border-color: #c7d2fe;
-}
-.custom-pagination .pagination li.disabled span,
-.custom-pagination .pagination li.disabled a {
-    color: #b0b0b0;
-    background: #f8f9fa;
-    cursor: not-allowed;
-    border: 1px solid #e9ecef;
-}
-@media (max-width: 600px) {
-    .custom-pagination .pagination {
-        flex-wrap: wrap;
-        gap: 4px;
-    }
-    .custom-pagination .pagination li span,
-    .custom-pagination .pagination li a {
-        min-width: 28px;
-        height: 28px;
-        font-size: 0.95rem;
-        border-radius: 6px;
-    }
-}
-</style>
+
 <script>
 // Add loading animation to buttons
 document.querySelectorAll('.btn-add, .btn-edit, .btn-delete').forEach(btn => {
@@ -885,6 +1020,15 @@ function animateStats() {
 // Run animation when page loads
 window.addEventListener('load', animateStats);
 
+// Auto-submit search form on input
+let searchTimeout;
+document.querySelector('input[name="search"]').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        this.form.submit();
+    }, 500);
+});
+
 // Add smooth scroll to top functionality
 window.addEventListener('scroll', function() {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -911,6 +1055,14 @@ window.addEventListener('scroll', function() {
             scrollBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+            scrollBtn.addEventListener('mouseenter', () => {
+                scrollBtn.style.transform = 'translateY(-3px)';
+                scrollBtn.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+            });
+            scrollBtn.addEventListener('mouseleave', () => {
+                scrollBtn.style.transform = 'translateY(0)';
+                scrollBtn.style.boxShadow = '0 5px 20px rgba(102, 126, 234, 0.3)';
+            });
             document.body.appendChild(scrollBtn);
         }
     } else {
@@ -918,14 +1070,6 @@ window.addEventListener('scroll', function() {
         if (scrollBtn) {
             scrollBtn.remove();
         }
-    }
-});
-
-// Tambahan: scroll horizontal pada table jika overflow
-window.addEventListener('DOMContentLoaded', function() {
-    const tableContainer = document.querySelector('.table-container');
-    if(tableContainer) {
-        tableContainer.style.overflowX = 'auto';
     }
 });
 </script>

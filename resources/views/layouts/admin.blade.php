@@ -10,6 +10,9 @@
     
     <style>
         /* CSS LENGKAP ANDA DITEMPATKAN DI SINI */
+        .admin-body-container {
+            display: flex; /* Mengaktifkan Flexbox */
+        }
         * {
             margin: 0;
             padding: 0;

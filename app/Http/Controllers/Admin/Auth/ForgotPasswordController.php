@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
 use App\Models\User;
 
 class ForgotPasswordController extends Controller
@@ -13,21 +12,32 @@ class ForgotPasswordController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        // Cek email di database
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return back()->with('error', 'Gmail anda tidak ada di database.');
+            return back()->with('error', 'Email tidak ditemukan di database.')->withInput();
         }
 
-        // Kirim link reset password ke email (gunakan fitur bawaan Laravel)
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        // Redirect ke halaman reset password, bawa email sebagai parameter
+        return redirect()->route('admin.password.reset.form', ['email' => $user->email]);
+    }
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', 'Link reset password telah dikirim ke email anda. Silakan cek Gmail anda.');
-        } else {
-            return back()->with('error', 'Gagal mengirim link reset password. Silakan coba lagi.');
-        }
+    public function showResetForm(Request $request)
+    {
+        $email = $request->query('email', '');
+        return view('admin.auth.reset-password', compact('email'));
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return redirect()->route('admin.login')->with('status', 'Password berhasil diubah. Silakan login.');
     }
 }
