@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;  // Perbaiki ini
             const response = await fetch('{{ route("kasir.orders.storeTakeaway") }}', {
                 method: 'POST',
                 headers: {
@@ -360,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok && result.success) {
+                // Use the proper redirect URL from the response
                 window.location.href = result.redirect_url;
             } else {
                 alert('Error: ' + (result.message || 'Terjadi kesalahan yang tidak diketahui.'));

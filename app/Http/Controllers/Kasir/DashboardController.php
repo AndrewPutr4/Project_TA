@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Menu;
+use App\Models\Order;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -39,11 +40,18 @@ class DashboardController extends Controller
         $foods = $foodsQuery->get();
         $categories = Category::all();
         
+        $menus = Menu::all();
+        $todayOrders = Order::whereDate('created_at', today())->count();
+        $pendingOrders = Order::where('status', 'pending')->count();
+        
         // Kirim data ke view
         return view('kasir.dashboard', [
             'categories' => $categories,
             'foods' => $foods,
             'selectedCategory' => $request->category, // Untuk menandai kategori aktif
+            'menus' => $menus,
+            'todayOrders' => $todayOrders,
+            'pendingOrders' => $pendingOrders
         ]);
     }
 }

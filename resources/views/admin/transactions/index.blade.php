@@ -484,20 +484,49 @@
         <div class="left">
             <h1>Transaksi Pelanggan</h1>
             <ul class="breadcrumb">
-                <li>
-                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                </li>
+                <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                 <li><i class='bx bx-chevron-right'></i></li>
-                <li>
-                    <a class="active" href="#">Transaksi</a>
-                </li>
+                <li><a class="active" href="#">Transaksi</a></li>
             </ul>
         </div>
-        <a href="{{ route('admin.transactions.create') }}" class="btn-download" style="background:var(--blue);color:white;">
-            <i class='bx bx-plus'></i>
-            <span class="text">Tambah Transaksi</span>
+        <a href="{{ route('admin.transactions.export') }}" class="btn-download">
+            <i class='bx bx-download'></i>
+            <span class="text">Download PDF</span>
         </a>
     </div>
+
+    <!-- Add Filter Form -->
+    <div class="filter-section" style="margin-bottom: 20px; background: white; padding: 20px; border-radius: 15px;">
+        <form action="{{ route('admin.transactions.index') }}" method="GET" class="filter-form">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div>
+                    <label>Dari Tanggal:</label>
+                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
+                </div>
+                <div>
+                    <label>Sampai Tanggal:</label>
+                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
+                </div>
+                <div>
+                    <label>Kasir:</label>
+                    <select name="kasir_id" class="form-control">
+                        <option value="">Semua Kasir</option>
+                        @foreach($kasirs as $kasir)
+                            <option value="{{ $kasir->id }}" {{ request('kasir_id') == $kasir->id ? 'selected' : '' }}>
+                                {{ $kasir->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="display: flex; align-items: flex-end;">
+                    <button type="submit" class="btn-filter" style="padding: 8px 15px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class='bx bx-filter-alt'></i> Filter
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="table-data">
         <div class="order">
             <div class="head">
@@ -507,6 +536,7 @@
                 <thead>
                     <tr>
                         <th>Nama Pelanggan</th>
+                        <th>Kasir</th>
                         <th>Total</th>
                         <th>Tanggal</th>
                         <th>Aksi</th>
@@ -516,6 +546,7 @@
                     @foreach($transactions as $transaction)
                     <tr @if($transaction->total > 100000) data-high-value="true" @endif>
                         <td data-label="Nama Pelanggan">{{ $transaction->customer_name }}</td>
+                        <td data-label="Kasir">{{ $transaction->kasir->name ?? 'N/A' }}</td>
                         <td data-label="Total">Rp {{ number_format($transaction->total, 0, ',', '.') }}</td>
                         <td data-label="Tanggal">{{ $transaction->created_at->format('d-m-Y H:i') }}</td>
                         <td data-label="Aksi">
@@ -529,7 +560,7 @@
                     @endforeach
                     @if($transactions->isEmpty())
                     <tr>
-                        <td colspan="4" style="text-align:center;">Belum ada transaksi.</td>
+                        <td colspan="5" style="text-align:center;">Belum ada transaksi.</td>
                     </tr>
                     @endif
                 </tbody>

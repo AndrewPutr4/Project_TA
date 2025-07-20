@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all();
-        return view('admin.transactions.index', compact('transactions'));
+        $transactions = Transaction::with('kasir')->latest()->get();
+        $kasirs = User::where('role', 'kasir')->get();
+        
+        return view('admin.transactions.index', compact('transactions', 'kasirs'));
     }
 
     public function create()

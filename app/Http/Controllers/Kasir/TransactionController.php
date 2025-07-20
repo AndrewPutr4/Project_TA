@@ -160,8 +160,8 @@ class TransactionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('kasir.transactions.receipt', $transaction)
-                             ->with('success', 'Pembayaran berhasil diproses!');
+            return redirect()->route('kasir.orders.index')
+                ->with('success', 'Pembayaran berhasil diproses!');
 
         } catch (\Exception $e) {
             DB::rollBack();

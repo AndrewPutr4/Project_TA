@@ -96,6 +96,8 @@ Route::prefix('admin')->group(function () {
             'update' => 'admin.shifts.update',
             'destroy' => 'admin.shifts.destroy'
         ]);
+        Route::get('transactions/export', [Admin\TransactionExportController::class, 'export'])
+            ->name('admin.transactions.export');
         Route::resource('transactions', Admin\TransactionController::class)->names([
             'index' => 'admin.transactions.index',
             'create' => 'admin.transactions.create',
@@ -142,6 +144,7 @@ Route::prefix('kasir')->group(function() {
 
         // Order Management
         Route::get('orders', [Kasir\OrderController::class, 'index'])->name('kasir.orders.index');
+        Route::get('orders/pos', [Kasir\OrderController::class, 'pos'])->name('kasir.pos');  // Add this line
         Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('kasir.orders.show');
         Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
         Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');

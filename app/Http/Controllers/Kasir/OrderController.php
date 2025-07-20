@@ -222,10 +222,10 @@ class OrderController extends Controller
                 'notes'            => $validated['notes'] ?? null,
                 'subtotal'         => $subtotal,
                 'service_fee'      => $serviceFee,
-                'total'            => $total,
-                'status'           => 'confirmed',
-                'payment_status'   => 'unpaid',
-                'order_date'       => now(),
+                'total'           => $total,
+                'status'          => 'confirmed',
+                'payment_status'  => 'unpaid',
+                'order_date'      => now(),
             ]);
 
             // Buat order items
@@ -234,23 +234,19 @@ class OrderController extends Controller
             DB::commit();
 
             return response()->json([
-                'success'      => true,
-                'message'      => 'Order berhasil dibuat!',
-                'order_id'     => $order->id,
+                'success' => true,
+                'message' => 'Order berhasil dibuat!',
+                'order_id' => $order->id,  // Make sure this is included
                 'order_number' => $order->order_number,
-                'redirect_url' => route('kasir.transactions.create', $order)
+                'redirect_url' => route('kasir.transactions.create', ['order' => $order->id])  // Update this line
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Takeaway/DineIn Order Creation Error: ' . $e->getMessage(), [
-                'request_data' => $validated,
-                'trace' => $e->getTraceAsString()
-            ]);
-
+            Log::error('Order creation error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan saat membuat pesanan: ' . $e->getMessage()
+                'message' => 'Error creating order: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -323,5 +319,13 @@ class OrderController extends Controller
                 'message' => 'Gagal membuat order'
             ], 500);
         }
+    }
+
+    /**
+     * Menampilkan halaman POS dengan daftar menu.
+     */
+    public function pos()
+    {
+        return redirect()->route('kasir.dashboard', ['new_order' => true]);
     }
 }
