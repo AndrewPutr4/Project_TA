@@ -312,6 +312,7 @@
             <thead>
                 <tr>
                     <th>Nama Kasir</th>
+                    <th>Tanggal</th>
                     <th>Mulai</th>
                     <th>Selesai</th>
                     <th>Aksi</th>
@@ -322,6 +323,9 @@
                 <tr>
                     <td>
                         <span class="kasir-name">{{ $shift->kasir_name }}</span>
+                    </td>
+                    <td>
+                        <span class="date-cell">{{ \Carbon\Carbon::parse($shift->date)->format('d/m/Y') }}</span>
                     </td>
                     <td>
                         <span class="time-cell time-start">{{ $shift->start_time }}</span>
@@ -346,7 +350,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="empty-state">
+                    <td colspan="5" class="empty-state">
                         Belum ada data shift kasir.
                     </td>
                 </tr>

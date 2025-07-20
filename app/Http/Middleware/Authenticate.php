@@ -2,19 +2,35 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
+// Make sure to extend the base Authenticate middleware
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
-class Authenticate
+class Authenticate extends Middleware
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Get the path the user should be redirected to when they are not authenticated.
      */
-    public function handle(Request $request, Closure $next): Response
+    protected function redirectTo(Request $request): ?string
     {
-        return $next($request);
+        dd('Middleware Saya Dijalankan');
+        // If the request doesn't expect a JSON response...
+        if (! $request->expectsJson()) {
+            
+            // If the user is trying to access an admin route...
+            if ($request->routeIs('admin.*')) {
+                // ...redirect them to the admin login page.
+                return route('admin.login');
+            }
+
+            // If the user is trying to access a cashier route...
+            if ($request->routeIs('kasir.*')) {
+                // ...redirect them to the cashier login page.
+                return route('kasir.login');
+            }
+        }
+
+        // For any other case, or for JSON requests, do nothing.
+        return null;
     }
 }

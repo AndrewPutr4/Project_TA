@@ -1,12 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth; // Import Auth
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Kasir;
 use App\Http\Middleware\KasirMiddleware;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\ShiftController;
+use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\KasirController;
+use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
+use App\Http\Controllers\Kasir\AuthController as KasirAuthController;
+// IMPORT CONTROLLER BARU UNTUK SHIFT KASIR
+use App\Http\Controllers\Kasir\ShiftController as KasirShiftController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,60 +67,82 @@ Route::prefix('api')->name('api.')->group(function () {
 //======================================================================
 // RUTE UNTUK ADMIN
 //======================================================================
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Rute untuk otentikasi (login, logout)
-    Route::get('login', [Admin\AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [Admin\AuthController::class, 'login']);
-    Route::post('logout', [Admin\AuthController::class, 'logout'])->name('logout');
-    Route::get('register', [Admin\AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('register', [Admin\AuthController::class, 'register']);
+Route::prefix('admin')->group(function () {
+    // Authentication routes
+    Route::get('/register', [App\Http\Controllers\Admin\Auth\AuthController::class, 'showRegisterForm'])->name('admin.register');
+    Route::post('/register', [App\Http\Controllers\Admin\Auth\AuthController::class, 'register'])->name('admin.register.submit');
+    Route::get('/login', [App\Http\Controllers\Admin\Auth\AuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [App\Http\Controllers\Admin\Auth\AuthController::class, 'login'])->name('admin.login.submit');
+    Route::post('/logout', [App\Http\Controllers\Admin\Auth\AuthController::class, 'logout'])->name('admin.logout');
 
     // Rute yang dilindungi otentikasi admin
-    Route::middleware('auth:web')->group(function () {
-        Route::get('dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
-        Route::resource('menus', Admin\MenuController::class);
-        Route::resource('shifts', Admin\ShiftController::class);
-        Route::resource('transactions', Admin\TransactionController::class);
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('dashboard', [Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::resource('menus', Admin\MenuController::class)->names([
+            'index' => 'admin.menus.index',
+            'create' => 'admin.menus.create',
+            'store' => 'admin.menus.store',
+            'show' => 'admin.menus.show',
+            'edit' => 'admin.menus.edit',
+            'update' => 'admin.menus.update',
+            'destroy' => 'admin.menus.destroy'
+        ]);
+        Route::resource('shifts', Admin\ShiftController::class)->names([
+            'index' => 'admin.shifts.index',
+            'create' => 'admin.shifts.create',
+            'store' => 'admin.shifts.store',
+            'show' => 'admin.shifts.show',
+            'edit' => 'admin.shifts.edit',
+            'update' => 'admin.shifts.update',
+            'destroy' => 'admin.shifts.destroy'
+        ]);
+        Route::resource('transactions', Admin\TransactionController::class)->names([
+            'index' => 'admin.transactions.index',
+            'create' => 'admin.transactions.create',
+            'store' => 'admin.transactions.store',
+            'show' => 'admin.transactions.show',
+            'edit' => 'admin.transactions.edit',
+            'update' => 'admin.transactions.update',
+            'destroy' => 'admin.transactions.destroy'
+        ]);
         
         // Manajemen Kasir
         Route::get('kasir/register', [Admin\KasirController::class, 'showRegisterForm'])->name('kasir.register');
         Route::post('kasir/register', [Admin\KasirController::class, 'register']);
-        Route::resource('kasir', Admin\KasirController::class)->except(['show', 'edit']);
+        Route::resource('kasir', Admin\KasirController::class)
+            ->except(['show', 'edit'])
+            ->names([
+                'index' => 'admin.kasir.index',
+                'create' => 'admin.kasir.create',
+                'store' => 'admin.kasir.store',
+                'update' => 'admin.kasir.update',
+                'destroy' => 'admin.kasir.destroy'
+            ]);
     });
 });
 
 //======================================================================
 // RUTE UNTUK KASIR
 //======================================================================
-Route::prefix('kasir')->name('kasir.')->group(function () {
+Route::prefix('kasir')->group(function() {
     // Kasir Auth
-    Route::get('login', [Kasir\AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [Kasir\AuthController::class, 'login']);
-    Route::post('logout', [Kasir\AuthController::class, 'logout'])->name('logout');
-
+    Route::get('login', [KasirAuthController::class, 'showLoginForm'])->name('kasir.login');
+    Route::post('login', [KasirAuthController::class, 'login'])->name('kasir.login.submit');
+    Route::post('logout', [KasirAuthController::class, 'logout'])->name('kasir.logout');
+    
     // Kasir Protected Routes
-    Route::middleware([KasirMiddleware::class])->group(function () {
+    Route::middleware('auth:kasir')->group(function () {
         // Dashboard (Menggunakan Controller baru)
-        Route::get('dashboard', [Kasir\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [Kasir\DashboardController::class, 'index'])->name('kasir.dashboard');
 
-        // Shift Management
-        Route::get('shift', function () {
-            return view('kasir.shift');
-        })->name('shift');
-
-        Route::post('shift/start', function () {
-            session(['shift_active' => true]);
-            return redirect()->route('kasir.shift')->with('message', 'Shift dimulai.');
-        })->name('shift.start');
-
-        Route::post('shift/end', function () {
-            session()->forget('shift_active');
-            return redirect()->route('kasir.shift')->with('message', 'Shift diakhiri.');
-        })->name('shift.end');
+        // Shift Management (MENGGUNAKAN CONTROLLER BARU)
+        Route::get('shift', [KasirShiftController::class, 'showShiftPage'])->name('kasir.shift');
+        Route::post('shift/start', [KasirShiftController::class, 'startShift'])->name('kasir.shift.start');
+        Route::post('shift/end', [KasirShiftController::class, 'endShift'])->name('kasir.shift.end');
 
         // Order Management
-        Route::get('orders', [Kasir\OrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('orders.show');
+        Route::get('orders', [Kasir\OrderController::class, 'index'])->name('kasir.orders.index');
+        Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('kasir.orders.show');
         Route::post('orders', [Kasir\OrderController::class, 'store'])->name('orders.store');
         Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
         Route::post('/orders/{order}/confirm', [OrderController::class, 'confirm'])->name('orders.confirm');
@@ -117,14 +150,14 @@ Route::prefix('kasir')->name('kasir.')->group(function () {
         Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('orders.stats');
         
         // == RUTE BARU UNTUK TAKEAWAY ==
-        Route::post('orders/takeaway', [Kasir\OrderController::class, 'storeTakeawayOrder'])->name('orders.storeTakeaway');
+        Route::post('orders/takeaway', [Kasir\OrderController::class, 'storeTakeawayOrder'])->name('kasir.orders.storeTakeaway');
 
         // Transaction Management
-        Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('transactions.index');
-        Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('transactions.show');
-        Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('transactions.create');
+        Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('kasir.transactions.index');
+        Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('kasir.transactions.show');
+        Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('kasir.transactions.create');
         Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
-        Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('transactions.receipt');
+        Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('kasir.transactions.receipt');
         Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
         
         

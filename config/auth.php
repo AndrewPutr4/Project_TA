@@ -35,11 +35,19 @@ return [
     */
 
     'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'kasir' => [
+            'driver' => 'session',
+            'provider' => 'users', // Change this from 'kasirs' to 'users'
+        ],
     ],
-],
 
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +69,11 @@ return [
 'providers' => [
     'users' => [
         'driver' => 'eloquent',
-        'model' => App\Models\User::class, // Sudah benar
+        'model' => App\Models\User::class,
+    ],
+    'kasirs' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Kasir::class,
     ],
 ],
 
@@ -105,4 +117,12 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    // Add this section
+    'redirects' => [
+        'kasir' => [
+            'login' => 'kasir.login',
+            'logout' => 'kasir.login',
+        ],
+    ],
 ];

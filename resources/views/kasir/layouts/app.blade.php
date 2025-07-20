@@ -21,10 +21,21 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $credentials['role'] = 'kasir';
-
         if (Auth::guard('kasir')->attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Get the authenticated kasir user
+            $kasir = Auth::guard('kasir')->user();
+            
+            // Buat shift baru saat login
+            Shift::create([
+                'kasir_name' => $kasir->name,
+                'start_time' => now()->format('H:i:s'),
+                // end_time bisa null atau diisi saat logout
+                'end_time' => null 
+            ]);
+
+            session(['shift_active' => true]);
             return redirect()->intended('kasir/dashboard');
         }
 
@@ -38,11 +49,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         // Update end_time saat logout
-        $kasir = Auth::guard('kasir')->user();
-        $shift = Shift::where('kasir_name', $kasir->name)
-                     ->whereNull('end_time')
-                     ->first();
-                     
+        $shift = Shift::where('kasir_name', Auth::guard('kasir')->user()->name)->whereNull('end_time')->first();
         if ($shift) {
             $shift->update(['end_time' => now()->format('H:i:s')]);
         }

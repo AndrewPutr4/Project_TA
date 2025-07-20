@@ -183,6 +183,7 @@
             
             <form method="POST" action="{{ route('admin.login') }}">
                 @csrf
+                {{-- Pastikan guard admin digunakan di controller --}}
                 
                 <div class="form-group">
                     <label for="email">Email Address</label>

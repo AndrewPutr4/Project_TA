@@ -96,6 +96,7 @@
         <h2>Login Kasir</h2>
         <form method="POST" action="{{ route('kasir.login') }}">
             @csrf
+            {{-- Pastikan guard kasir digunakan di controller --}}
             <label for="email">Email</label>
             <input id="email" type="email" name="email" required autofocus autocomplete="username">
             <label for="password">Password</label>
