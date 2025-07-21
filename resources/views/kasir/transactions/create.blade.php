@@ -6,7 +6,7 @@
     <div class="page-header">
         <div class="header-content">
             <div class="header-left">
-                <a href="{{ route('kasir.orders.show', $order) }}" class="back-btn">
+                <a href="{{ route('kasir.orders.index') }}" class="back-btn">
                     <i class="fas fa-arrow-left"></i>
                     Kembali
                 </a>
@@ -26,7 +26,6 @@
             <div class="card-content">
                 <div class="customer-info">
                     <h3><i class="fas fa-user"></i> {{ $order->customer_name }}</h3>
-                    <p><i class="fas fa-phone"></i> {{ $order->customer_phone }}</p>
                     @if($order->table_number)
                     <p><i class="fas fa-chair"></i> Dine In - Meja {{ $order->table_number }}</p>
                     @else
@@ -78,9 +77,7 @@
                             <label class="payment-method">
                                 <input type="radio" name="payment_method" value="cash" checked>
                                 <div class="method-card cash-method">
-                                    <div class="method-icon">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </div>
+                                    <div class="method-icon"><i class="fas fa-money-bill-wave"></i></div>
                                     <div class="method-info">
                                         <span class="method-title">Tunai</span>
                                         <span class="method-desc">Pembayaran dengan uang cash</span>
@@ -90,9 +87,7 @@
                             <label class="payment-method">
                                 <input type="radio" name="payment_method" value="cashless">
                                 <div class="method-card cashless-method">
-                                    <div class="method-icon">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
+                                    <div class="method-icon"><i class="fas fa-credit-card"></i></div>
                                     <div class="method-info">
                                         <span class="method-title">Cashless</span>
                                         <span class="method-desc">Via Midtrans (QRIS, Kartu, dll)</span>
@@ -103,14 +98,10 @@
                     </div>
 
                     <div class="form-group" id="cashReceivedGroup">
-                        <label for="cash_received">
-                            <i class="fas fa-hand-holding-usd"></i> 
-                            Uang Diterima
-                        </label>
-                        <input type="number" name="cash_received" id="cash_received" class="form-input"
-                               placeholder="Masukkan jumlah uang yang diterima" step="1000" min="0">
+                        <label for="cash_received"><i class="fas fa-hand-holding-usd"></i> Uang Diterima</label>
+                        <input type="number" name="cash_received" id="cash_received" class="form-input" placeholder="Masukkan jumlah uang yang diterima" step="1000" min="0">
                         @error('cash_received')
-                        <span class="error-message">{{ $message }}</span>
+                            <span class="error-message">{{ $message }}</span>
                         @enderror
                         
                         <div class="quick-amounts">
@@ -131,15 +122,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="notes">
-                            <i class="fas fa-sticky-note"></i> 
-                            Catatan (Opsional)
-                        </label>
-                        <textarea name="notes" id="notes" class="form-textarea" rows="3"
-                                  placeholder="Catatan tambahan untuk transaksi ini"></textarea>
-                        @error('notes')
-                        <span class="error-message">{{ $message }}</span>
-                        @enderror
+                        <label for="notes"><i class="fas fa-sticky-note"></i> Catatan (Opsional)</label>
+                        <textarea name="notes" id="notes" class="form-textarea" rows="3" placeholder="Catatan tambahan untuk transaksi ini"></textarea>
                     </div>
 
                     <div class="form-actions">
@@ -229,11 +213,13 @@
 @endsection
 
 @push('scripts')
+{{-- Script Midtrans dan Logika Pembayaran --}}
 <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // === Get DOM elements ===
+    // === Inisialisasi Variabel ===
+    const paymentForm = document.getElementById('paymentForm');
     const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
     const cashReceivedGroup = document.getElementById('cashReceivedGroup');
     const cashReceivedInput = document.getElementById('cash_received');
@@ -241,46 +227,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const changeAmount = document.getElementById('changeAmount');
     const submitBtn = document.getElementById('submitBtn');
     const quickBtns = document.querySelectorAll('.quick-btn');
-    const paymentForm = document.getElementById('paymentForm');
     const finalTotalEl = document.getElementById('finalTotal');
+    const originalTotal = parseFloat(finalTotalEl.dataset.total) || 0;
     
-    const originalTotal = parseInt(finalTotalEl.dataset.total) || 0;
+    // === Fungsi untuk Menampilkan/Sembunyikan Input Uang Tunai ===
+    function toggleCashInput() {
+        if (document.querySelector('input[name="payment_method"]:checked').value === 'cash') {
+            cashReceivedGroup.style.display = 'block';
+            cashReceivedInput.required = true;
+        } else {
+            cashReceivedGroup.style.display = 'none';
+            cashReceivedInput.required = false;
+            changeDisplay.style.display = 'none';
+        }
+    }
+    paymentMethods.forEach(method => method.addEventListener('change', toggleCashInput));
     
-    // === Handle payment method change ===
-    paymentMethods.forEach(function(method) {
-        method.addEventListener('change', function() {
-            if (this.value === 'cash') {
-                cashReceivedGroup.style.display = 'block';
-                cashReceivedInput.required = true;
-            } else { // For 'cashless'
-                cashReceivedGroup.style.display = 'none';
-                cashReceivedInput.required = false;
-                changeDisplay.style.display = 'none';
-            }
-        });
-    });
-    
-    // === Function to calculate change ===
+    // === Fungsi untuk Menghitung Kembalian ===
     function calculateChange() {
+        if (document.querySelector('input[name="payment_method"]:checked').value !== 'cash') return;
         const cashReceived = parseFloat(cashReceivedInput.value) || 0;
         
         if (cashReceived > 0) {
             const change = cashReceived - originalTotal;
+            changeDisplay.style.display = 'flex';
             if (change >= 0) {
                 changeAmount.textContent = 'Rp ' + change.toLocaleString('id-ID');
                 changeDisplay.className = 'change-display';
-                changeDisplay.style.display = 'flex';
             } else {
                 changeAmount.textContent = 'Kurang Rp ' + Math.abs(change).toLocaleString('id-ID');
                 changeDisplay.className = 'change-display insufficient';
-                changeDisplay.style.display = 'flex';
             }
         } else {
             changeDisplay.style.display = 'none';
         }
     }
-    
-    // === Event listener for cash received input & quick buttons ===
     cashReceivedInput.addEventListener('input', calculateChange);
     quickBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -289,31 +270,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // === 2. MODIFIED: Handle form submission for ALL payment types ===
+    // === LOGIKA UTAMA: PENANGANAN SUBMIT FORM ===
     paymentForm.addEventListener('submit', function(e) {
+        e.preventDefault(); 
         const selectedMethod = document.querySelector('input[name="payment_method"]:checked').value;
         const form = this;
         
-        // Prevent default submission to handle logic here first
-        e.preventDefault(); 
-        
-        // Disable button to prevent double submission
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner loading"></i> Memproses...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
         
-        // === Logic for CASH payment ===
+        // --- Jika Metode Pembayaran adalah TUNAI ---
         if (selectedMethod === 'cash') {
             const cashReceived = parseFloat(cashReceivedInput.value) || 0;
             if (cashReceived < originalTotal) {
                 alert('Jumlah uang yang diterima kurang dari total pembayaran!');
-                submitBtn.disabled = false; // Re-enable button
+                submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Proses Pembayaran';
-                return; // Stop execution
+                return;
             }
-            form.submit(); // Submit the form for cash payment
+            form.submit(); // Langsung kirim form ke server
         } 
         
-        // === 3. NEW: Logic for CASHLESS (Midtrans) payment ===
+        // --- Jika Metode Pembayaran adalah CASHLESS (MIDTRANS) ---
         else if (selectedMethod === 'cashless') {
             fetch('{{ route("kasir.transactions.createMidtransSnapToken", $order) }}', {
                 method: 'POST',
@@ -331,46 +309,45 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                // Pay with Midtrans Snap
+                // Tampilkan Popup Pembayaran Midtrans
                 snap.pay(data.snap_token, {
                     onSuccess: function(result){
-                        // Add midtrans result data as hidden inputs to the form
-                        // This sends transaction details to your backend
+                        // Buat input tersembunyi untuk menyimpan detail hasil dari Midtrans
                         let hiddenInput = document.createElement('input');
                         hiddenInput.type = 'hidden';
                         hiddenInput.name = 'midtrans_payload';
                         hiddenInput.value = JSON.stringify(result);
                         form.appendChild(hiddenInput);
                         
-                        // Submit the form to your backend to record the transaction
+                        // Kirim form ke server untuk dicatat
                         form.submit();
                     },
                     onPending: function(result){
                         alert("Menunggu pembayaran Anda!");
-                        submitBtn.disabled = false; // Re-enable button
+                        submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Proses Pembayaran';
                     },
                     onError: function(result){
                         alert("Pembayaran gagal!");
-                        submitBtn.disabled = false; // Re-enable button
+                        submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Proses Pembayaran';
                     },
                     onClose: function(){
                         alert('Anda menutup popup tanpa menyelesaikan pembayaran.');
-                        submitBtn.disabled = false; // Re-enable button
+                        submitBtn.disabled = false;
                         submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Proses Pembayaran';
                     }
                 });
             }).catch(error => {
-                alert('Terjadi kesalahan. Silakan coba lagi.');
+                alert('Terjadi kesalahan koneksi. Pastikan Anda terhubung ke internet.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Proses Pembayaran';
             });
         }
     });
     
-    // Initialize display
-    calculateChange();
+    // Panggil fungsi sekali saat halaman dimuat
+    toggleCashInput();
 });
 </script>
 @endpush

@@ -17,18 +17,20 @@ return new class extends Migration
             $table->foreignUuid('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('kasir_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('customer_name');
-            $table->string('customer_phone')->nullable();
             $table->decimal('subtotal', 10, 2);
-            $table->decimal('tax', 10, 2)->default(0);
             $table->decimal('service_fee', 10, 2)->default(0);
-            $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('total', 10, 2);
             $table->decimal('cash_received', 10, 2)->default(0);
             $table->decimal('change_amount', 10, 2)->default(0);
-            $table->enum('payment_method', ['cash', 'card', 'qris', 'transfer'])->default('cash');
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('payment_method', ['cash', 'card', 'qris', 'transfer', 'midtrans'])->default('cash');
+            $table->enum('status', ['pending', 'completed', 'cancelled', 'failed'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamp('transaction_date');
+
+            // ✅ KOLOM BARU UNTUK MIDTRANS (tanpa ->after())
+            $table->text('snap_token')->nullable();
+            $table->string('payment_gateway_reference')->nullable();
+            
             $table->timestamps();
 
             $table->index(['transaction_date', 'status']);

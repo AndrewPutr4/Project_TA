@@ -1,83 +1,114 @@
 @extends('layouts.kasir')
+@section('title', 'Detail Transaksi')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="bg-white shadow-lg rounded-lg p-6 max-w-md mx-auto">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold">Warung Ibu Titin</h1>
-            <p class="text-gray-600">Jl. Raya Uluwatu No. 123, Kuta Selatan, Bali</p>
-            <p class="text-gray-600">Telp: 0812-3456-7890</p>
+<div class="order-detail-container">
+    <div class="page-header">
+        <div class="header-left">
+            <a href="{{ route('kasir.transactions.index') }}" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+            <h1 class="page-title">Detail Transaksi</h1>
+        </div>
+        <div class="header-actions">
+            <a href="{{ route('kasir.transactions.receipt', $transaction) }}" target="_blank" class="btn btn-primary">
+                <i class="fas fa-print"></i> Cetak Struk
+            </a>
+        </div>
+    </div>
+
+    <div class="order-detail-grid">
+        <div class="order-info-card">
+            <div class="card-header">
+                <h2>Informasi Transaksi</h2>
+            </div>
+            <div class="card-content">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>No. Transaksi</label>
+                        {{-- ✅ PERBAIKAN 1: Memotong nomor transaksi agar lebih pendek --}}
+                        <span>#{{ substr($transaction->transaction_number, 0, 8) }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>No. Order</label>
+                        <span>#{{ $transaction->order->order_number }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Tanggal</label>
+                        <span>{{ $transaction->created_at->format('d F Y, H:i') }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Kasir</label>
+                        {{-- ✅ PERBAIKAN 2: Menampilkan "Midtrans" jika kasir tidak ada --}}
+                        <span>{{ $transaction->kasir->name ?? 'Midtrans' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Customer</label>
+                        <span>{{ $transaction->customer_name }}</span>
+                    </div>
+                     <div class="info-item">
+                        <label>Metode Pembayaran</label>
+                        <span>{{ ucfirst($transaction->payment_method) }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="border-t border-b border-dashed border-gray-400 py-4 my-4">
-            <div class="flex justify-between text-sm">
-                <span class="font-semibold">No. Transaksi:</span>
-                <span>{{ $transaction->id }}</span>
+        <div class="order-summary-card">
+            <div class="card-header">
+                <h2>Ringkasan Pembayaran</h2>
             </div>
-            <div class="flex justify-between text-sm mt-1">
-                <span class="font-semibold">Tanggal:</span>
-                <span>{{ $transaction->created_at->format('d M Y, H:i') }}</span>
-            </div>
-            <div class="flex justify-between text-sm mt-1">
-                <span class="font-semibold">Kasir:</span>
-                <span>{{ $transaction->kasir->name }}</span>
-            </div>
-            <div class="flex justify-between text-sm mt-1">
-                <span class="font-semibold">Pelanggan:</span>
-                <span>{{ $transaction->order->customer_name }}</span>
+            <div class="card-content">
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span>Rp {{ number_format($transaction->subtotal, 0, ',', '.') }}</span>
+                    </div>
+                    @if($transaction->service_fee > 0)
+                    <div class="summary-item">
+                        <span>Biaya Layanan</span>
+                        <span>Rp {{ number_format($transaction->service_fee, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
+                    <div class="summary-item total">
+                        <span>Total</span>
+                        <span>Rp {{ number_format($transaction->total, 0, ',', '.') }}</span>
+                    </div>
+                     @if($transaction->payment_method == 'cash')
+                    <div class="summary-item">
+                        <span>Uang Diterima</span>
+                        <span>Rp {{ number_format($transaction->cash_received, 0, ',', '.') }}</span>
+                    </div>
+                     <div class="summary-item">
+                        <span>Kembalian</span>
+                        <span>Rp {{ number_format($transaction->change_amount, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
+                </div>
             </div>
         </div>
 
-        <div>
-            <h3 class="text-lg font-semibold mb-2">Detail Pesanan:</h3>
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="border-b">
-                        <th class="text-left py-2">Item</th>
-                        <th class="text-center py-2">Qty</th>
-                        <th class="text-right py-2">Harga</th>
-                        <th class="text-right py-2">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="order-items-card">
+            <div class="card-header">
+                <h2>Item yang Dibeli</h2>
+                <span class="item-count">{{ $transaction->order->orderItems->count() }} item</span>
+            </div>
+            <div class="card-content">
+                <div class="items-list">
                     @foreach($transaction->order->orderItems as $item)
-                    <tr>
-                        <td class="py-2">{{ $item->menu->name }}</td>
-                        <td class="text-center py-2">{{ $item->quantity }}</td>
-                        <td class="text-right py-2">Rp{{ number_format($item->price, 0, ',', '.') }}</td>
-                        <td class="text-right py-2">Rp{{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
-                    </tr>
+                    <div class="order-item">
+                        <div class="item-info">
+                            <h3 class="item-name">{{ $item->menu_name }}</h3>
+                        </div>
+                        <div class="item-details">
+                            <div class="item-price">Rp {{ number_format($item->price, 0, ',', '.') }}</div>
+                            <div class="item-qty">x{{ $item->quantity }}</div>
+                            <div class="item-subtotal">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</div>
+                        </div>
+                    </div>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        <div class="border-t border-dashed border-gray-400 pt-4 mt-4">
-            <div class="flex justify-between font-semibold">
-                <span>Total</span>
-                <span>Rp{{ number_format($transaction->total_amount, 0, ',', '.') }}</span>
+                </div>
             </div>
-            <div class="flex justify-between text-sm mt-1">
-                <span>Bayar</span>
-                <span>Rp{{ number_format($transaction->paid_amount, 0, ',', '.') }}</span>
-            </div>
-            <div class="flex justify-between text-sm mt-1">
-                <span>Kembali</span>
-                <span>Rp{{ number_format($transaction->change_amount, 0, ',', '.') }}</span>
-            </div>
-        </div>
-
-        <div class="text-center mt-8">
-            <p class="text-gray-600 text-sm">Terima kasih atas kunjungan Anda!</p>
-        </div>
-
-        <div class="mt-8 flex justify-center space-x-4">
-            <a href="{{ route('kasir.transactions.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
-                Kembali
-            </a>
-            <a href="{{ route('kasir.transactions.receipt', $transaction->id) }}" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-print mr-2"></i>Cetak Struk
-            </a>
         </div>
     </div>
 </div>

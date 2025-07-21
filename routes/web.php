@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
 use App\Http\Controllers\Kasir\AuthController as KasirAuthController;
 // IMPORT CONTROLLER BARU UNTUK SHIFT KASIR
 use App\Http\Controllers\Kasir\ShiftController as KasirShiftController;
+use App\Http\Controllers\Kasir\MidtransCallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,13 +160,11 @@ Route::prefix('kasir')->group(function() {
         Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('kasir.transactions.index');
         Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('kasir.transactions.show');
         Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('kasir.transactions.create');
-        Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('transactions.store');
+        Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('kasir.transactions.store');
         Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('kasir.transactions.receipt');
-        Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('transactions.stats');
-        
-        
-        // Midtrans Snap Token
-        Route::post('orders/{order}/midtrans-snap-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])->name('transactions.createMidtransSnapToken');
+        Route::post('orders/{order}/midtrans-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])
+            ->name('kasir.transactions.createMidtransSnapToken');
+        Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('kasir.transactions.todayStats');
     });
 });
 
@@ -194,3 +193,13 @@ Route::post('/admin/password/reset', [\App\Http\Controllers\Admin\Auth\ForgotPas
 Route::get('/password/reset', function () {
     return redirect()->route('admin.password.reset.form');
 })->name('password.reset');
+Route::get('/password/reset', function () {
+    return redirect()->route('admin.password.reset.form');
+})->name('password.reset');
+/*
+|--------------------------------------------------------------------------
+| RUTE UNTUK CALLBACK / WEBHOOK DARI PIHAK KETIGA
+|--------------------------------------------------------------------------
+| Letakkan di sini agar tidak terkena middleware otentikasi.
+*/
+Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');

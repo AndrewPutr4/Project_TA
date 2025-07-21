@@ -2,7 +2,6 @@
 @section('title', 'Daftar Order')
 @section('content')
 <div class="orders-container">
-    <!-- Compact Header -->
     <div class="page-header">
         <div class="header-content">
             <div class="header-text">
@@ -21,7 +20,6 @@
         </div>
     </div>
 
-    <!-- Compact Filters -->
     <div class="filters-section">
         <div class="filters-content">
             <form method="GET" class="filters-form">
@@ -77,7 +75,6 @@
         </div>
     </div>
 
-    <!-- Orders Table -->
     <div class="table-section">
         <div class="table-header">
             <div class="table-info">
@@ -148,18 +145,12 @@
                         </td>
                         <td class="order-status">
                             <span class="status-badge status-{{ $order->status }}">
-                                @if($order->status === 'pending')
-                                    <i class="fas fa-clock"></i>
-                                @elseif($order->status === 'confirmed')
-                                    <i class="fas fa-check-circle"></i>
-                                @elseif($order->status === 'preparing')
-                                    <i class="fas fa-utensils"></i>
-                                @elseif($order->status === 'ready')
-                                    <i class="fas fa-bell"></i>
-                                @elseif($order->status === 'completed')
-                                    <i class="fas fa-check-double"></i>
-                                @else
-                                    <i class="fas fa-times-circle"></i>
+                                @if($order->status === 'pending')<i class="fas fa-clock"></i>
+                                @elseif($order->status === 'confirmed')<i class="fas fa-check-circle"></i>
+                                @elseif($order->status === 'preparing')<i class="fas fa-utensils"></i>
+                                @elseif($order->status === 'ready')<i class="fas fa-bell"></i>
+                                @elseif($order->status === 'completed')<i class="fas fa-check-double"></i>
+                                @else<i class="fas fa-times-circle"></i>
                                 @endif
                                 {{ ucfirst($order->status) }}
                             </span>
@@ -167,11 +158,9 @@
                         <td class="payment-status">
                             <span class="payment-badge payment-{{ $order->payment_status }}">
                                 @if($order->payment_status === 'paid')
-                                    <i class="fas fa-check-circle"></i>
-                                    Lunas
+                                    <i class="fas fa-check-circle"></i> Lunas
                                 @else
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    Belum Bayar
+                                    <i class="fas fa-exclamation-circle"></i> Belum Bayar
                                 @endif
                             </span>
                         </td>
@@ -185,18 +174,16 @@
                                     <i class="fas fa-eye"></i>
                                     <span class="btn-text">Detail</span>
                                 </a>
+
                                 @if($order->status == 'pending')
                                     <button onclick="confirmOrder('{{ $order->id }}')" class="btn btn-sm btn-success">
                                         <i class="fas fa-check"></i>
                                         <span class="btn-text">Konfirmasi</span>
                                     </button>
                                 @endif
-                                @if($order->status == 'ready' && $order->payment_status == 'unpaid')
-                                    <a href="{{ route('kasir.transactions.create', $order) }}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-credit-card"></i>
-                                        <span class="btn-text">Bayar</span>
-                                    </a>
-                                @endif
+                                
+                                {{-- ✅ TOMBOL BAYAR SUDAH DIHAPUS DARI SINI ✅ --}}
+
                                 @if($order->status != 'completed' && $order->status != 'cancelled')
                                     <button onclick="cancelOrder('{{ $order->id }}')" class="btn btn-sm btn-danger">
                                         <i class="fas fa-times"></i>

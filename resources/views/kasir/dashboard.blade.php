@@ -317,21 +317,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     processBtn.addEventListener('click', async () => {
         const customerName = document.getElementById('customer_name_input').value.trim();
-        const orderType = orderTypeDinein.checked ? 'dine_in' : 'takeaway';
-        const tableNumber = tableNumberInput.value;
+        const orderType = document.getElementById('order_type_dinein').checked ? 'dine_in' : 'takeaway';
+        const tableNumber = document.getElementById('table_number_input').value;
 
-        if (!customerName) {
-            alert('Nama pelanggan wajib diisi.');
-            return;
-        }
-        if (orderType === 'dine_in' && !tableNumber) {
-            alert('Nomor meja wajib dipilih untuk Dine In.');
-            return;
-        }
-        if (orderItems.length === 0) {
-            alert('Keranjang masih kosong.');
-            return;
-        }
+        // ... (validasi form) ...
 
         processBtn.disabled = true;
         processBtn.textContent = 'MEMPROSES...';
@@ -340,13 +329,12 @@ document.addEventListener('DOMContentLoaded', function () {
             customer_name: customerName,
             order_type: orderType,
             items: orderItems.map(item => ({ id: item.id, quantity: item.quantity })),
+            table_number: orderType === 'dine_in' ? tableNumber : null
         };
-        if (orderType === 'dine_in') {
-            payload.table_number = tableNumber;
-        }
 
         try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;  // Perbaiki ini
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            // Mengirim data ke controller untuk membuat order
             const response = await fetch('{{ route("kasir.orders.storeTakeaway") }}', {
                 method: 'POST',
                 headers: {
@@ -360,10 +348,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                // Use the proper redirect URL from the response
+                // Pindah halaman ke form pembayaran (Langkah 3)
                 window.location.href = result.redirect_url;
             } else {
-                alert('Error: ' + (result.message || 'Terjadi kesalahan yang tidak diketahui.'));
+                alert('Error: ' + (result.message || 'Terjadi kesalahan.'));
                 processBtn.disabled = false;
                 processBtn.textContent = 'LANJUT BAYAR';
             }
