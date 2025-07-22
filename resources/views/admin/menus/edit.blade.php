@@ -4,7 +4,7 @@
 <style>
     main {
         padding: 32px 24px;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
         min-height: calc(100vh - 70px);
     }
 
@@ -15,11 +15,11 @@
         margin-bottom: 32px;
         flex-wrap: wrap;
         gap: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
         position: relative;
         overflow: hidden;
     }
@@ -99,27 +99,27 @@
     .order {
         background: white;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(245, 158, 11, 0.2);
     }
 
     .order:hover {
         transform: translateY(-5px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 25px 50px rgba(245, 158, 11, 0.15);
     }
 
     .form-container {
         padding: 40px;
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
     }
 
     .form-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 20px;
-        border-bottom: 2px solid #e9ecef;
+        border-bottom: 2px solid #fef3c7;
         position: relative;
     }
 
@@ -131,13 +131,13 @@
         transform: translateX(-50%);
         width: 60px;
         height: 2px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     }
 
     .form-header h2 {
         font-size: 2rem;
         font-weight: 700;
-        color: #495057;
+        color: #92400e;
         margin: 0 0 10px 0;
         display: flex;
         align-items: center;
@@ -151,14 +151,14 @@
     }
 
     .form-header p {
-        color: #6c757d;
+        color: #a16207;
         font-size: 1rem;
         margin: 0;
     }
 
     .menu-info-card {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        border-left: 4px solid #2196f3;
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+        border-left: 4px solid #f59e0b;
         padding: 20px;
         border-radius: 0 12px 12px 0;
         margin-bottom: 30px;
@@ -170,7 +170,7 @@
         position: absolute;
         top: 20px;
         left: -12px;
-        background: #2196f3;
+        background: #f59e0b;
         color: white;
         width: 24px;
         height: 24px;
@@ -182,7 +182,7 @@
     }
 
     .menu-info-card h4 {
-        color: #1976d2;
+        color: #92400e;
         font-size: 1.1rem;
         font-weight: 600;
         margin: 0 0 10px 0;
@@ -190,7 +190,7 @@
 
     .menu-info-card p {
         margin: 0;
-        color: #1565c0;
+        color: #a16207;
         font-size: 0.9rem;
     }
 
@@ -202,7 +202,7 @@
     .form-group label {
         display: block;
         font-weight: 600;
-        color: #495057;
+        color: #92400e;
         margin-bottom: 8px;
         font-size: 1rem;
         position: relative;
@@ -236,29 +236,29 @@
     .form-control {
         width: 100% !important;
         padding: 15px 20px !important;
-        border: 2px solid #e9ecef;
+        border: 2px solid #fde68a;
         border-radius: 12px;
         font-size: 1rem;
         transition: all 0.3s ease;
         background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.05);
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         transform: translateY(-2px);
     }
 
     .form-control:hover {
-        border-color: #667eea;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
     }
 
     select.form-control {
         cursor: pointer;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f59e0b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         background-position: right 12px center;
         background-repeat: no-repeat;
         background-size: 16px;
@@ -276,7 +276,7 @@
         left: 20px;
         top: 50%;
         transform: translateY(-50%);
-        color: #6c757d;
+        color: #a16207;
         font-weight: 600;
         z-index: 2;
     }
@@ -289,9 +289,9 @@
         margin-bottom: 20px;
         text-align: center;
         padding: 20px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
         border-radius: 12px;
-        border: 2px dashed #dee2e6;
+        border: 2px dashed #fde68a;
         position: relative;
     }
 
@@ -301,7 +301,7 @@
         top: -12px;
         left: 20px;
         background: white;
-        color: #6c757d;
+        color: #a16207;
         padding: 0 10px;
         font-size: 0.85rem;
         font-weight: 600;
@@ -312,19 +312,19 @@
         height: 120px !important;
         object-fit: cover;
         border-radius: 15px !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
         transition: all 0.3s ease;
         border: 3px solid white;
     }
 
     .current-image:hover {
         transform: scale(1.05);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 15px 35px rgba(245, 158, 11, 0.2);
     }
 
     .image-info {
         margin-top: 15px;
-        color: #6c757d;
+        color: #a16207;
         font-size: 0.9rem;
     }
 
@@ -335,7 +335,7 @@
     }
 
     input[type="file"].form-control::file-selector-button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         border: none;
         padding: 8px 16px;
@@ -348,12 +348,12 @@
 
     input[type="file"].form-control::file-selector-button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
     }
 
     .file-upload-note {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        border-left: 4px solid #ffc107;
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+        border-left: 4px solid #f59e0b;
         padding: 15px;
         border-radius: 0 8px 8px 0;
         margin-top: 10px;
@@ -365,7 +365,7 @@
         position: absolute;
         top: 15px;
         left: -12px;
-        background: #ffc107;
+        background: #f59e0b;
         color: white;
         width: 24px;
         height: 24px;
@@ -377,7 +377,7 @@
     }
 
     .file-upload-note small {
-        color: #856404 !important;
+        color: #92400e !important;
         font-weight: 500;
         font-size: 0.85rem !important;
     }
@@ -388,7 +388,7 @@
         justify-content: center;
         margin-top: 40px;
         padding-top: 30px;
-        border-top: 1px solid #e9ecef;
+        border-top: 1px solid #fef3c7;
     }
 
     .btn-download {
@@ -430,13 +430,13 @@
     }
 
     .btn-update {
-        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%) !important;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
         color: white !important;
-        box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
     }
 
     .btn-update:hover {
-        box-shadow: 0 15px 35px rgba(23, 162, 184, 0.4);
+        box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
         color: white !important;
     }
 
@@ -446,13 +446,13 @@
     }
 
     .btn-back {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
         color: white !important;
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
     }
 
     .btn-back:hover {
-        box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+        box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4);
         color: white !important;
     }
 
@@ -463,11 +463,11 @@
 
     /* Input validation styles */
     .form-control:valid {
-        border-color: #28a745;
+        border-color: #10b981;
     }
 
     .form-control:invalid:not(:placeholder-shown) {
-        border-color: #dc3545;
+        border-color: #ef4444;
     }
 
     .validation-icon {
@@ -576,7 +576,7 @@
         position: absolute;
         top: -15px;
         right: -15px;
-        background: #ff6b6b;
+        background: #ef4444;
         color: white;
         border: none;
         width: 40px;
@@ -587,7 +587,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
     }
 
     /* Modal Konfirmasi Kembali */
@@ -617,7 +617,7 @@
 
     #backConfirmModal .modal-content .modal-icon {
         font-size:2.5rem;
-        color:#ff9800;
+        color:#f59e0b;
         margin-bottom:0.7rem;
     }
 
@@ -662,7 +662,7 @@
 
     #updateConfirmModal .modal-content .modal-icon {
         font-size:2.5rem;
-        color:#17a2b8;
+        color:#f59e0b;
         margin-bottom:0.7rem;
     }
 
@@ -735,12 +735,12 @@
                     <div class="form-group" style="--delay: 1">
                         <label for="name">Nama Menu</label>
                         <div class="validation-icon">
-                            <input type="text" 
+                            <input type="text"
                                    id="name"
-                                   name="name" 
-                                   class="form-control" 
-                                   value="{{ $menu->name }}" 
-                                   required 
+                                   name="name"
+                                   class="form-control"
+                                   value="{{ $menu->name }}"
+                                   required
                                    placeholder="Masukkan nama menu"
                                    autocomplete="off">
                         </div>
@@ -780,7 +780,7 @@
                                    step="1"
                                    autocomplete="off">
                         </div>
-                        <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">
+                        <small style="color: #a16207; font-size: 0.85rem; margin-top: 5px; display: block;">
                             💡 Masukkan harga dalam rupiah tanpa titik/koma (contoh: 25000 untuk Rp 25.000)
                         </small>
                     </div>
@@ -790,8 +790,8 @@
                         
                         @if($menu->image)
                             <div class="current-image-container">
-                                <img src="{{ asset('storage/'.$menu->image) }}" 
-                                     alt="Gambar Menu {{ $menu->name }}" 
+                                <img src="{{ asset('storage/'.$menu->image) }}"
+                                     alt="Gambar Menu {{ $menu->name }}"
                                      class="current-image"
                                      onclick="openImageModal(this.src)">
                                 <div class="image-info">
@@ -801,10 +801,10 @@
                             </div>
                         @endif
                         
-                        <input type="file" 
+                        <input type="file"
                                id="image"
-                               name="image" 
-                               class="form-control" 
+                               name="image"
+                               class="form-control"
                                accept="image/*">
                         
                         <div class="file-upload-note">
@@ -845,7 +845,7 @@
 <!-- Modal Konfirmasi Kembali -->
 <div id="backConfirmModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:18px; max-width:350px; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center; position:relative;">
-        <div style="font-size:2.5rem; color:#ff9800; margin-bottom:0.7rem;">&#9888;</div>
+        <div style="font-size:2.5rem; color:#f59e0b; margin-bottom:0.7rem;">&#9888;</div>
         <h5 style="font-weight:700; color:#333;">Perubahan Belum Disimpan</h5>
         <p style="color:#666; margin-bottom:1.5rem;">Anda memiliki perubahan pada form ini.<br>Yakin ingin kembali tanpa menyimpan?</p>
         <div style="display:flex; gap:1rem; justify-content:center;">
@@ -858,7 +858,7 @@
 <!-- Modal Konfirmasi Update -->
 <div id="updateConfirmModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); align-items:center; justify-content:center;">
     <div style="background:#fff; border-radius:18px; max-width:350px; margin:auto; padding:2rem 1.5rem; box-shadow:0 8px 32px rgba(0,0,0,0.18); text-align:center; position:relative;">
-        <div style="font-size:2.5rem; color:#17a2b8; margin-bottom:0.7rem;">&#9888;</div>
+        <div style="font-size:2.5rem; color:#f59e0b; margin-bottom:0.7rem;">&#9888;</div>
         <h5 style="font-weight:700; color:#333;">Konfirmasi Simpan Perubahan</h5>
         <p style="color:#666; margin-bottom:1.5rem;">Anda yakin ingin menyimpan perubahan pada menu ini?</p>
         <div style="display:flex; gap:1rem; justify-content:center;">
@@ -903,23 +903,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Add loading animation to form submission
-document.querySelector('form').addEventListener('submit', function(e) {
-    const submitBtn = document.querySelector('.btn-update');
-    const originalText = submitBtn.innerHTML;
-    
-    submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Mengupdate...';
-    submitBtn.style.pointerEvents = 'none';
-    
-    // If validation fails, restore button
-    setTimeout(() => {
-        if (!this.checkValidity()) {
-            submitBtn.innerHTML = originalText;
-            submitBtn.style.pointerEvents = 'auto';
-        }
-    }, 100);
-});
-
 // Enhanced form interactions
 document.querySelectorAll('.form-control').forEach(input => {
     input.addEventListener('focus', function() {
@@ -939,31 +922,11 @@ document.getElementById('price').addEventListener('input', function(e) {
     if (!document.querySelector('.price-preview')) {
         const preview = document.createElement('small');
         preview.className = 'price-preview';
-        preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
+        preview.style.cssText = 'color: #f59e0b; font-weight: 600; margin-top: 5px; display: block;';
         e.target.parentElement.appendChild(preview);
     }
     let formatted = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '0';
     document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
-});
-
-// Inisialisasi preview saat load jika ada value
-window.addEventListener('load', () => {
-    document.getElementById('name').focus();
-    
-    // Initialize price preview if there's existing value
-    const priceInput = document.getElementById('price');
-    if (priceInput.value) {
-        // Trigger preview tanpa mengubah value
-        let value = priceInput.value.replace(/[^\d]/g, '');
-        let formatted = value ? value.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '0';
-        if (!document.querySelector('.price-preview')) {
-            const preview = document.createElement('small');
-            preview.className = 'price-preview';
-            preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
-            priceInput.parentElement.appendChild(preview);
-        }
-        document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
-    }
 });
 
 // File upload preview
@@ -983,7 +946,7 @@ document.getElementById('image').addEventListener('change', function(e) {
             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             border-radius: 12px;
             text-align: center;
-            border: 2px solid #28a745;
+            border: 2px solid #10b981;
             position: relative;
         `;
         
@@ -1018,11 +981,11 @@ document.getElementById('image').addEventListener('change', function(e) {
 document.querySelectorAll('.form-control[required]').forEach(input => {
     input.addEventListener('blur', function() {
         if (this.value.trim() === '') {
-            this.style.borderColor = '#dc3545';
-            this.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
+            this.style.borderColor = '#ef4444';
+            this.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
         } else {
-            this.style.borderColor = '#28a745';
-            this.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+            this.style.borderColor = '#10b981';
+            this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
         }
     });
 });
@@ -1040,7 +1003,7 @@ window.addEventListener('load', () => {
         if (!document.querySelector('.price-preview')) {
             const preview = document.createElement('small');
             preview.className = 'price-preview';
-            preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
+            preview.style.cssText = 'color: #f59e0b; font-weight: 600; margin-top: 5px; display: block;';
             priceInput.parentElement.appendChild(preview);
         }
         document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
@@ -1060,8 +1023,8 @@ document.querySelectorAll('.btn-download').forEach(btn => {
 // Category selection enhancement
 document.getElementById('category').addEventListener('change', function() {
     if (this.value) {
-        this.style.borderColor = '#28a745';
-        this.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+        this.style.borderColor = '#10b981';
+        this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
     }
 });
 
@@ -1079,13 +1042,13 @@ document.querySelectorAll('.form-control, input[type="checkbox"]').forEach(input
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: linear-gradient(135deg, #ffc107 0%, #ff8f00 100%);
+                background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
                 color: white;
                 padding: 10px 20px;
                 border-radius: 25px;
                 font-weight: 600;
                 font-size: 0.9rem;
-                box-shadow: 0 5px 20px rgba(255, 193, 7, 0.3);
+                box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3);
                 z-index: 1000;
                 animation: slideInRight 0.3s ease;
             `;
@@ -1109,6 +1072,7 @@ document.getElementById('backConfirmYes').onclick = function() {
     hasChanges = false;
     window.location.href = "{{ route('admin.menus.index') }}";
 };
+
 document.getElementById('backConfirmNo').onclick = function() {
     document.getElementById('backConfirmModal').style.display = 'none';
 };
@@ -1135,6 +1099,7 @@ document.getElementById('updateConfirmYes').onclick = function() {
     hasChanges = false;
     editMenuForm.submit();
 };
+
 // Modal update: Batal
 document.getElementById('updateConfirmNo').onclick = function() {
     document.getElementById('updateConfirmModal').style.display = 'none';
@@ -1147,6 +1112,7 @@ window.addEventListener('beforeunload', function(e) {
         e.returnValue = '';
     }
 });
+
 editMenuForm.addEventListener('submit', function() {
     hasChanges = false;
     window.onbeforeunload = null;

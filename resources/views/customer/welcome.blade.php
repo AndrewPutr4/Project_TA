@@ -139,8 +139,8 @@
           <i class="bi bi-geo-alt icon"></i>
           <div class="address">
             <h4>Address</h4>
-            <p>A108 Adam Street</p>
-            <p>New York, NY 535022</p>
+            <p>Jl. Raya Abianbase No.80, Dalung</p>
+            <p>Kec. Kuta Utara, Kabupaten Badung, Bali</p>
             <p></p>
           </div>
         </div>
@@ -149,8 +149,8 @@
           <div>
             <h4>Contact</h4>
             <p>
-              <strong>Phone:</strong> <span>+1 5589 55488 55</span><br>
-              <strong>Email:</strong> <span>info@example.com</span><br>
+              <strong>Phone:</strong> <span>0813-5375-9061</span><br>
+              <strong>Email:</strong> <span>baksobalung779@gmail.com</span><br>
             </p>
           </div>
         </div>
@@ -159,18 +159,18 @@
           <div>
             <h4>Opening Hours</h4>
             <p>
-              <strong>Mon-Sat:</strong> <span>11AM - 23PM</span><br>
-              <strong>Sunday</strong>: <span>Closed</span>
+              <strong>Open Everyday</strong><br>
+              <strong>Monday-Sanday:</strong> <span>10.00 AM - 22.00 PM</span><br>
             </p>
           </div>
         </div>
         <div class="col-lg-3 col-md-6">
           <h4>Follow Us</h4>
           <div class="social-links d-flex">
-            <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            
+            <a href="https://www.facebook.com/share/1CHSi3ebgg/?mibextid=wwXIfr" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/bakso_balung_slingsing?igsh=dzU5ZzZwc3ZycHRm" class="instagram"><i class="bi bi-instagram"></i></a>
+            
           </div>
         </div>
       </div>

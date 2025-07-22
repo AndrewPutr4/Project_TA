@@ -4,7 +4,7 @@
 <style>
     main {
         padding: 32px 24px;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
         min-height: calc(100vh - 70px);
     }
 
@@ -15,11 +15,11 @@
         margin-bottom: 32px;
         flex-wrap: wrap;
         gap: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
         position: relative;
         overflow: hidden;
     }
@@ -99,27 +99,27 @@
     .order {
         background: white;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(245, 158, 11, 0.2);
     }
 
     .order:hover {
         transform: translateY(-5px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 25px 50px rgba(245, 158, 11, 0.15);
     }
 
     .form-container {
         padding: 40px;
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
     }
 
     .form-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 20px;
-        border-bottom: 2px solid #e9ecef;
+        border-bottom: 2px solid #fef3c7;
         position: relative;
     }
 
@@ -131,13 +131,13 @@
         transform: translateX(-50%);
         width: 60px;
         height: 2px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     }
 
     .form-header h2 {
         font-size: 2rem;
         font-weight: 700;
-        color: #495057;
+        color: #92400e;
         margin: 0 0 10px 0;
         display: flex;
         align-items: center;
@@ -151,7 +151,7 @@
     }
 
     .form-header p {
-        color: #6c757d;
+        color: #a16207;
         font-size: 1rem;
         margin: 0;
     }
@@ -164,7 +164,7 @@
     .form-group label {
         display: block;
         font-weight: 600;
-        color: #495057;
+        color: #92400e;
         margin-bottom: 8px;
         font-size: 1rem;
         position: relative;
@@ -198,29 +198,29 @@
     .form-control {
         width: 100% !important;
         padding: 15px 20px !important;
-        border: 2px solid #e9ecef;
+        border: 2px solid #fde68a;
         border-radius: 12px;
         font-size: 1rem;
         transition: all 0.3s ease;
         background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.05);
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         transform: translateY(-2px);
     }
 
     .form-control:hover {
-        border-color: #667eea;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: #f59e0b;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
     }
 
     select.form-control {
         cursor: pointer;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f59e0b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         background-position: right 12px center;
         background-repeat: no-repeat;
         background-size: 16px;
@@ -235,7 +235,7 @@
     }
 
     input[type="file"].form-control::file-selector-button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         border: none;
         padding: 8px 16px;
@@ -248,7 +248,7 @@
 
     input[type="file"].form-control::file-selector-button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
     }
 
     .price-input-container {
@@ -261,7 +261,7 @@
         left: 20px;
         top: 50%;
         transform: translateY(-50%);
-        color: #6c757d;
+        color: #a16207;
         font-weight: 600;
         z-index: 2;
     }
@@ -276,7 +276,7 @@
         justify-content: center;
         margin-top: 40px;
         padding-top: 30px;
-        border-top: 1px solid #e9ecef;
+        border-top: 1px solid #fef3c7;
     }
 
     .btn-download {
@@ -318,13 +318,13 @@
     }
 
     .btn-save {
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%) !important;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
         color: white !important;
-        box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
     }
 
     .btn-save:hover {
-        box-shadow: 0 15px 35px rgba(86, 171, 47, 0.4);
+        box-shadow: 0 15px 35px rgba(245, 158, 11, 0.4);
         color: white !important;
     }
 
@@ -334,13 +334,13 @@
     }
 
     .btn-back {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
         color: white !important;
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
     }
 
     .btn-back:hover {
-        box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+        box-shadow: 0 15px 35px rgba(239, 68, 68, 0.4);
         color: white !important;
     }
 
@@ -350,8 +350,8 @@
     }
 
     .form-tips {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        border-left: 4px solid #2196f3;
+        background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+        border-left: 4px solid #f59e0b;
         padding: 20px;
         border-radius: 0 12px 12px 0;
         margin-bottom: 30px;
@@ -363,7 +363,7 @@
         position: absolute;
         top: 20px;
         left: -12px;
-        background: #2196f3;
+        background: #f59e0b;
         color: white;
         width: 24px;
         height: 24px;
@@ -375,7 +375,7 @@
     }
 
     .form-tips h4 {
-        color: #1976d2;
+        color: #92400e;
         font-size: 1.1rem;
         font-weight: 600;
         margin: 0 0 10px 0;
@@ -384,7 +384,7 @@
     .form-tips ul {
         margin: 0;
         padding-left: 20px;
-        color: #1565c0;
+        color: #a16207;
     }
 
     .form-tips li {
@@ -394,11 +394,11 @@
 
     /* Input validation styles */
     .form-control:valid {
-        border-color: #28a745;
+        border-color: #10b981;
     }
 
     .form-control:invalid:not(:placeholder-shown) {
-        border-color: #dc3545;
+        border-color: #ef4444;
     }
 
     .form-control:valid + .validation-icon::after {
@@ -519,11 +519,11 @@
                     <div class="form-group" style="--delay: 1">
                         <label for="name">Nama Menu</label>
                         <div class="validation-icon">
-                            <input type="text" 
+                            <input type="text"
                                    id="name"
-                                   name="name" 
-                                   class="form-control" 
-                                   required 
+                                   name="name"
+                                   class="form-control"
+                                   required
                                    placeholder="Masukkan nama menu (contoh: Nasi Goreng Spesial)"
                                    autocomplete="off">
                         </div>
@@ -542,29 +542,29 @@
                     <div class="form-group" style="--delay: 3">
                         <label for="price">Harga Menu</label>
                         <div class="price-input-container validation-icon">
-                            <input type="text" 
+                            <input type="text"
                                    id="price"
-                                   name="price" 
-                                   class="form-control" 
-                                   required 
-                                   placeholder="25000" 
-                                   pattern="[0-9,\.]*" 
+                                   name="price"
+                                   class="form-control"
+                                   required
+                                   placeholder="25000"
+                                   pattern="[0-9,\.]*"
                                    inputmode="decimal"
                                    autocomplete="off">
                         </div>
-                        <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">
+                        <small style="color: #a16207; font-size: 0.85rem; margin-top: 5px; display: block;">
                             💡 Masukkan harga dalam rupiah (contoh: 25000 untuk Rp 25.000)
                         </small>
                     </div>
 
                     <div class="form-group" style="--delay: 4">
                         <label for="image">Gambar Menu</label>
-                        <input type="file" 
+                        <input type="file"
                                id="image"
-                               name="image" 
-                               class="form-control" 
+                               name="image"
+                               class="form-control"
                                accept="image/*">
-                        <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">
+                        <small style="color: #a16207; font-size: 0.85rem; margin-top: 5px; display: block;">
                             📸 Format yang didukung: JPG, PNG, GIF (Maksimal 2MB)
                         </small>
                     </div>
@@ -628,7 +628,7 @@ document.getElementById('price').addEventListener('input', function(e) {
         if (!document.querySelector('.price-preview')) {
             const preview = document.createElement('small');
             preview.className = 'price-preview';
-            preview.style.cssText = 'color: #28a745; font-weight: 600; margin-top: 5px; display: block;';
+            preview.style.cssText = 'color: #f59e0b; font-weight: 600; margin-top: 5px; display: block;';
             e.target.parentElement.appendChild(preview);
         }
         document.querySelector('.price-preview').textContent = `Preview: Rp ${formatted}`;
@@ -652,10 +652,10 @@ document.getElementById('image').addEventListener('change', function(e) {
         preview.style.cssText = `
             margin-top: 15px;
             padding: 15px;
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
             border-radius: 10px;
             text-align: center;
-            border: 2px dashed #dee2e6;
+            border: 2px dashed #fde68a;
         `;
         
         const img = document.createElement('img');
@@ -663,7 +663,7 @@ document.getElementById('image').addEventListener('change', function(e) {
             max-width: 200px;
             max-height: 150px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
         `;
         
         const reader = new FileReader();
@@ -673,7 +673,7 @@ document.getElementById('image').addEventListener('change', function(e) {
         reader.readAsDataURL(file);
         
         const fileName = document.createElement('p');
-        fileName.style.cssText = 'margin: 10px 0 0 0; color: #6c757d; font-size: 0.9rem;';
+        fileName.style.cssText = 'margin: 10px 0 0 0; color: #a16207; font-size: 0.9rem;';
         fileName.textContent = `📁 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
         
         preview.appendChild(img);
@@ -686,23 +686,14 @@ document.getElementById('image').addEventListener('change', function(e) {
 document.querySelectorAll('.form-control[required]').forEach(input => {
     input.addEventListener('blur', function() {
         if (this.value.trim() === '') {
-            this.style.borderColor = '#dc3545';
-            this.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
+            this.style.borderColor = '#ef4444';
+            this.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
         } else {
-            this.style.borderColor = '#28a745';
-            this.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+            this.style.borderColor = '#10b981';
+            this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
         }
     });
 });
-
-// Smooth scroll to form errors
-function scrollToError() {
-    const firstError = document.querySelector('.form-control:invalid');
-    if (firstError) {
-        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        firstError.focus();
-    }
-}
 
 // Auto-focus first input
 window.addEventListener('load', () => {
@@ -722,8 +713,8 @@ document.querySelectorAll('.btn-download').forEach(btn => {
 // Category selection enhancement
 document.getElementById('category').addEventListener('change', function() {
     if (this.value) {
-        this.style.borderColor = '#28a745';
-        this.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+        this.style.borderColor = '#10b981';
+        this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
     }
 });
 </script>

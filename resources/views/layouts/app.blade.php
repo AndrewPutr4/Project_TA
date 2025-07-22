@@ -51,38 +51,36 @@
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-geo-alt icon"></i>
                     <div class="address">
-                        <h4>Alamat</h4>
-                        <p>Jl. Selingsing No. 123</p>
-                        <p>Jakarta Selatan, 12345</p>
+                        <h4>Address</h4>
+            <p>Jl. Raya Abianbase No.80, Dalung</p>
+            <p>Kec. Kuta Utara, Kabupaten Badung, Bali</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-telephone icon"></i>
                     <div>
-                        <h4>Kontak</h4>
+                        <h4>Contact</h4>
                         <p>
-                            <strong>Telepon:</strong> <span>+62 812-3456-7890</span><br>
-                            <strong>Email:</strong> <span>info@warungbakso.com</span><br>
+                            <strong>Phone:</strong> <span>0813-5375-9061</span><br>
+              <strong>Email:</strong> <span>baksobalung779@gmail.com</span><br>
                         </p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-clock icon"></i>
                     <div>
-                        <h4>Jam Buka</h4>
-                        <p>
-                            <strong>Senin-Sabtu:</strong> <span>10:00 - 22:00</span><br>
-                            <strong>Minggu:</strong> <span>10:00 - 21:00</span>
+                        <h4>Opening Hours</h4>
+            <p>
+              <strong>Open Everyday</strong><br>
+              <strong>Monday-Sanday:</strong> <span>10.00 AM - 22.00 PM</span><br>
                         </p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4>Ikuti Kami</h4>
                     <div class="social-links d-flex">
-                        <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="whatsapp"><i class="bi bi-whatsapp"></i></a>
+                        <a href="https://www.facebook.com/share/1CHSi3ebgg/?mibextid=wwXIfr" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/bakso_balung_slingsing?igsh=dzU5ZzZwc3ZycHRm" class="instagram"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
             </div>
