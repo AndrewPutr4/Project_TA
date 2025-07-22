@@ -34,7 +34,7 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Menu</a></li>
-          <li><a href="{{ route('orders.history') }}" class="{{ request()->routeIs('orders.*') ? 'active' : '' }}">Pesanan Saya</a></li>
+          <li><a href="{{ route('orders.history') }}" class="{{ request()->routeIs('orders.*') ? 'active' : '' }}">Riwayat Pesanan</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>

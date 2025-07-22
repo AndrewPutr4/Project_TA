@@ -1,13 +1,8 @@
 @extends('layouts.kasir')
 
-{{-- PENTING: Pastikan layout 'layouts.kasir' Anda memiliki meta tag CSRF di dalam <head> --}}
-{{-- Contoh: <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
-
 @section('content')
 <div class="pos-system">
-    {{-- ================================================= --}}
     {{-- Bagian Kiri: Daftar Produk & Kategori --}}
-    {{-- ================================================= --}}
     <div class="products-section">
         <header class="pos-header">
             <div class="header-info">
@@ -36,9 +31,8 @@
         </aside>
         
         <main class="products-panel">
-             <div class="products-grid">
+            <div class="products-grid">
                 @forelse($foods as $food)
-                    {{-- PERBAIKAN: Menghapus 'onclick' dan menggunakan data attributes untuk menyimpan info produk --}}
                     <div class="product-card" data-id="{{ $food->id }}" data-name="{{ htmlspecialchars($food->name, ENT_QUOTES) }}" data-price="{{ $food->price }}">
                         <div class="product-image-container">
                             <img src="{{ $food->image ? asset('storage/' . $food->image) : 'https://placehold.co/300x200/e2e8f0/334155?text=No+Image' }}" alt="{{ $food->name }}" class="product-image">
@@ -55,23 +49,21 @@
         </main>
     </div>
 
-    {{-- ================================================= --}}
-    {{-- Bagian Kanan: Panel Transaksi (INTERAKTIF) --}}
-    {{-- ================================================= --}}
+    {{-- Bagian Kanan: Panel Transaksi --}}
     <aside class="order-panel">
         <div class="panel-header"><h3>Detail Transaksi</h3></div>
         
         <div class="customer-info">
             <div class="form-group">
                 <label class="mb-1">Jenis Pesanan</label>
-                <div>
-                    <label style="margin-right: 1.5em;">
+                <div class="radio-group">
+                    <label class="radio-label">
                         <input type="radio" name="order_type" value="takeaway" id="order_type_takeaway" checked>
-                        Takeaway
+                        <span>Takeaway</span>
                     </label>
-                    <label>
+                    <label class="radio-label">
                         <input type="radio" name="order_type" value="dine_in" id="order_type_dinein">
-                        Dine In
+                        <span>Dine In</span>
                     </label>
                 </div>
             </div>
@@ -89,11 +81,11 @@
                 </select>
             </div>
         </div>
-
+        
         <div class="order-items-container" id="order-items">
             <div class="empty-order"><p>Pilih produk untuk memulai transaksi</p></div>
         </div>
-
+        
         <div class="order-summary">
             <div class="summary-row"><span>Subtotal</span><span id="subtotal">Rp 0</span></div>
             <div class="summary-row"><span>Pajak (10%)</span><span id="tax">Rp 0</span></div>
@@ -107,55 +99,435 @@
     </aside>
 </div>
 
-{{-- CSS untuk Halaman POS --}}
 <style>
-    :root { --primary-color: #2563eb; --secondary-color: #4b5563; --bg-light: #f9fafb; --border-color: #e5e7eb; }
-    .pos-system { display: grid; grid-template-columns: 1fr 420px; height: 100vh; background-color: var(--bg-light); font-family: 'Inter', sans-serif; }
-    .products-section { display: flex; flex-direction: column; overflow: hidden; background-color: white; }
-    .pos-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
-    .store-name { font-size: 1.5rem; font-weight: 700; color: #111827; }
-    .store-subtitle { font-size: 0.875rem; color: var(--secondary-color); }
-    .search-bar { width: 40%; }
-    .search-input-group { position: relative; }
-    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--secondary-color); }
-    .search-input { width: 100%; padding: 0.6rem 0.6rem 0.6rem 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-light); }
-    .categories-panel { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--border-color); }
-    .categories-list { display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 8px; }
-    .category-item { padding: 0.5rem 1.25rem; border-radius: 99px; background: #f3f4f6; color: var(--secondary-color); font-weight: 500; cursor: pointer; text-decoration: none; white-space: nowrap; transition: all 0.2s; }
-    .category-item.active, .category-item:hover { background: var(--primary-color); color: white; }
-    .products-panel { flex-grow: 1; overflow-y: auto; padding: 1.5rem; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1.25rem; }
-    .product-card { border-radius: 12px; cursor: pointer; background-color: white; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.2s ease; }
-    .product-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .product-image-container { width: 100%; height: 120px; pointer-events: none; }
-    .product-image { width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px; }
-    .product-info { padding: 0.75rem; pointer-events: none; }
-    .product-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.25rem; color: #1f2937; }
-    .product-price { font-weight: 700; color: var(--primary-color); }
-    .no-products { grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--secondary-color); }
-    .order-panel { display: flex; flex-direction: column; background-color: white; border-left: 1px solid var(--border-color); }
-    .panel-header { padding: 1.25rem 1.5rem; font-size: 1.25rem; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    .customer-info { padding: 1.5rem; border-bottom: 1px solid var(--border-color); }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; color: #374151; }
-    .form-input { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 8px; }
-    .order-items-container { flex-grow: 1; padding: 1rem 1.5rem; overflow-y: auto; }
-    .empty-order { text-align: center; padding: 4rem 1rem; color: var(--secondary-color); }
-    .order-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
-    .order-item:last-child { border-bottom: none; }
-    .item-name { font-weight: 600; }
-    .item-price { font-size: 0.875rem; color: var(--secondary-color); }
-    .quantity-controls { display: flex; align-items: center; gap: 0.75rem; }
-    .quantity-controls button { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-color); background-color: var(--bg-light); cursor: pointer; }
-    .item-total { font-weight: 700; }
-    .order-summary { padding: 1.5rem; border-top: 8px solid #f3f4f6; }
-    .summary-row, .summary-total { display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
-    .summary-total { font-weight: 700; font-size: 1.25rem; color: #111827; margin-top: 1rem; }
-    .order-actions { padding: 1.5rem; display: flex; gap: 1rem; }
-    .action-btn { flex-grow: 1; padding: 1rem; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.2s; }
-    .action-btn.secondary { background: #e5e7eb; color: #374151; }
-    .action-btn.primary { background: var(--primary-color); color: white; }
-    .action-btn:disabled { background-color: #9ca3af; color: #e5e7eb; cursor: not-allowed; }
+    :root { 
+        --primary-color: #f59e0b; 
+        --primary-dark: #d97706;
+        --primary-light: #fbbf24;
+        --secondary-color: #4b5563; 
+        --bg-light: #f9fafb; 
+        --border-color: #e5e7eb; 
+        --warning-bg: #fffbeb;
+        --warning-border: #fed7aa;
+        --warning-text: #92400e;
+    }
+    
+    .pos-system { 
+        display: grid; 
+        grid-template-columns: 1fr 420px; 
+        height: calc(100vh - 70px); 
+        background-color: var(--bg-light); 
+        font-family: 'Inter', sans-serif; 
+        gap: 0;
+    }
+    
+    .products-section { 
+        display: flex; 
+        flex-direction: column; 
+        overflow: hidden; 
+        background-color: white; 
+        min-width: 0;
+    }
+    
+    .pos-header { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 1rem 1.5rem; 
+        border-bottom: 1px solid var(--border-color); 
+        flex-shrink: 0;
+        background: linear-gradient(135deg, var(--warning-bg) 0%, #fef3c7 100%);
+    }
+    
+    .store-name { 
+        font-size: 1.5rem; 
+        font-weight: 700; 
+        color: var(--warning-text); 
+        margin: 0;
+    }
+    
+    .store-subtitle { 
+        font-size: 0.875rem; 
+        color: var(--warning-text); 
+        opacity: 0.8;
+    }
+    
+    .search-bar { 
+        width: 40%; 
+        min-width: 200px;
+    }
+    
+    .search-input-group { 
+        position: relative; 
+    }
+    
+    .search-icon { 
+        position: absolute; 
+        left: 10px; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        color: var(--primary-color); 
+    }
+    
+    .search-input { 
+        width: 100%; 
+        padding: 0.6rem 0.6rem 0.6rem 2.5rem; 
+        border-radius: 8px; 
+        border: 2px solid var(--warning-border); 
+        background-color: white; 
+        transition: all 0.2s ease;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+    
+    .categories-panel { 
+        padding: 0.75rem 1.5rem; 
+        border-bottom: 1px solid var(--border-color); 
+        flex-shrink: 0;
+        background: var(--warning-bg);
+    }
+    
+    .categories-list { 
+        display: flex; 
+        gap: 0.75rem; 
+        overflow-x: auto; 
+        padding-bottom: 8px; 
+    }
+    
+    .category-item { 
+        padding: 0.5rem 1.25rem; 
+        border-radius: 99px; 
+        background: white; 
+        color: var(--warning-text); 
+        font-weight: 500; 
+        cursor: pointer; 
+        text-decoration: none; 
+        white-space: nowrap; 
+        transition: all 0.2s; 
+        border: 2px solid var(--warning-border);
+    }
+    
+    .category-item.active, .category-item:hover { 
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); 
+        color: white; 
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+    
+    .products-panel { 
+        flex-grow: 1; 
+        overflow-y: auto; 
+        padding: 1.5rem; 
+    }
+    
+    .products-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+        gap: 1.25rem; 
+    }
+    
+    .product-card { 
+        border-radius: 12px; 
+        cursor: pointer; 
+        background-color: white; 
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1); 
+        transition: all 0.2s ease; 
+        border: 2px solid transparent;
+    }
+    
+    .product-card:hover { 
+        transform: translateY(-3px); 
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2); 
+        border-color: var(--primary-light);
+    }
+    
+    .product-image-container { 
+        width: 100%; 
+        height: 120px; 
+        pointer-events: none; 
+        position: relative;
+        overflow: hidden;
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .product-image { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        border-top-left-radius: 10px; 
+        border-top-right-radius: 10px; 
+    }
+    
+    .product-info { 
+        padding: 0.75rem; 
+        pointer-events: none; 
+    }
+    
+    .product-name { 
+        font-weight: 600; 
+        font-size: 0.9rem; 
+        margin-bottom: 0.25rem; 
+        color: #1f2937; 
+    }
+    
+    .product-price { 
+        font-weight: 700; 
+        color: var(--primary-color); 
+        font-size: 1rem;
+    }
+    
+    .no-products { 
+        grid-column: 1 / -1; 
+        text-align: center; 
+        padding: 3rem; 
+        color: var(--secondary-color); 
+    }
+    
+    .order-panel { 
+        display: flex; 
+        flex-direction: column; 
+        background-color: white; 
+        border-left: 1px solid var(--border-color); 
+        min-width: 0;
+    }
+    
+    .panel-header { 
+        padding: 1.25rem 1.5rem; 
+        font-size: 1.25rem; 
+        font-weight: 700; 
+        border-bottom: 1px solid var(--border-color); 
+        flex-shrink: 0;
+        background: linear-gradient(135deg, var(--warning-bg) 0%, #fef3c7 100%);
+        color: var(--warning-text);
+    }
+    
+    .customer-info { 
+        padding: 1.5rem; 
+        border-bottom: 1px solid var(--border-color); 
+        flex-shrink: 0;
+    }
+    
+    .form-group { 
+        margin-bottom: 1rem; 
+    }
+    
+    .form-group label { 
+        display: block; 
+        font-size: 0.875rem; 
+        font-weight: 500; 
+        margin-bottom: 0.25rem; 
+        color: #374151; 
+    }
+    
+    .radio-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .radio-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        border: 2px solid var(--warning-border);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .radio-label:has(input:checked) {
+        background: var(--warning-bg);
+        border-color: var(--primary-color);
+        color: var(--warning-text);
+    }
+    
+    .form-input { 
+        width: 100%; 
+        padding: 0.75rem; 
+        border: 2px solid var(--warning-border); 
+        border-radius: 8px; 
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+    
+    .order-items-container { 
+        flex-grow: 1; 
+        padding: 1rem 1.5rem; 
+        overflow-y: auto; 
+    }
+    
+    .empty-order { 
+        text-align: center; 
+        padding: 4rem 1rem; 
+        color: var(--secondary-color); 
+    }
+    
+    .order-item { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        padding: 1rem 0; 
+        border-bottom: 1px solid var(--border-color); 
+    }
+    
+    .order-item:last-child { 
+        border-bottom: none; 
+    }
+    
+    .item-name { 
+        font-weight: 600; 
+    }
+    
+    .item-price { 
+        font-size: 0.875rem; 
+        color: var(--secondary-color); 
+    }
+    
+    .quantity-controls { 
+        display: flex; 
+        align-items: center; 
+        gap: 0.75rem; 
+    }
+    
+    .quantity-controls button { 
+        width: 32px; 
+        height: 32px; 
+        border-radius: 50%; 
+        border: 2px solid var(--primary-color); 
+        background-color: white; 
+        cursor: pointer; 
+        color: var(--primary-color);
+        font-weight: bold;
+        transition: all 0.2s ease;
+    }
+    
+    .quantity-controls button:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: scale(1.1);
+    }
+    
+    .item-total { 
+        font-weight: 700; 
+        color: var(--primary-color);
+    }
+    
+    .order-summary { 
+        padding: 1.5rem; 
+        border-top: 8px solid var(--warning-bg); 
+        flex-shrink: 0;
+    }
+    
+    .summary-row, .summary-total { 
+        display: flex; 
+        justify-content: space-between; 
+        margin-bottom: 0.75rem; 
+    }
+    
+    .summary-total { 
+        font-weight: 700; 
+        font-size: 1.25rem; 
+        color: var(--primary-color); 
+        margin-top: 1rem; 
+        padding-top: 1rem;
+        border-top: 2px solid var(--warning-border);
+    }
+    
+    .order-actions { 
+        padding: 1.5rem; 
+        display: flex; 
+        gap: 1rem; 
+        flex-shrink: 0;
+    }
+    
+    .action-btn { 
+        flex-grow: 1; 
+        padding: 1rem; 
+        border-radius: 8px; 
+        border: none; 
+        font-weight: bold; 
+        font-size: 1rem; 
+        cursor: pointer; 
+        transition: all 0.2s; 
+    }
+    
+    .action-btn.secondary { 
+        background: #f1f5f9; 
+        color: #374151; 
+        border: 2px solid #e2e8f0;
+    }
+    
+    .action-btn.secondary:hover {
+        background: #e2e8f0;
+        transform: translateY(-1px);
+    }
+    
+    .action-btn.primary { 
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); 
+        color: white; 
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+    
+    .action-btn.primary:hover {
+        background: linear-gradient(135deg, var(--primary-dark) 0%, #b45309 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    }
+    
+    .action-btn:disabled { 
+        background-color: #9ca3af; 
+        color: #e5e7eb; 
+        cursor: not-allowed; 
+        transform: none;
+        box-shadow: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .pos-system {
+            grid-template-columns: 1fr 380px;
+        }
+        .order-panel {
+            min-width: 380px;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .pos-system {
+            grid-template-columns: 1fr 350px;
+            height: auto;
+            min-height: calc(100vh - 70px);
+        }
+        .order-panel {
+            min-width: 350px;
+        }
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+        .pos-header {
+            padding: 1rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .search-bar {
+            width: 100%;
+        }
+    }
 
     @media (max-width: 900px) {
         .pos-system {
@@ -177,43 +549,217 @@
             max-height: none;
             padding: 1rem;
         }
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .pos-header {
+            padding: 0.75rem;
+        }
+        .store-name {
+            font-size: 1.25rem;
+        }
+        .categories-panel {
+            padding: 0.75rem;
+        }
+        .categories-list {
+            gap: 0.5rem;
+        }
+        .category-item {
+            padding: 0.375rem 1rem;
+            font-size: 0.875rem;
+        }
+        .products-panel {
+            padding: 0.75rem;
+        }
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 0.75rem;
+        }
+        .product-image-container {
+            height: 100px;
+        }
+        .product-info {
+            padding: 0.5rem;
+        }
+        .product-name {
+            font-size: 0.8rem;
+        }
+        .product-price {
+            font-size: 0.875rem;
+        }
+        .panel-header, .customer-info, .order-summary, .order-actions {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .order-items-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .radio-group {
+            gap: 0.75rem;
+        }
+        .action-btn {
+            padding: 0.875rem;
+            font-size: 0.875rem;
+        }
     }
 
     @media (max-width: 600px) {
-        .pos-header, .panel-header, .customer-info, .order-summary, .order-actions {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
+        .pos-header {
+            padding: 0.5rem;
         }
-        .products-panel, .order-items-container {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+        .store-name {
+            font-size: 1.125rem;
+        }
+        .store-subtitle {
+            font-size: 0.8rem;
+        }
+        .categories-panel {
+            padding: 0.5rem;
+        }
+        .products-panel {
+            padding: 0.5rem;
         }
         .products-grid {
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
-        .order-panel {
-            font-size: 0.95rem;
+        .product-image-container {
+            height: 90px;
+        }
+        .product-info {
+            padding: 0.375rem;
+        }
+        .product-name {
+            font-size: 0.75rem;
+        }
+        .product-price {
+            font-size: 0.8rem;
+        }
+        .panel-header {
+            padding: 1rem 0.75rem;
+            font-size: 1.125rem;
+        }
+        .customer-info, .order-summary, .order-actions {
+            padding: 1rem 0.75rem;
+        }
+        .order-items-container {
+            padding: 0.75rem;
+        }
+        .radio-group {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .radio-label {
+            justify-content: center;
         }
         .action-btn {
-            padding: 0.7rem;
-            font-size: 0.95rem;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+        }
+        .summary-total {
+            font-size: 1.125rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .pos-header {
+            padding: 0.375rem;
+        }
+        .search-input {
+            padding: 0.5rem 0.5rem 0.5rem 2rem;
+            font-size: 0.875rem;
+        }
+        .search-icon {
+            width: 16px;
+            height: 16px;
+            left: 8px;
+        }
+        .categories-list {
+            gap: 0.25rem;
+        }
+        .category-item {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 0.375rem;
+        }
+        .product-image-container {
+            height: 80px;
+        }
+        .product-card {
+            border-radius: 8px;
+        }
+        .product-image {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+        }
+        .order-actions {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .action-btn {
+            width: 100%;
+        }
+    }
+
+    /* Scrollbar styling for mobile */
+    .categories-list::-webkit-scrollbar {
+        height: 4px;
+    }
+    .categories-list::-webkit-scrollbar-track {
+        background: var(--warning-bg);
+        border-radius: 2px;
+    }
+    .categories-list::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+    .categories-list::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-dark);
+    }
+
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+        .product-card:hover {
+            transform: none;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+            border-color: transparent;
+        }
+        .product-card:active {
+            transform: scale(0.98);
+            border-color: var(--primary-color);
+        }
+        .category-item:hover {
+            background: white;
+            color: var(--warning-text);
+            transform: none;
+            box-shadow: none;
+        }
+        .category-item.active:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
         }
     }
 </style>
 
-{{-- JavaScript untuk Logika POS --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Variabel untuk menyimpan item-item pesanan
     let orderItems = [];
     const processBtn = document.getElementById('process-payment-btn');
     const productsGrid = document.querySelector('.products-grid');
-
-    // Fungsi untuk format mata uang Rupiah
-    const formatCurrency = (number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
-
-    // PERBAIKAN: Fungsi internal untuk menambah item, tidak lagi di 'window'
+    
+    const formatCurrency = (number) => new Intl.NumberFormat('id-ID', { 
+        style: 'currency', 
+        currency: 'IDR', 
+        minimumFractionDigits: 0 
+    }).format(number);
+    
     const addToOrder = (id, name, price) => {
         const existingItem = orderItems.find(item => item.id === id);
         if (existingItem) {
@@ -223,8 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderOrder();
     };
-
-    // PERBAIKAN: Menggunakan event delegation pada container grid
+    
     if(productsGrid) {
         productsGrid.addEventListener('click', (event) => {
             const card = event.target.closest('.product-card');
@@ -239,8 +784,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-    // Fungsi untuk mengubah kuantitas item
+    
     window.updateQuantity = (id, change) => {
         const item = orderItems.find(item => item.id === id);
         if (item) {
@@ -251,8 +795,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         renderOrder();
     };
-
-    // Fungsi untuk merender ulang daftar pesanan di panel kanan
+    
     function renderOrder() {
         const container = document.getElementById('order-items');
         if (orderItems.length === 0) {
@@ -276,16 +819,14 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateTotals();
     }
     
-    // Fungsi untuk menghitung total, subtotal, dan pajak
     function calculateTotals() {
         const subtotal = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        const tax = subtotal * 0.10; // Pajak 10%
+        const tax = subtotal * 0.10;
         const total = subtotal + tax;
         
         document.getElementById('subtotal').textContent = formatCurrency(subtotal);
         document.getElementById('tax').textContent = formatCurrency(tax);
         document.getElementById('total').textContent = formatCurrency(total);
-
         processBtn.disabled = orderItems.length === 0;
     }
     
@@ -296,13 +837,12 @@ document.addEventListener('DOMContentLoaded', function () {
             renderOrder();
         }
     });
-
-    // === Tambahan untuk order type dan nomor meja ===
+    
     const orderTypeTakeaway = document.getElementById('order_type_takeaway');
     const orderTypeDinein = document.getElementById('order_type_dinein');
     const tableNumberGroup = document.getElementById('table_number_group');
     const tableNumberInput = document.getElementById('table_number_input');
-
+    
     function updateOrderTypeUI() {
         if (orderTypeDinein.checked) {
             tableNumberGroup.style.display = '';
@@ -311,30 +851,28 @@ document.addEventListener('DOMContentLoaded', function () {
             tableNumberInput.value = '';
         }
     }
+    
     orderTypeTakeaway.addEventListener('change', updateOrderTypeUI);
     orderTypeDinein.addEventListener('change', updateOrderTypeUI);
     updateOrderTypeUI();
-
+    
     processBtn.addEventListener('click', async () => {
         const customerName = document.getElementById('customer_name_input').value.trim();
         const orderType = document.getElementById('order_type_dinein').checked ? 'dine_in' : 'takeaway';
         const tableNumber = document.getElementById('table_number_input').value;
-
-        // ... (validasi form) ...
-
+        
         processBtn.disabled = true;
         processBtn.textContent = 'MEMPROSES...';
-
+        
         const payload = {
             customer_name: customerName,
             order_type: orderType,
             items: orderItems.map(item => ({ id: item.id, quantity: item.quantity })),
             table_number: orderType === 'dine_in' ? tableNumber : null
         };
-
+        
         try {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-            // Mengirim data ke controller untuk membuat order
             const response = await fetch('{{ route("kasir.orders.storeTakeaway") }}', {
                 method: 'POST',
                 headers: {
@@ -344,11 +882,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify(payload)
             });
-
+            
             const result = await response.json();
-
             if (response.ok && result.success) {
-                // Pindah halaman ke form pembayaran (Langkah 3)
                 window.location.href = result.redirect_url;
             } else {
                 alert('Error: ' + (result.message || 'Terjadi kesalahan.'));
@@ -362,7 +898,7 @@ document.addEventListener('DOMContentLoaded', function () {
             processBtn.textContent = 'LANJUT BAYAR';
         }
     });
-
+    
     renderOrder();
 });
 </script>

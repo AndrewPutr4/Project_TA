@@ -19,6 +19,7 @@
             line-height: 1.5;
             min-height: 100vh;
         }
+
         /* Clean Navigation Bar */
         .navbar {
             background: white;
@@ -31,12 +32,14 @@
         .navbar-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             height: 70px;
+            flex-wrap: wrap;
         }
+
         /* Brand Section */
         .navbar-brand {
             display: flex;
@@ -44,42 +47,47 @@
             gap: 0.75rem;
             text-decoration: none;
             color: #1e293b;
+            flex-shrink: 0;
         }
         .brand-icon {
             width: 36px;
             height: 36px;
-            background: #3b82f6;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
         }
         .brand-text {
             font-size: 1.125rem;
             font-weight: 700;
             color: #1e293b;
         }
+
         /* Navigation Right Section */
         .navbar-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
+
         /* User Info */
         .user-info {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             padding: 0.5rem 1rem;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
             border-radius: 8px;
         }
         .user-avatar {
             width: 32px;
             height: 32px;
-            background: #10b981;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -100,9 +108,10 @@
         }
         .user-role {
             font-size: 0.75rem;
-            color: #64748b;
+            color: #92400e;
             line-height: 1.2;
         }
+
         /* Status Indicator */
         .status-badge {
             display: flex;
@@ -131,11 +140,13 @@
             text-transform: uppercase;
             letter-spacing: 0.025em;
         }
+
         /* Navigation Links */
         .nav-links {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
         .nav-link {
             display: flex;
@@ -150,17 +161,20 @@
             transition: all 0.2s ease;
             border: 1px solid transparent;
             position: relative;
+            white-space: nowrap;
         }
         .nav-link:hover {
-            color: #3b82f6;
-            background: #f1f5f9;
-            border-color: #e2e8f0;
+            color: #f59e0b;
+            background: #fffbeb;
+            border-color: #fed7aa;
         }
         .nav-link.active {
-            color: #3b82f6;
-            background: #eff6ff;
-            border-color: #bfdbfe;
+            color: #f59e0b;
+            background: #fffbeb;
+            border-color: #fbbf24;
+            box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
         }
+
         /* Order notification badge */
         .nav-link .notification-badge {
             position: absolute;
@@ -178,6 +192,7 @@
             justify-content: center;
             border: 2px solid white;
         }
+
         /* Logout Button */
         .logout-form {
             display: inline-block;
@@ -187,7 +202,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
             border: none;
             border-radius: 6px;
@@ -195,20 +210,25 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
         }
         .logout-btn:hover {
-            background: #dc2626;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
         }
         .logout-btn:active {
-            transform: translateY(1px);
+            transform: translateY(0);
         }
+
         /* Main Content */
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
             min-height: calc(100vh - 70px);
         }
+
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
@@ -303,11 +323,11 @@
             color: #475569;
         }
         .modal-btn-confirm {
-            background: #ef4444;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
         }
         .modal-btn-confirm:hover {
-            background: #dc2626;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
         }
         .modal-btn-confirm:active,
         .modal-btn-cancel:active {
@@ -318,40 +338,31 @@
             cursor: not-allowed;
             transform: none;
         }
+
         /* Loading State */
         .loading {
             opacity: 0.6;
             pointer-events: none;
         }
+
         /* Responsive Design */
-        @media (max-width: 1024px) {
-            .navbar-container {
-                padding: 0 1.5rem;
-            }
-                        
-            .main-content {
-                padding: 1.5rem;
-            }
-        }
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
             .navbar-container {
                 padding: 0 1rem;
-                height: 60px;
+            }
+            .main-content {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .navbar-container {
+                height: auto;
+                min-height: 70px;
+                padding: 0.75rem 1rem;
             }
             .navbar-right {
-                gap: 1rem;
-            }
-            .user-info {
-                padding: 0.375rem 0.75rem;
-            }
-            .user-details {
-                display: none;
-            }
-            .status-badge {
-                padding: 0.25rem 0.5rem;
-            }
-            .status-text {
-                display: none;
+                gap: 0.75rem;
             }
             .nav-links {
                 gap: 0.25rem;
@@ -360,8 +371,51 @@
                 padding: 0.375rem 0.75rem;
                 font-size: 0.8125rem;
             }
+            .main-content {
+                padding: 1rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+                height: auto;
+            }
+            .navbar-brand {
+                align-self: flex-start;
+            }
+            .navbar-right {
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .user-info {
+                padding: 0.375rem 0.75rem;
+                order: 1;
+            }
+            .user-details {
+                display: none;
+            }
+            .status-badge {
+                padding: 0.25rem 0.5rem;
+                order: 2;
+            }
+            .status-text {
+                display: none;
+            }
+            .nav-links {
+                order: 3;
+                flex: 1;
+                justify-content: center;
+            }
             .nav-link span {
                 display: none;
+            }
+            .logout-form {
+                order: 4;
             }
             .logout-btn {
                 padding: 0.375rem 0.75rem;
@@ -371,10 +425,11 @@
                 display: none;
             }
             .main-content {
-                padding: 1rem;
+                padding: 0.75rem 0.5rem;
             }
             .modal-content {
                 margin: 0.5rem;
+                width: calc(100% - 1rem);
             }
             .modal-header {
                 padding: 1.25rem 1.25rem 0.75rem 1.25rem;
@@ -396,36 +451,53 @@
                 width: 100%;
             }
         }
-        @media (max-width: 640px) {
+
+        @media (max-width: 480px) {
             .navbar-container {
-                flex-wrap: wrap;
-                height: auto;
-                padding: 0.75rem 1rem;
+                padding: 0.75rem 0.5rem;
+            }
+            .brand-text {
+                font-size: 1rem;
+            }
+            .brand-icon {
+                width: 32px;
+                height: 32px;
             }
             .navbar-right {
-                width: 100%;
-                justify-content: space-between;
-                margin-top: 0.75rem;
-                padding-top: 0.75rem;
-                border-top: 1px solid #e2e8f0;
-            }
-            .user-info {
-                order: 1;
-            }
-            .status-badge {
-                order: 2;
+                gap: 0.5rem;
             }
             .nav-links {
-                order: 3;
+                gap: 0.125rem;
             }
-            .logout-form {
-                order: 4;
+            .nav-link {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            .user-info {
+                padding: 0.25rem 0.5rem;
+            }
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .status-badge {
+                padding: 0.125rem 0.375rem;
+            }
+            .logout-btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
+            }
+            .main-content {
+                padding: 0.5rem 0.25rem;
             }
         }
+
         /* Smooth Transitions */
         * {
             transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
         }
+
         /* Animations */
         @keyframes spin {
             from { transform: rotate(0deg); }
@@ -437,6 +509,31 @@
         }
         .modal-content {
             animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Mobile-first approach for better performance */
+        @media (min-width: 769px) {
+            .navbar-container {
+                flex-direction: row;
+                height: 70px;
+                padding: 0 2rem;
+            }
+            .navbar-right {
+                width: auto;
+                gap: 1.5rem;
+            }
+            .user-details {
+                display: flex !important;
+            }
+            .status-text {
+                display: inline !important;
+            }
+            .nav-link span {
+                display: inline !important;
+            }
+            .logout-btn span {
+                display: inline !important;
+            }
         }
     </style>
 </head>
@@ -483,17 +580,14 @@
                         </svg>
                         <span>Dashboard</span>
                     </a>
-                    <!-- TAMBAHAN LINK ORDERS -->
                     <a href="{{ route('kasir.orders.index') }}" class="nav-link {{ request()->routeIs('kasir.orders.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                         </svg>
                         <span>Orders</span>
-                        <!-- Badge untuk pending orders (opsional) -->
                         <span class="notification-badge" id="pendingOrdersBadge" style="display: none;">0</span>
                     </a>
-                    <!-- TAMBAHAN LINK TRANSACTIONS - TAMBAHKAN SETELAH ORDERS LINK -->
                     <a href="{{ route('kasir.transactions.index') }}" class="nav-link {{ request()->routeIs('kasir.transactions.*') ? 'active' : '' }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -564,16 +658,20 @@
             const logoutForm = document.getElementById('logoutForm');
 
             // Show modal when logout button is clicked
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                logoutModal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent background scroll
-            });
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logoutModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
 
             // Hide modal when cancel button is clicked
-            cancelLogout.addEventListener('click', function() {
-                hideModal();
-            });
+            if (cancelLogout) {
+                cancelLogout.addEventListener('click', function() {
+                    hideModal();
+                });
+            }
 
             // Hide modal when clicking outside
             logoutModal.addEventListener('click', function(e) {
@@ -590,37 +688,42 @@
             });
 
             // Confirm logout
-            confirmLogout.addEventListener('click', function() {
-                // Add loading state
-                confirmLogout.disabled = true;
-                confirmLogout.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-                        <path d="M21 12a9 9 0 11-6.219-8.56"/>
-                    </svg>
-                    Logging out...
-                `;
-                                
-                cancelLogout.disabled = true;
-                                
-                // Submit form after short delay
-                setTimeout(() => {
-                    logoutForm.submit();
-                }, 500);
-            });
+            if (confirmLogout) {
+                confirmLogout.addEventListener('click', function() {
+                    confirmLogout.disabled = true;
+                    confirmLogout.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                            <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                        </svg>
+                        Logging out...
+                    `;
+                    
+                    cancelLogout.disabled = true;
+                    
+                    setTimeout(() => {
+                        if (logoutForm) {
+                            logoutForm.submit();
+                        }
+                    }, 500);
+                });
+            }
 
             function hideModal() {
                 logoutModal.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scroll
-                                
-                // Reset button states
-                confirmLogout.disabled = false;
-                confirmLogout.innerHTML = `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20,6 9,17 4,12"></polyline>
-                    </svg>
-                    Ya, Logout
-                `;
-                cancelLogout.disabled = false;
+                document.body.style.overflow = '';
+                
+                if (confirmLogout) {
+                    confirmLogout.disabled = false;
+                    confirmLogout.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                        Ya, Logout
+                    `;
+                }
+                if (cancelLogout) {
+                    cancelLogout.disabled = false;
+                }
             }
 
             // Add loading state to navigation links
@@ -632,24 +735,21 @@
                 });
             });
 
-            // Load pending orders count (opsional)
+            // Load pending orders count
             loadPendingOrdersCount();
-
             console.log('✅ Kasir System loaded');
         });
 
-        // Function to load pending orders count
         function loadPendingOrdersCount() {
-            // Hanya load jika route orders ada
             if (typeof window.kasirOrdersStatsUrl !== 'undefined') {
                 fetch(window.kasirOrdersStatsUrl)
                     .then(response => response.json())
                     .then(data => {
                         const badge = document.getElementById('pendingOrdersBadge');
-                        if (data.pending_orders > 0) {
+                        if (badge && data.pending_orders > 0) {
                             badge.textContent = data.pending_orders;
                             badge.style.display = 'flex';
-                        } else {
+                        } else if (badge) {
                             badge.style.display = 'none';
                         }
                     })
@@ -659,10 +759,8 @@
             }
         }
 
-        // Refresh pending orders count every 30 seconds
         setInterval(loadPendingOrdersCount, 30000);
     </script>
-
     @stack('scripts')
 </body>
 </html>

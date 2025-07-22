@@ -4,7 +4,7 @@
 <style>
     main {
         padding: 32px 24px;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         min-height: calc(100vh - 70px);
     }
 
@@ -15,11 +15,11 @@
         margin-bottom: 32px;
         flex-wrap: wrap;
         gap: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 40px;
         border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 20px 40px rgba(245, 158, 11, 0.3);
         position: relative;
         overflow: hidden;
     }
@@ -95,14 +95,14 @@
         align-items: center;
         gap: 10px;
         padding: 15px 30px;
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white !important;
         text-decoration: none;
         border-radius: 15px;
         font-weight: 600;
         font-size: 1rem;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
         position: relative;
         overflow: hidden;
         z-index: 2;
@@ -125,13 +125,78 @@
 
     .btn-download:hover {
         transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(86, 171, 47, 0.4);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
         color: white !important;
         text-decoration: none;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
     }
 
     .btn-download i {
         font-size: 1.2rem;
+    }
+
+    .filter-section {
+        margin-bottom: 20px;
+        background: white;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(245, 158, 11, 0.1);
+        border: 2px solid #fed7aa;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        align-items: end;
+    }
+
+    .filter-form label {
+        display: block;
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #fed7aa;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #fffbeb;
+        color: #92400e;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #f59e0b;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+
+    .btn-filter {
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-filter:hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
     }
 
     .table-data {
@@ -143,27 +208,28 @@
     .order {
         background: white;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 2px solid #fed7aa;
     }
 
     .order:hover {
         transform: translateY(-8px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 25px 50px rgba(245, 158, 11, 0.15);
+        border-color: #f59e0b;
     }
 
     .order .head {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         padding: 25px 30px;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #fed7aa;
         position: relative;
     }
 
     .order .head h3 {
         margin: 0;
-        color: #495057;
+        color: #92400e;
         font-size: 1.5rem;
         font-weight: 700;
         display: flex;
@@ -183,7 +249,7 @@
     }
 
     table thead {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
     }
 
@@ -198,7 +264,7 @@
 
     table td {
         padding: 20px 25px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #fed7aa;
         vertical-align: middle;
         font-size: 0.95rem;
     }
@@ -209,22 +275,22 @@
     }
 
     table tbody tr:hover {
-        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         transform: scale(1.01);
     }
 
     table tbody tr:nth-child(even) {
-        background: rgba(248, 249, 250, 0.5);
+        background: rgba(255, 251, 235, 0.5);
     }
 
     table tbody tr:nth-child(even):hover {
-        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
     }
 
     /* Enhanced styling for customer names */
     table td:first-child {
         font-weight: 600;
-        color: #495057;
+        color: #92400e;
         position: relative;
     }
 
@@ -234,34 +300,50 @@
         font-size: 1.1rem;
     }
 
-    /* Total amount styling */
+    /* Kasir column styling */
     table td:nth-child(2) {
-        font-weight: 700;
-        font-size: 1.1rem;
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        color: #155724;
+        font-weight: 600;
+        color: #92400e;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
         border-radius: 8px;
         text-align: center;
         position: relative;
     }
 
     table td:nth-child(2)::before {
-        content: '💰';
+        content: '👨‍💼';
         margin-right: 5px;
     }
 
-    /* Date styling */
+    /* Total amount styling */
     table td:nth-child(3) {
-        font-family: 'Courier New', monospace;
-        font-weight: 600;
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        color: #856404;
+        font-weight: 700;
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        color: #166534;
         border-radius: 8px;
         text-align: center;
         position: relative;
     }
 
     table td:nth-child(3)::before {
+        content: '💰';
+        margin-right: 5px;
+    }
+
+    /* Date styling */
+    table td:nth-child(4) {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        color: #92400e;
+        border-radius: 8px;
+        text-align: center;
+        position: relative;
+        border: 2px solid #fed7aa;
+    }
+
+    table td:nth-child(4)::before {
         content: '📅';
         margin-right: 5px;
     }
@@ -272,22 +354,24 @@
         align-items: center;
         gap: 6px;
         padding: 10px 16px;
-        background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         color: white !important;
         text-decoration: none;
         border-radius: 10px;
         font-weight: 600;
         font-size: 0.85rem;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         margin-right: 8px;
+        border: 2px solid transparent;
     }
 
     table td:last-child a:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         color: white !important;
         text-decoration: none;
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
     }
 
     table td:last-child button {
@@ -295,7 +379,7 @@
         align-items: center;
         gap: 6px;
         padding: 10px 16px;
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
         border: none;
         border-radius: 10px;
@@ -303,12 +387,14 @@
         font-size: 0.85rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        border: 2px solid transparent;
     }
 
     table td:last-child button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     }
 
     table td:last-child form {
@@ -316,16 +402,18 @@
     }
 
     /* Empty state styling */
-    table td[colspan="4"] {
+    table td[colspan="5"] {
         text-align: center;
         padding: 80px 20px;
-        color: #6c757d;
+        color: #92400e;
         font-size: 1.1rem;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         position: relative;
+        border: 2px dashed #fed7aa;
+        border-radius: 12px;
     }
 
-    table td[colspan="4"]::before {
+    table td[colspan="5"]::before {
         content: '💳';
         display: block;
         font-size: 4rem;
@@ -341,7 +429,7 @@
         top: 0;
         bottom: 0;
         width: 4px;
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
@@ -363,11 +451,39 @@
         transform: translateY(-50%);
         font-size: 1.2rem;
         animation: sparkle 2s infinite;
+        z-index: 1;
     }
 
     @keyframes sparkle {
         0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
         50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+    }
+
+    /* Scroll to top button */
+    .scroll-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .scroll-top:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
     }
 
     /* Responsive design */
@@ -389,6 +505,15 @@
         .btn-download {
             width: 100%;
             justify-content: center;
+        }
+
+        .filter-section {
+            padding: 20px;
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
 
         table th,
@@ -423,18 +548,24 @@
             }
 
             table tr {
-                border: 1px solid #ccc;
-                margin-bottom: 10px;
-                padding: 15px;
-                border-radius: 10px;
+                border: 2px solid #fed7aa;
+                margin-bottom: 15px;
+                padding: 20px;
+                border-radius: 15px;
                 background: white;
+                box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
             }
 
             table td {
                 border: none;
                 position: relative;
-                padding: 10px 10px 10px 50%;
+                padding: 12px 12px 12px 50%;
                 text-align: left;
+                border-bottom: 1px solid #fed7aa;
+            }
+
+            table td:last-child {
+                border-bottom: none;
             }
 
             table td:before {
@@ -445,7 +576,7 @@
                 padding-right: 10px;
                 white-space: nowrap;
                 font-weight: bold;
-                color: #495057;
+                color: #92400e;
             }
         }
     }
@@ -457,7 +588,7 @@
     }
 
     .loading {
-        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background: linear-gradient(90deg, #fffbeb 25%, #fef3c7 50%, #fffbeb 75%);
         background-size: 200px 100%;
         animation: shimmer 1.5s infinite;
     }
@@ -477,6 +608,10 @@
     .order {
         animation: fadeInUp 0.6s ease forwards;
     }
+
+    .filter-section {
+        animation: fadeInUp 0.4s ease forwards;
+    }
 </style>
 
 <main>
@@ -495,34 +630,32 @@
         </a>
     </div>
 
-    <!-- Add Filter Form -->
-    <div class="filter-section" style="margin-bottom: 20px; background: white; padding: 20px; border-radius: 15px;">
+    <!-- Filter Form -->
+    <div class="filter-section">
         <form action="{{ route('admin.transactions.index') }}" method="GET" class="filter-form">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <div>
-                    <label>Dari Tanggal:</label>
-                    <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
-                </div>
-                <div>
-                    <label>Sampai Tanggal:</label>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
-                </div>
-                <div>
-                    <label>Kasir:</label>
-                    <select name="kasir_id" class="form-control">
-                        <option value="">Semua Kasir</option>
-                        @foreach($kasirs as $kasir)
-                            <option value="{{ $kasir->id }}" {{ request('kasir_id') == $kasir->id ? 'selected' : '' }}>
-                                {{ $kasir->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div style="display: flex; align-items: flex-end;">
-                    <button type="submit" class="btn-filter" style="padding: 8px 15px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        <i class='bx bx-filter-alt'></i> Filter
-                    </button>
-                </div>
+            <div>
+                <label>Dari Tanggal:</label>
+                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
+            </div>
+            <div>
+                <label>Sampai Tanggal:</label>
+                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
+            </div>
+            <div>
+                <label>Kasir:</label>
+                <select name="kasir_id" class="form-control">
+                    <option value="">Semua Kasir</option>
+                    @foreach($kasirs as $kasir)
+                        <option value="{{ $kasir->id }}" {{ request('kasir_id') == $kasir->id ? 'selected' : '' }}>
+                            {{ $kasir->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn-filter">
+                    <i class='bx bx-filter-alt'></i> Filter
+                </button>
             </div>
         </form>
     </div>
@@ -550,17 +683,24 @@
                         <td data-label="Total">Rp {{ number_format($transaction->total, 0, ',', '.') }}</td>
                         <td data-label="Tanggal">{{ $transaction->created_at->format('d-m-Y H:i') }}</td>
                         <td data-label="Aksi">
-                            <a href="{{ route('admin.transactions.edit', $transaction) }}" style="color:var(--blue);margin-right:8px;"><i class='bx bx-edit'></i>Edit</a>
+                            <a href="{{ route('admin.transactions.edit', $transaction) }}">
+                                <i class='bx bx-edit'></i>Edit
+                            </a>
                             <form action="{{ route('admin.transactions.destroy', $transaction) }}" method="POST" style="display:inline;">
                                 @csrf @method('DELETE')
-                                <button type="submit" onclick="return confirm('Yakin hapus?')" style="background:none;border:none;color:var(--red);cursor:pointer;"><i class='bx bx-trash'></i>Hapus</button>
+                                <button type="submit" onclick="return confirm('Yakin hapus transaksi ini?')">
+                                    <i class='bx bx-trash'></i>Hapus
+                                </button>
                             </form>
                         </td>
                     </tr>
                     @endforeach
                     @if($transactions->isEmpty())
                     <tr>
-                        <td colspan="5" style="text-align:center;">Belum ada transaksi.</td>
+                        <td colspan="5" style="text-align:center;">
+                            <strong>Belum ada transaksi.</strong><br>
+                            <small>Transaksi akan muncul di sini setelah kasir melakukan penjualan.</small>
+                        </td>
                     </tr>
                     @endif
                 </tbody>
@@ -571,7 +711,7 @@
 
 <script>
 // Add loading animation to buttons
-document.querySelectorAll('.btn-download, table a, table button').forEach(btn => {
+document.querySelectorAll('.btn-download, .btn-filter, table a, table button').forEach(btn => {
     btn.addEventListener('click', function() {
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
@@ -588,21 +728,6 @@ window.addEventListener('scroll', function() {
             const scrollBtn = document.createElement('button');
             scrollBtn.className = 'scroll-top';
             scrollBtn.innerHTML = '<i class="bx bx-up-arrow-alt"></i>';
-            scrollBtn.style.cssText = `
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                width: 50px;
-                height: 50px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                z-index: 1000;
-                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-                transition: all 0.3s ease;
-            `;
             scrollBtn.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
@@ -625,7 +750,7 @@ window.addEventListener('scroll', function() {
 // Enhanced table interactions
 document.querySelectorAll('table tbody tr').forEach(row => {
     row.addEventListener('mouseenter', function() {
-        this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        this.style.boxShadow = '0 8px 25px rgba(245, 158, 11, 0.15)';
     });
     
     row.addEventListener('mouseleave', function() {
@@ -635,29 +760,32 @@ document.querySelectorAll('table tbody tr').forEach(row => {
 
 // Add transaction value highlighting
 document.querySelectorAll('table tbody tr').forEach(row => {
-    const totalCell = row.querySelector('td:nth-child(2)');
+    const totalCell = row.querySelector('td:nth-child(3)');
     if (totalCell) {
         const amount = parseInt(totalCell.textContent.replace(/[^\d]/g, ''));
         if (amount > 500000) {
-            totalCell.style.background = 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)';
-            totalCell.style.color = '#856404';
+            totalCell.style.background = 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)';
+            totalCell.style.color = '#92400e';
             totalCell.style.fontWeight = '800';
+            totalCell.style.border = '2px solid #f59e0b';
         } else if (amount > 100000) {
-            totalCell.style.background = 'linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%)';
-            totalCell.style.color = '#0c5460';
+            totalCell.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
+            totalCell.style.color = '#166534';
+            totalCell.style.border = '2px solid #bbf7d0';
         }
     }
 });
 
 // Add real-time date formatting
-document.querySelectorAll('table tbody tr td:nth-child(3)').forEach(dateCell => {
+document.querySelectorAll('table tbody tr td:nth-child(4)').forEach(dateCell => {
     const dateText = dateCell.textContent.trim();
     const today = new Date().toLocaleDateString('id-ID');
     const cellDate = new Date(dateText.split(' ')[0].split('-').reverse().join('-')).toLocaleDateString('id-ID');
     
     if (cellDate === today) {
-        dateCell.style.background = 'linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%)';
-        dateCell.style.color = '#155724';
+        dateCell.style.background = 'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)';
+        dateCell.style.color = '#166534';
+        dateCell.style.border = '2px solid #10b981';
         dateCell.innerHTML = '🔥 ' + dateText + ' (Hari ini)';
     }
 });
@@ -686,5 +814,19 @@ function animateTransactionCount() {
 window.addEventListener('load', () => {
     setTimeout(animateTransactionCount, 500);
 });
+
+// Add form validation
+document.querySelector('.filter-form').addEventListener('submit', function(e) {
+    const startDate = document.querySelector('input[name="start_date"]').value;
+    const endDate = document.querySelector('input[name="end_date"]').value;
+    
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+        e.preventDefault();
+        alert('Tanggal mulai tidak boleh lebih besar dari tanggal akhir!');
+        return false;
+    }
+});
+
+console.log('✅ Transactions page loaded with yellow theme');
 </script>
 @endsection

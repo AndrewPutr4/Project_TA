@@ -4,17 +4,17 @@
 <style>
     main {
         padding: 20px;
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         min-height: calc(100vh - 70px);
     }
 
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 40px;
         border-radius: 20px;
         margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
         position: relative;
     }
 
@@ -89,20 +89,20 @@
     .content-card {
         background: white;
         border-radius: 15px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 10px rgba(245, 158, 11, 0.08);
         overflow: hidden;
-        border: none;
+        border: 2px solid #fed7aa;
     }
 
     .card-header {
-        background: #f8f9fa;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         padding: 20px 25px;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #fed7aa;
     }
 
     .card-header h3 {
         margin: 0;
-        color: #495057;
+        color: #92400e;
         font-size: 1.3rem;
         font-weight: 600;
         display: flex;
@@ -118,7 +118,7 @@
     }
 
     .table thead th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 15px 20px;
         text-align: left;
@@ -132,7 +132,7 @@
     .table tbody td {
         padding: 15px 20px;
         border: none;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #fed7aa;
         vertical-align: middle;
         font-size: 0.95rem;
     }
@@ -143,11 +143,11 @@
     }
 
     .table tbody tr:hover {
-        background-color: #f8f9ff;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
     }
 
     .table tbody tr:nth-child(even) {
-        background-color: #fafafa;
+        background-color: #fffbeb;
     }
 
     .table tbody tr:last-child td {
@@ -157,7 +157,7 @@
     /* Kasir name styling */
     .kasir-name {
         font-weight: 600;
-        color: #495057;
+        color: #92400e;
     }
 
     .kasir-name::before {
@@ -169,13 +169,14 @@
     .time-cell {
         font-family: 'Courier New', monospace;
         font-weight: 600;
-        background: #e3f2fd;
-        color: #1565c0;
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
         border-radius: 6px;
         text-align: center;
         padding: 8px 12px;
         border: none;
         display: inline-block;
+        border: 2px solid #bfdbfe;
     }
 
     .time-start::before {
@@ -186,6 +187,16 @@
     .time-end::before {
         content: '🕕';
         margin-right: 5px;
+    }
+
+    .date-cell {
+        font-weight: 600;
+        color: #92400e;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 2px solid #fed7aa;
+        display: inline-block;
     }
 
     /* Action buttons */
@@ -202,34 +213,39 @@
         margin-right: 8px;
         border: none;
         cursor: pointer;
+        border: 2px solid transparent;
     }
 
     .btn-edit {
-        background: #17a2b8;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         color: white;
+        border-color: #3b82f6;
     }
 
     .btn-edit:hover {
-        background: #138496;
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
         color: white;
         text-decoration: none;
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 
     .btn-delete {
-        background: #dc3545;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
+        border-color: #ef4444;
     }
 
     .btn-delete:hover {
-        background: #c82333;
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
 
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #6c757d;
+        color: #92400e;
         font-size: 1.1rem;
         border: none;
     }
@@ -384,6 +400,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 150);
         });
     });
+    
+    console.log('✅ Shifts page loaded with yellow theme');
 });
 </script>
 @endsection

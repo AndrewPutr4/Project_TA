@@ -7,15 +7,17 @@
         margin: 0 auto;
         padding: 20px;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        min-height: calc(100vh - 70px);
     }
 
     .page-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 30px;
         border-radius: 15px;
         margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
     }
 
     .page-header h2 {
@@ -36,21 +38,21 @@
     .card {
         background: white;
         border-radius: 15px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        box-shadow: 0 5px 25px rgba(245, 158, 11, 0.08);
         margin-bottom: 30px;
         overflow: hidden;
-        border: 1px solid #f0f0f0;
+        border: 2px solid #fed7aa;
     }
 
     .card-header {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         padding: 25px 30px;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid #fed7aa;
     }
 
     .card-header h4 {
         margin: 0;
-        color: #495057;
+        color: #92400e;
         font-size: 1.4rem;
         font-weight: 600;
         display: flex;
@@ -76,25 +78,25 @@
 
     .form-group label {
         font-weight: 600;
-        color: #495057;
+        color: #92400e;
         margin-bottom: 8px;
         font-size: 0.95rem;
     }
 
     .form-control {
         padding: 12px 16px;
-        border: 2px solid #e9ecef;
+        border: 2px solid #fed7aa;
         border-radius: 10px;
         font-size: 1rem;
         transition: all 0.3s ease;
-        background: #f8f9fa;
+        background: #fffbeb;
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #667eea;
+        border-color: #f59e0b;
         background: white;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
     }
 
     .btn {
@@ -109,46 +111,55 @@
         align-items: center;
         gap: 8px;
         text-decoration: none;
+        border: 2px solid transparent;
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
+        border-color: #f59e0b;
     }
 
     .btn-primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
     }
 
     .btn-success {
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
+        border-color: #10b981;
     }
 
     .btn-success:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(86, 171, 47, 0.3);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
     }
 
     .btn-warning {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
         color: white;
+        border-color: #3b82f6;
     }
 
     .btn-warning:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
     }
 
     .btn-danger {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         color: white;
+        border-color: #ef4444;
     }
 
     .btn-danger:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3);
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     }
 
     .table-container {
@@ -163,7 +174,7 @@
     }
 
     .table thead {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
     }
 
@@ -177,7 +188,7 @@
 
     .table td {
         padding: 16px 20px;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #fed7aa;
         vertical-align: middle;
     }
 
@@ -186,7 +197,7 @@
     }
 
     .table tbody tr:hover {
-        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
         transform: scale(1.01);
     }
 
@@ -205,18 +216,19 @@
         border-radius: 10px;
         margin-top: 20px;
         font-weight: 500;
+        border: 2px solid;
     }
 
     .alert-success {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+        color: #166534;
+        border-color: #bbf7d0;
     }
 
     .alert-danger {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        color: #991b1b;
+        border-color: #fecaca;
     }
 
     .modal {
@@ -239,8 +251,9 @@
         border-radius: 15px;
         min-width: 500px;
         max-width: 90vw;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
         animation: modalSlideIn 0.3s ease;
+        border: 2px solid #fed7aa;
     }
 
     @keyframes modalSlideIn {
@@ -255,7 +268,7 @@
     }
 
     .modal-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
         color: white;
         padding: 25px 30px;
         border-radius: 15px 15px 0 0;
@@ -285,7 +298,7 @@
     .empty-state {
         text-align: center;
         padding: 60px 20px;
-        color: #6c757d;
+        color: #92400e;
     }
 
     .empty-state-icon {
@@ -415,17 +428,17 @@
                             <td><strong>{{ $loop->iteration }}</strong></td>
                             <td>
                                 <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
                                         {{ strtoupper(substr($kasir->name, 0, 1)) }}
                                     </div>
                                     <div>
-                                        <div style="font-weight: 600; color: #495057;">{{ $kasir->name }}</div>
-                                        <div style="font-size: 0.85rem; color: #6c757d;">Kasir</div>
+                                        <div style="font-weight: 600; color: #92400e;">{{ $kasir->name }}</div>
+                                        <div style="font-size: 0.85rem; color: #92400e; opacity: 0.7;">Kasir</div>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span style="color: #495057;">{{ $kasir->email }}</span>
+                                <span style="color: #92400e;">{{ $kasir->email }}</span>
                             </td>
                             <td>
                                 <div class="action-buttons">
@@ -492,7 +505,7 @@
                 <div class="modal-form-group">
                     <label for="editPassword">Password Baru</label>
                     <input type="password" id="editPassword" name="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah password">
-                    <small style="color: #6c757d; font-size: 0.85rem; margin-top: 5px; display: block;">Kosongkan jika tidak ingin mengubah password</small>
+                    <small style="color: #92400e; font-size: 0.85rem; margin-top: 5px; display: block;">Kosongkan jika tidak ingin mengubah password</small>
                 </div>
                 <div class="modal-actions">
                     <button type="button" onclick="hideEdit()" class="btn btn-danger">
@@ -539,5 +552,7 @@ document.addEventListener('keydown', function(e) {
         hideEdit();
     }
 });
+
+console.log('✅ Kasir register page loaded with yellow theme');
 </script>
 @endsection

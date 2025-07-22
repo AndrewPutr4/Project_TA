@@ -31,7 +31,7 @@
                 <ul>
                     {{-- ✅ CORRECTION: Changed 'Beranda' to 'home' and 'Menu' to 'home' to match your routes file --}}
                     <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Menu</a></li>
-                    <li><a href="{{ route('orders.history') }}" class="{{ request()->routeIs('orders.*') ? 'active' : '' }}">Pesanan Saya</a></li>
+                    <li><a href="{{ route('orders.history') }}" class="{{ request()->routeIs('orders.*') ? 'active' : '' }}">Riwayat Pesanan</a></li>
                     {{-- <li><a href="#">Kontak</a></li> --}} {{-- Removed link to prevent errors --}}
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
