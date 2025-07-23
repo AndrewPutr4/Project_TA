@@ -155,7 +155,7 @@
     {{-- Bungkus semua konten yang mau dicetak dengan div ini --}}
     <div class="printable-area">
         <div class="receipt-header">
-            <h1><strong>Nama Toko Anda</strong></h1>
+            <h1><strong>Warung Bakso Selingsing</strong></h1>
             <p>Alamat Toko Anda</p>
             <p>Telp: (021) 123-4567</p>
         </div>
@@ -257,10 +257,20 @@
 
     {{-- Tombol aksi ini TIDAK akan ikut ter-print --}}
     <div class="actions">
-        <button onclick="window.print()">Cetak Struk</button>
-        <a href="{{ route('kasir.orders.index') }}">
-            <button type="button">Daftar Pesanan</button>
+        <button onclick="window.print()" class="print-btn">Cetak Struk</button>
+        <a href="{{ route('kasir.orders.index') }}" class="order-btn">
+            <button type="button">Daftar Order</button>
         </a>
     </div>
+
+    <script>
+        // Auto print saat halaman dimuat
+        window.onload = function() {
+            // Delay sebentar untuk memastikan halaman terload sempurna
+            setTimeout(function() {
+                window.print();
+            }, 1000);
+        };
+    </script>
 </body>
 </html>

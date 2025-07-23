@@ -26,11 +26,11 @@
 <body class="checkout-page">
     <header id="header" class="header d-flex align-items-center sticky-top">
         <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="{{ route('home') }}" class="logo d-flex align-items-center me-auto me-xl-0">
+            <a href="{{ route('home') }}" class="logo d-flex align-items-center">
                 <h1 class="sitename">Warung Bakso Selingsing</h1>
                 <span>.</span>
             </a>
-            <a class="btn btn-outline-primary" href="{{ route('home') }}">
+            <a class="btn btn-back-menu" href="{{ route('home') }}">
                 <i class="bi bi-arrow-left"></i> Kembali ke Menu
             </a>
         </div>
@@ -81,7 +81,7 @@
                                                 @endphp
                                                 <div class="cart-item">
                                                     <div class="cart-item-image">
-                                                        <img src="{{ $menu->image ? asset('storage/'.$menu->image) : 'https://placehold.co/80x80?text=No+Image' }}" 
+                                                        <img src="{{ $menu->image ? asset('storage/'.$menu->image) : 'https://placehold.co/80x80?text=No+Image' }}"
                                                              alt="{{ $menu->name }}" class="img-fluid">
                                                     </div>
                                                     <div class="cart-item-info">
@@ -126,10 +126,10 @@
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label for="customer_name" class="form-label">Nama Pelanggan *</label>
-                                                    <input type="text" 
-                                                           class="form-control @error('customer_name') is-invalid @enderror" 
-                                                           id="customer_name" 
-                                                           name="customer_name" 
+                                                    <input type="text"
+                                                           class="form-control @error('customer_name') is-invalid @enderror"
+                                                           id="customer_name"
+                                                           name="customer_name"
                                                            value="{{ old('customer_name') }}"
                                                            placeholder="Masukkan nama Anda"
                                                            required>
@@ -139,11 +139,12 @@
                                                 </div>
                                                 
                                                 <div class="col-md-6 mb-3">
-                                                    <label for="table_number" class="form-label">Nomor Meja (Kosongkan jika Takeaway)</label>
-                                                    <select class="form-select @error('table_number') is-invalid @enderror" 
-                                                            id="table_number" 
-                                                            name="table_number">
-                                                        <option value="">Takeaway</option>
+                                                    <label for="table_number" class="form-label">Nomor Meja *</label>
+                                                    <select class="form-select @error('table_number') is-invalid @enderror"
+                                                            id="table_number"
+                                                            name="table_number"
+                                                            required>
+                                                        <option value="">Pilih Nomor Meja</option>
                                                         @for($i = 1; $i <= 10; $i++)
                                                             <option value="{{ $i }}" {{ old('table_number') == $i ? 'selected' : '' }}>
                                                                 Meja {{ $i }}
@@ -158,10 +159,10 @@
                                             
                                             <div class="mb-3">
                                                 <label for="notes" class="form-label">Catatan Khusus (Opsional)</label>
-                                                <textarea class="form-control @error('notes') is-invalid @enderror" 
-                                                          id="notes" 
-                                                          name="notes" 
-                                                          rows="3" 
+                                                <textarea class="form-control @error('notes') is-invalid @enderror"
+                                                          id="notes"
+                                                          name="notes"
+                                                          rows="3"
                                                           placeholder="Catatan khusus untuk pesanan Anda...">{{ old('notes') }}</textarea>
                                                 @error('notes')
                                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -186,7 +187,6 @@
                                                 </label>
                                             </div>
                                         </div>
-
 
                                         <div class="d-grid gap-2 mt-4">
                                             <button type="submit" class="btn btn-warning btn-lg fw-bold" id="place-order-btn">
@@ -214,6 +214,7 @@
                         <p>Kec. Kuta Utara, Kabupaten Badung, Bali</p>
                     </div>
                 </div>
+
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-telephone icon"></i>
                     <div>
@@ -224,6 +225,7 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="col-lg-3 col-md-6 d-flex">
                     <i class="bi bi-clock icon"></i>
                     <div>
@@ -234,6 +236,7 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="col-lg-3 col-md-6">
                     <h4>Follow Us</h4>
                     <div class="social-links d-flex">
@@ -251,129 +254,279 @@
     <script src="{{ asset('assets/vendor/glightbox/js/glightbox.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/purecounter/purecounter_vanilla.js') }}"></script>
     <script src="{{ asset('assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <style>
+        /* Header Styling */
+        #header {
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+            box-shadow: 0 2px 15px rgba(245, 158, 11, 0.1);
+            padding: 1rem 0;
+        }
+
+        #header .container {
+            max-width: 1200px;
+        }
+
+        /* Logo Styling */
+        .logo {
+            text-decoration: none;
+            color: #f59e0b !important;
+        }
+
+        .logo .sitename {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f59e0b;
+            margin: 0;
+            font-family: 'Amatic SC', cursive;
+        }
+
+        .logo span {
+            color: #d97706;
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        /* Back Button Styling */
+        .btn-back-menu {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white !important;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-back-menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-back-menu:hover::before {
+            left: 100%;
+        }
+
+        .btn-back-menu:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .btn-back-menu:active {
+            transform: translateY(0);
+        }
+
+        .btn-back-menu i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-back-menu:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* Responsive Header */
+        @media (max-width: 768px) {
+            #header .container {
+                padding: 0 1rem;
+            }
+
+            .logo .sitename {
+                font-size: 1.4rem;
+            }
+
+            .btn-back-menu {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            #header .container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center !important;
+            }
+
+            .logo {
+                order: 1;
+            }
+
+            .btn-back-menu {
+                order: 2;
+                width: auto;
+                align-self: center;
+            }
+        }
+
+        /* Checkout Card Styling */
         .checkout-card {
-            background: #fff;
+            background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.1);
             padding: 2rem;
             margin-bottom: 2rem;
+            border: 1px solid rgba(245, 158, 11, 0.1);
         }
-        
+
+        .checkout-card h2 {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
         .cart-item {
             display: flex;
             align-items: center;
             padding: 1rem;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
+            border: 2px solid #fef3c7;
+            border-radius: 15px;
             margin-bottom: 0.75rem;
-            background: #fff;
-            transition: box-shadow 0.2s;
+            background: linear-gradient(135deg, #ffffff 0%, #fffbf0 100%);
+            transition: all 0.3s ease;
         }
-        
+
         .cart-item:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.15);
+            transform: translateY(-2px);
+            border-color: #f59e0b;
         }
-        
+
         .cart-item-image {
             flex-shrink: 0;
             margin-right: 1rem;
         }
-        
+
         .cart-item-image img {
             width: 60px;
             height: 60px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 10px;
+            border: 2px solid #fef3c7;
         }
-        
+
         .cart-item-info {
             flex-grow: 1;
         }
-        
+
         .cart-item-info h6 {
             margin: 0;
             font-weight: 600;
-            color: #333;
+            color: #92400e;
         }
-        
+
         .cart-item-info small {
-            color: #6c757d;
+            color: #a16207;
             font-size: 0.85rem;
         }
-        
+
         .cart-item-price {
             text-align: right;
             flex-shrink: 0;
         }
-        
+
         .quantity-badge {
-            background: #ffc107;
-            color: #000;
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 15px;
             font-size: 0.875rem;
             font-weight: 600;
             display: inline-block;
             margin-bottom: 0.25rem;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
         }
-        
+
         .order-summary {
-            border: 2px dashed #ffc107;
-            background: #fffbf0 !important;
+            border: 2px dashed #f59e0b;
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%) !important;
+            border-radius: 15px;
         }
-        
+
         .customer-info, .payment-method {
-            border-top: 2px solid #f8f9fa;
+            border-top: 2px solid #fef3c7;
             padding-top: 1.5rem;
         }
-        
+
+        .customer-info h4, .payment-method h4 {
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
         .form-label {
             font-weight: 600;
-            color: #333;
+            color: #92400e;
         }
-        
+
         .form-control:focus, .form-select:focus {
-            border-color: #ffc107;
-            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25);
         }
-        
+
+        .form-check-input:checked {
+            background-color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .form-check-input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.25);
+        }
+
         #place-order-btn {
-            background: linear-gradient(45deg, #ffc107, #ffb300);
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             border: none;
             padding: 1rem 2rem;
             font-size: 1.1rem;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
         }
-        
+
         #place-order-btn:hover {
-            background: linear-gradient(45deg, #ffb300, #ffa000);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(245, 158, 11, 0.4);
         }
-        
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .checkout-card {
                 padding: 1.5rem;
                 margin: 1rem;
                 border-radius: 15px;
             }
-            
+
             .cart-item {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 0.75rem;
                 padding: 1rem 0.75rem;
             }
-            
+
             .cart-item-image {
                 margin-right: 0;
                 align-self: center;
             }
-            
+
             .cart-item-price {
                 text-align: left;
                 width: 100%;
@@ -381,11 +534,25 @@
                 justify-content: space-between;
                 align-items: center;
             }
-            
+
             .cart-item-info {
                 text-align: center;
                 width: 100%;
             }
+        }
+
+        /* Alert Styling */
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            color: #92400e;
+            border-radius: 15px;
+        }
+
+        .alert-warning .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: none;
+            color: white;
         }
     </style>
 
@@ -399,6 +566,17 @@
                 form.addEventListener('submit', function(e) {
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Memproses...';
+                });
+            }
+
+            // Add loading animation to back button
+            const backBtn = document.querySelector('.btn-back-menu');
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
                 });
             }
         });

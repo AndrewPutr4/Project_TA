@@ -17,28 +17,128 @@
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
     
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    
+    <style>
+        /* Header dengan tema kuning */
+        #header {
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3c7 100%);
+            box-shadow: 0 2px 15px rgba(245, 158, 11, 0.1);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+        }
+        
+        .logo h1.sitename {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+        
+        .logo span {
+            color: #f59e0b;
+            font-weight: 800;
+        }
+        
+        .navmenu ul li a {
+            color: #92400e;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .navmenu ul li a:hover,
+        .navmenu ul li a.active {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 8px;
+            padding: 8px 15px;
+        }
+        
+        .btn-getstarted {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-getstarted::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-getstarted:hover::before {
+            left: 100%;
+        }
+        
+        .btn-getstarted:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Mobile responsive header */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .logo h1.sitename {
+                font-size: 1.4rem;
+            }
+            
+            .btn-getstarted {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo h1.sitename {
+                font-size: 1.2rem;
+            }
+            
+            .btn-getstarted {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            
+            .btn-getstarted .bi {
+                margin-right: 5px;
+            }
+        }
+    </style>
 </head>
-
 <body class="@yield('body-class', '')">
     <header id="header" class="header d-flex align-items-center sticky-top">
         <div class="container position-relative d-flex align-items-center justify-content-between">
-            <a href="{{ route('home') }}" class="logo d-flex align-items-center me-auto me-xl-0">
+            <a href="{{ route('home') }}" class="logo d-flex align-items-center">
                 <h1 class="sitename">Warung Bakso Selingsing</h1>
                 <span>.</span>
             </a>
             
-            <nav id="navmenu" class="navmenu">
+            <nav id="navmenu" class="navmenu d-none d-md-block">
                 <ul>
-                    {{-- ✅ CORRECTION: Changed 'Beranda' to 'home' and 'Menu' to 'home' to match your routes file --}}
                     <li><a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Menu</a></li>
                     <li><a href="{{ route('orders.history') }}" class="{{ request()->routeIs('orders.*') ? 'active' : '' }}">Riwayat Pesanan</a></li>
-                    {{-- <li><a href="#">Kontak</a></li> --}} {{-- Removed link to prevent errors --}}
                 </ul>
-                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
             
             <a class="btn-getstarted" href="{{ route('customer.welcome') }}">
-                <i class="bi bi-cart"></i> kembali ke menu
+                <i class="bi bi-arrow-left"></i> Kembali ke Menu
             </a>
         </div>
     </header>
@@ -52,8 +152,8 @@
                     <i class="bi bi-geo-alt icon"></i>
                     <div class="address">
                         <h4>Address</h4>
-            <p>Jl. Raya Abianbase No.80, Dalung</p>
-            <p>Kec. Kuta Utara, Kabupaten Badung, Bali</p>
+                        <p>Jl. Raya Abianbase No.80, Dalung</p>
+                        <p>Kec. Kuta Utara, Kabupaten Badung, Bali</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 d-flex">
@@ -62,7 +162,7 @@
                         <h4>Contact</h4>
                         <p>
                             <strong>Phone:</strong> <span>0813-5375-9061</span><br>
-              <strong>Email:</strong> <span>baksobalung779@gmail.com</span><br>
+                            <strong>Email:</strong> <span>baksobalung779@gmail.com</span><br>
                         </p>
                     </div>
                 </div>
@@ -70,9 +170,9 @@
                     <i class="bi bi-clock icon"></i>
                     <div>
                         <h4>Opening Hours</h4>
-            <p>
-              <strong>Open Everyday</strong><br>
-              <strong>Monday-Sanday:</strong> <span>10.00 AM - 22.00 PM</span><br>
+                        <p>
+                            <strong>Open Everyday</strong><br>
+                            <strong>Monday-Sunday:</strong> <span>10.00 AM - 22.00 PM</span><br>
                         </p>
                     </div>
                 </div>
@@ -80,7 +180,7 @@
                     <h4>Ikuti Kami</h4>
                     <div class="social-links d-flex">
                         <a href="https://www.facebook.com/share/1CHSi3ebgg/?mibextid=wwXIfr" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="https://www.instagram.com/bakso_balung_slingsing?igsh=dzU5ZzZwc3ZycHRm" class="instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.instagram.com/bakso_balung_slingsing?igsh=dzU5ZzZwc3ZycHRm" class="instagram"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
             </div>
