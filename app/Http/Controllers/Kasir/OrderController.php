@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Menu;
+use App\Models\Transaction;
 
 class OrderController extends Controller
 {
@@ -174,82 +175,94 @@ class OrderController extends Controller
     /**
      * Menyimpan order takeaway/dine-in baru yang dibuat dari dashboard kasir.
      */
-    public function storeTakeawayOrder(Request $request)
-    {
-        $validated = $request->validate([
-            'customer_name'  => 'required|string|max:255',
-            'order_type'     => 'required|in:takeaway,dine_in',
-            'table_number'   => 'required_if:order_type,dine_in|nullable|integer|min:1|max:50',
-            'notes'          => 'nullable|string|max:500',
-            'items'          => 'required|array|min:1',
-            'items.*.id'     => 'required|exists:menus,id',
-            'items.*.quantity' => 'required|integer|min:1|max:99',
+
+public function storeTakeawayOrder(Request $request)
+{
+    $validated = $request->validate([
+        'customer_name'  => 'required|string|max:255',
+        'order_type'     => 'required|in:takeaway,dine_in',
+        'table_number'   => 'required_if:order_type,dine_in|nullable|integer|min:1|max:50',
+        'notes'          => 'nullable|string|max:500',
+        'items'          => 'required|array|min:1',
+        'items.*.id'     => 'required|exists:menus,id',
+        'items.*.quantity' => 'required|integer|min:1|max:99',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        $subtotal = 0;
+        $orderItemsData = [];
+
+        foreach ($validated['items'] as $item) {
+            $menu = Menu::find($item['id']);
+            if (!$menu) {
+                throw new \Exception('Menu tidak ditemukan: ' . $item['id']);
+            }
+            $itemTotal = $menu->price * $item['quantity'];
+            $subtotal += $itemTotal;
+            $orderItemsData[] = [
+                'menu_id'          => $menu->id,
+                'menu_name'        => $menu->name,
+                'menu_description' => $menu->description ?? '',
+                'price'            => $menu->price,
+                'quantity'         => $item['quantity'],
+                'subtotal'         => $itemTotal,
+            ];
+        }
+
+        $serviceFee = $subtotal * 0.10;
+        $total = $subtotal + $serviceFee;
+
+        // 1. Buat Order baru (sama seperti sebelumnya)
+        $order = Order::create([
+            'customer_name'   => $validated['customer_name'],
+            'table_number'    => $validated['order_type'] === 'dine_in' ? $validated['table_number'] : null,
+            'notes'           => $validated['notes'] ?? null,
+            'subtotal'        => $subtotal,
+            'service_fee'     => $serviceFee,
+            'total'           => $total,
+            'status'          => 'confirmed', // atau 'completed'
+            'payment_status'  => 'unpaid',
+            'order_date'      => now(),
         ]);
 
-        DB::beginTransaction();
-        try {
-            $subtotal = 0;
-            $orderItemsData = [];
+        $order->orderItems()->createMany($orderItemsData);
 
-            // Hitung subtotal dan siapkan data order items
-            foreach ($validated['items'] as $item) {
-                $menu = Menu::find($item['id']);
-                if (!$menu) {
-                    throw new \Exception('Menu tidak ditemukan: ' . $item['id']);
-                }
+        // 2. ✨ BUAT TRANSACTION BARU YANG TERHUBUNG DENGAN ORDER
+        $transaction = Transaction::create([
+            'transaction_number' => Transaction::generateTransactionNumber(),
+            'order_id' => $order->id,
+            'kasir_id' => $request->user()->id,
+            'customer_name' => $order->customer_name,
+            'subtotal' => $order->subtotal,
+            'service_fee' => $order->service_fee,
+            'total' => $order->total,
+            'payment_method' => 'cashless', // Atau sesuai metode pembayaran yang digunakan
+            'status' => 'completed',
+            'notes' => $validated['notes'] ?? null,
+            'transaction_date' => now(),    
+        ]);
 
-                $itemTotal = $menu->price * $item['quantity'];
-                $subtotal += $itemTotal;
+        DB::commit();
 
-                $orderItemsData[] = [
-                    'menu_id'          => $menu->id,
-                    'menu_name'        => $menu->name,
-                    'menu_description' => $menu->description ?? '',
-                    'price'            => $menu->price,
-                    'quantity'         => $item['quantity'],
-                    'subtotal'         => $itemTotal,
-                ];
-            }
+        // 3. ✨ KIRIM ID TRANSACTION, BUKAN ORDER_ID
+        return response()->json([
+            'success' => true,
+            'message' => 'Order dan Transaksi berhasil dibuat!',
+            'data' => [
+                'transaction_id' => $transaction->id // <- Ini kuncinya!
+            ]
+        ]);
 
-            // Hitung pajak/service fee (10%)
-            $serviceFee = $subtotal * 0.10;
-            $total = $subtotal + $serviceFee;
-
-            // Buat order baru (tanpa customer_phone dan customer_address)
-            $order = Order::create([
-                'customer_name'    => $validated['customer_name'],
-                'table_number'     => $validated['order_type'] === 'dine_in' ? $validated['table_number'] : null,
-                'notes'            => $validated['notes'] ?? null,
-                'subtotal'         => $subtotal,
-                'service_fee'      => $serviceFee,
-                'total'           => $total,
-                'status'          => 'confirmed',
-                'payment_status'  => 'unpaid',
-                'order_date'      => now(),
-            ]);
-
-            // Buat order items
-            $order->orderItems()->createMany($orderItemsData);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Order berhasil dibuat!',
-                'order_id' => $order->id,  // Make sure this is included
-                'order_number' => $order->order_number,
-                'redirect_url' => route('kasir.transactions.create', ['order' => $order->id])  // Update this line
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Order creation error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Error creating order: ' . $e->getMessage()
-            ], 500);
-        }
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Order creation error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Error creating order: ' . $e->getMessage()
+        ], 500);
     }
+}
 
     /**
      * Store regular order (dari customer)

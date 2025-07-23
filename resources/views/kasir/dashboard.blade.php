@@ -885,7 +885,10 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const result = await response.json();
             if (response.ok && result.success) {
-                window.location.href = result.redirect_url;
+                const transaction_id = result.data.transaction_id;
+
+                // Update to use the transaction_id from response
+                window.location.href = `/kasir/transactions/${transaction_id}/receipt`;
             } else {
                 alert('Error: ' + (result.message || 'Terjadi kesalahan.'));
                 processBtn.disabled = false;
