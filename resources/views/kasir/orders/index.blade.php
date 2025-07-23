@@ -899,7 +899,7 @@ function confirmOrder(orderId) {
     .then(function(data) {
         if (data.success) {
             // Redirect to payment page
-            window.location.href = '/kasir/transactions/create/' + orderId;
+            window.location.href = data.redirect_url;
         } else {
             alert('Gagal mengkonfirmasi order: ' + (data.message || 'Unknown error'));
             confirmBtn.innerHTML = originalText;

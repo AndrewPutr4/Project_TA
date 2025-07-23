@@ -65,9 +65,7 @@ class Transaction extends Model
     {
         $subtotal = $order->subtotal;
         $serviceFee = $order->service_fee ?? 0;
-        $tax = $subtotal * 0.1; // 10% tax
-        $discount = $paymentData['discount'] ?? 0;
-        $total = $subtotal + $serviceFee + $tax - $discount;
+        $total = $subtotal + $serviceFee;
 
         // Calculate cash received and change for cash payments
         $cashReceived = $paymentData['payment_method'] === 'cash' ? ($paymentData['cash_received'] ?? $total) : $total;
@@ -80,9 +78,7 @@ class Transaction extends Model
             'customer_name' => $order->customer_name,
             'customer_phone' => $order->customer_phone,
             'subtotal' => $subtotal,
-            'tax' => $tax,
             'service_fee' => $serviceFee,
-            'discount' => $discount,
             'total' => $total,
             'cash_received' => $cashReceived,
             'change_amount' => $changeAmount,

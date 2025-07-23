@@ -4,72 +4,151 @@ namespace App\Http\Controllers\Kasir;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\Menu;
-use App\Models\Transaction;
 
 class OrderController extends Controller
 {
     /**
-     * Menampilkan daftar pesanan untuk kasir dengan pagination 5 per halaman.
+     * Menampilkan daftar pesanan
      */
     public function index(Request $request)
     {
-        $query = Order::with('orderItems.menu')
-                      ->orderBy('created_at', 'desc');
-
-        // Filter berdasarkan status
+        $query = Order::with(['orderItems'])
+            ->orderBy('created_at', 'desc');
+        
+        // Apply filters
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
-        // Filter berdasarkan payment status
+        
         if ($request->filled('payment_status')) {
             $query->where('payment_status', $request->payment_status);
         }
-
-        // Filter berdasarkan order type
+        
         if ($request->filled('order_type')) {
             if ($request->order_type === 'dine_in') {
                 $query->whereNotNull('table_number');
-            } elseif ($request->order_type === 'takeaway') {
+            } else {
                 $query->whereNull('table_number');
             }
         }
-
-        // Filter berdasarkan tanggal
+        
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->date);
         }
-
-        // Filter pencarian
+        
         if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('customer_name', 'like', "%{$searchTerm}%")
-                  ->orWhere('order_number', 'like', "%{$searchTerm}%");
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('customer_name', 'like', "%{$search}%")
+                  ->orWhere('order_number', 'like', "%{$search}%");
             });
         }
-
-        // Pagination dengan 5 items per halaman
-        $orders = $query->paginate(5);
-
+        
+        $orders = $query->paginate(15);
+        
         return view('kasir.orders.index', compact('orders'));
     }
-
+    
     /**
-     * Menampilkan detail pesanan untuk kasir.
+     * Menampilkan detail pesanan
      */
     public function show(Order $order)
     {
-        $order->load('orderItems.menu');
+        $order->load(['orderItems']);
         return view('kasir.orders.show', compact('order'));
     }
-
+    
     /**
-     * Konfirmasi order (untuk AJAX dari view)
+     * Menyimpan pesanan baru dari POS
+     */
+    public function storeTakeawayOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'order_type' => 'required|in:takeaway,dine_in',
+            'table_number' => 'required_if:order_type,dine_in|nullable|integer|min:1|max:50',
+            'notes' => 'nullable|string|max:500',
+            'items' => 'required|array|min:1',
+            'items.*.id' => 'required|exists:menus,id',
+            'items.*.quantity' => 'required|integer|min:1|max:99',
+        ]);
+        
+        DB::beginTransaction();
+        try {
+            $subtotal = 0;
+            $orderItemsData = [];
+            
+            // Hitung total dan siapkan data items
+            foreach ($validated['items'] as $item) {
+                $menu = Menu::findOrFail($item['id']);
+                $itemTotal = $menu->price * $item['quantity'];
+                $subtotal += $itemTotal;
+                
+                $orderItemsData[] = [
+                    'menu_id' => $menu->id,
+                    'menu_name' => $menu->name,
+                    'menu_description' => $menu->description ?? '',
+                    'price' => $menu->price,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $itemTotal,
+                ];
+            }
+            
+            // Hitung biaya layanan (10%)
+            $serviceFee = $subtotal * 0.10;
+            $total = $subtotal + $serviceFee;
+            
+            // Buat order baru
+            $order = Order::create([
+                'customer_name'  => $validated['customer_name'],
+                'table_number'   => $validated['order_type'] === 'dine_in' ? $validated['table_number'] : null,
+                'notes'          => $validated['notes'] ?? null,
+                'subtotal'       => $subtotal,
+                'service_fee'    => $serviceFee,
+                'total'          => $total,
+                'status'         => 'confirmed', // Langsung confirmed untuk kasir
+                'payment_status' => 'unpaid',
+                'order_date'     => now(),
+                'kasir_id'       => auth('kasir')->id(), // <-- INI PERBAIKANNYA
+            ]);
+            
+            // Simpan order items
+            $order->orderItems()->createMany($orderItemsData);
+            
+            DB::commit();
+            
+            Log::info('Order created successfully', [
+                'order_id' => $order->id,
+                'order_number' => $order->order_number,
+                'total' => $total
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesanan berhasil dibuat',
+                'redirect_url' => route('kasir.transactions.create', $order)
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Order creation failed', [
+                'error' => $e->getMessage(),
+                'request_data' => $validated
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal membuat pesanan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /**
+     * Konfirmasi pesanan
      */
     public function confirm(Order $order)
     {
@@ -77,27 +156,33 @@ class OrderController extends Controller
             if ($order->status !== 'pending') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Order sudah dikonfirmasi atau tidak dapat dikonfirmasi'
+                    'message' => 'Pesanan sudah dikonfirmasi atau tidak dapat dikonfirmasi'
                 ], 400);
             }
-
+            
             $order->update(['status' => 'confirmed']);
             
             return response()->json([
                 'success' => true,
-                'message' => 'Order berhasil dikonfirmasi'
+                'message' => 'Pesanan berhasil dikonfirmasi',
+                'redirect_url' => route('kasir.transactions.create', $order)
             ]);
+            
         } catch (\Exception $e) {
-            Log::error('Order confirmation error: ' . $e->getMessage());
+            Log::error('Order confirmation failed', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengkonfirmasi order: ' . $e->getMessage()
+                'message' => 'Gagal mengkonfirmasi pesanan'
             ], 500);
         }
     }
-
+    
     /**
-     * Batalkan order (untuk AJAX dari view)
+     * Batalkan pesanan
      */
     public function cancel(Order $order)
     {
@@ -105,240 +190,80 @@ class OrderController extends Controller
             if (in_array($order->status, ['completed', 'cancelled'])) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Order tidak dapat dibatalkan'
+                    'message' => 'Pesanan tidak dapat dibatalkan'
                 ], 400);
             }
-
+            
             $order->update(['status' => 'cancelled']);
             
             return response()->json([
                 'success' => true,
-                'message' => 'Order berhasil dibatalkan'
+                'message' => 'Pesanan berhasil dibatalkan'
             ]);
+            
         } catch (\Exception $e) {
-            Log::error('Order cancellation error: ' . $e->getMessage());
+            Log::error('Order cancellation failed', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal membatalkan order: ' . $e->getMessage()
+                'message' => 'Gagal membatalkan pesanan'
             ], 500);
         }
     }
-
+    
     /**
-     * Memperbarui status pesanan.
+     * Update status pesanan
      */
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
             'status' => 'required|in:pending,confirmed,preparing,ready,completed,cancelled'
         ]);
-
+        
         try {
             $order->update(['status' => $request->status]);
             
             return response()->json([
                 'success' => true,
-                'message' => 'Status order berhasil diupdate'
+                'message' => 'Status pesanan berhasil diperbarui'
             ]);
+            
         } catch (\Exception $e) {
-            Log::error('Order status update error: ' . $e->getMessage());
+            Log::error('Order status update failed', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage()
+            ]);
+            
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengupdate status order'
+                'message' => 'Gagal memperbarui status pesanan'
             ], 500);
         }
     }
-
+    
     /**
-     * Get today's order statistics
+     * Statistik pesanan hari ini
      */
     public function todayStats()
     {
         $today = now()->toDateString();
-                
+        
         $stats = [
             'pending_orders' => Order::whereDate('created_at', $today)
-                                    ->where('status', 'pending')
-                                    ->count(),
+                ->where('status', 'pending')
+                ->count(),
             'total_orders' => Order::whereDate('created_at', $today)->count(),
             'completed_orders' => Order::whereDate('created_at', $today)
-                                        ->where('status', 'completed')
-                                        ->count(),
+                ->where('status', 'completed')
+                ->count(),
             'ready_orders' => Order::whereDate('created_at', $today)
-                                   ->where('status', 'ready')
-                                   ->count(),
+                ->where('status', 'ready')
+                ->count(),
         ];
-
-        return response()->json($stats);
-    }
         
-    /**
-     * Menyimpan order takeaway/dine-in baru yang dibuat dari dashboard kasir.
-     */
-
-public function storeTakeawayOrder(Request $request)
-{
-    $validated = $request->validate([
-        'customer_name'  => 'required|string|max:255',
-        'order_type'     => 'required|in:takeaway,dine_in',
-        'table_number'   => 'required_if:order_type,dine_in|nullable|integer|min:1|max:50',
-        'notes'          => 'nullable|string|max:500',
-        'items'          => 'required|array|min:1',
-        'items.*.id'     => 'required|exists:menus,id',
-        'items.*.quantity' => 'required|integer|min:1|max:99',
-    ]);
-
-    DB::beginTransaction();
-    try {
-        $subtotal = 0;
-        $orderItemsData = [];
-
-        foreach ($validated['items'] as $item) {
-            $menu = Menu::find($item['id']);
-            if (!$menu) {
-                throw new \Exception('Menu tidak ditemukan: ' . $item['id']);
-            }
-            $itemTotal = $menu->price * $item['quantity'];
-            $subtotal += $itemTotal;
-            $orderItemsData[] = [
-                'menu_id'          => $menu->id,
-                'menu_name'        => $menu->name,
-                'menu_description' => $menu->description ?? '',
-                'price'            => $menu->price,
-                'quantity'         => $item['quantity'],
-                'subtotal'         => $itemTotal,
-            ];
-        }
-
-        $serviceFee = $subtotal * 0.10;
-        $total = $subtotal + $serviceFee;
-
-        // 1. Buat Order baru (sama seperti sebelumnya)
-        $order = Order::create([
-            'customer_name'   => $validated['customer_name'],
-            'table_number'    => $validated['order_type'] === 'dine_in' ? $validated['table_number'] : null,
-            'notes'           => $validated['notes'] ?? null,
-            'subtotal'        => $subtotal,
-            'service_fee'     => $serviceFee,
-            'total'           => $total,
-            'status'          => 'confirmed', // atau 'completed'
-            'payment_status'  => 'unpaid',
-            'order_date'      => now(),
-        ]);
-
-        $order->orderItems()->createMany($orderItemsData);
-
-        // 2. ✨ BUAT TRANSACTION BARU YANG TERHUBUNG DENGAN ORDER
-        $transaction = Transaction::create([
-            'transaction_number' => Transaction::generateTransactionNumber(),
-            'order_id' => $order->id,
-            'kasir_id' => $request->user()->id,
-            'customer_name' => $order->customer_name,
-            'subtotal' => $order->subtotal,
-            'service_fee' => $order->service_fee,
-            'total' => $order->total,
-            'payment_method' => 'cashless', // Atau sesuai metode pembayaran yang digunakan
-            'status' => 'completed',
-            'notes' => $validated['notes'] ?? null,
-            'transaction_date' => now(),    
-        ]);
-
-        DB::commit();
-
-        // 3. ✨ KIRIM ID TRANSACTION, BUKAN ORDER_ID
-        return response()->json([
-            'success' => true,
-            'message' => 'Order dan Transaksi berhasil dibuat!',
-            'data' => [
-                'transaction_id' => $transaction->id // <- Ini kuncinya!
-            ]
-        ]);
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Order creation error: ' . $e->getMessage());
-        return response()->json([
-            'success' => false,
-            'message' => 'Error creating order: ' . $e->getMessage()
-        ], 500);
-    }
-}
-
-    /**
-     * Store regular order (dari customer)
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'customer_name'    => 'required|string|max:255',
-            'notes'            => 'nullable|string|max:500',
-            'items'            => 'required|array|min:1',
-            'items.*.menu_id'  => 'required|exists:menus,id',
-            'items.*.quantity' => 'required|integer|min:1',
-        ]);
-
-        DB::beginTransaction();
-        try {
-            $subtotal = 0;
-            $orderItemsData = [];
-
-            foreach ($validated['items'] as $item) {
-                $menu = Menu::find($item['menu_id']);
-                $itemTotal = $menu->price * $item['quantity'];
-                $subtotal += $itemTotal;
-
-                $orderItemsData[] = [
-                    'menu_id'          => $menu->id,
-                    'menu_name'        => $menu->name,
-                    'menu_description' => $menu->description ?? '',
-                    'price'            => $menu->price,
-                    'quantity'         => $item['quantity'],
-                    'subtotal'         => $itemTotal,
-                ];
-            }
-
-            $serviceFee = $subtotal * 0.10;
-            $total = $subtotal + $serviceFee;
-
-            // Buat order tanpa customer_phone dan customer_address
-            $order = Order::create([
-                'customer_name'    => $validated['customer_name'],
-                'notes'            => $validated['notes'] ?? null,
-                'subtotal'         => $subtotal,
-                'service_fee'      => $serviceFee,
-                'total'            => $total,
-                'status'           => 'pending',
-                'payment_status'   => 'unpaid',
-                'order_date'       => now(),
-            ]);
-
-            $order->orderItems()->createMany($orderItemsData);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Order berhasil dibuat',
-                'order_id' => $order->id,
-                'order_number' => $order->order_number
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Order creation error: ' . $e->getMessage());
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal membuat order'
-            ], 500);
-        }
-    }
-
-    /**
-     * Menampilkan halaman POS dengan daftar menu.
-     */
-    public function pos()
-    {
-        return redirect()->route('kasir.dashboard', ['new_order' => true]);
+        return response()->json($stats);
     }
 }
