@@ -711,13 +711,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 snap.pay(data.snap_token, {
                     onSuccess: function(result) {
+                        // ==================================================
+                        // === PERBAIKAN UTAMA ADA DI SINI ==================
+                        // ==================================================
+                        
+                        // Buat input tersembunyi untuk menyimpan payload Midtrans
                         let hiddenInput = document.createElement('input');
                         hiddenInput.type = 'hidden';
                         hiddenInput.name = 'midtrans_payload';
                         hiddenInput.value = JSON.stringify(result);
                         paymentForm.appendChild(hiddenInput);
                         
-                        paymentForm.submit();
+                        // Kirim form menggunakan metode submit asli dari elemen form,
+                        // ini akan melewati event listener 'submit' yang ada
+                        // dan mencegah loop tak terbatas.
+                        HTMLFormElement.prototype.submit.call(paymentForm);
                     },
                     onPending: function(result) {
                         alert("Menunggu pembayaran Anda!");
