@@ -617,7 +617,7 @@
 <main>
     <div class="head-title">
         <div class="left">
-            <h1>Transaksi Pelanggan</h1>
+            <h1>Laporan Transaksi</h1>
             <ul class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                 <li><i class='bx bx-chevron-right'></i></li>

@@ -588,6 +588,9 @@
             main {
                 padding: 24px 20px;
             }
+            #content nav {
+                padding: 0 20px; /* Adjusted padding for smaller screens */
+            }
             .head-title {
                 flex-direction: column;
                 gap: 20px;
@@ -794,7 +797,7 @@
             <li class="{{ request()->routeIs('admin.transactions.*') ? 'active' : '' }}">
                 <a href="{{ route('admin.transactions.index') }}">
                     <i class='bx bxs-message-dots'></i>
-                    <span class="text">Transaksi</span>
+                    <span class="text">Laporan Transaksi</span>
                 </a>
             </li>
         </ul>
@@ -835,15 +838,17 @@
                 <button onclick="closeProfileModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.profile.password') }}">
+                <form method="POST" action="{{ route('admin.profile.updatePassword') }}">
                     @csrf
+                    @method('PUT') {{-- Added PUT method --}}
+                    {{-- Removed current_password field as requested --}}
                     <div class="modal-form-group">
-                        <label for="new_password">Password Baru</label>
-                        <input type="password" id="new_password" name="new_password" required minlength="6" placeholder="Minimal 6 karakter">
+                        <label for="password">Password Baru</label> {{-- Renamed to 'password' --}}
+                        <input type="password" id="password" name="password" required minlength="6" placeholder="Minimal 6 karakter">
                     </div>
                     <div class="modal-form-group">
-                        <label for="new_password_confirmation">Konfirmasi Password</label>
-                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" required minlength="6" placeholder="Ulangi password baru">
+                        <label for="password_confirmation">Konfirmasi Password</label> {{-- Renamed to 'password_confirmation' --}}
+                        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="6" placeholder="Ulangi password baru">
                     </div>
                     <div class="modal-actions">
                         <button type="submit">Update Password</button>
@@ -948,7 +953,7 @@
         sidebar.style.transition = 'left 0.3s ease';
 
         console.log('✅ Admin layout loaded with yellow theme, responsive design, and auto-close sidebar');
-</script>
+    </script>
     @stack('scripts')
 </body>
 </html>

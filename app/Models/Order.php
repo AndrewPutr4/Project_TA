@@ -1,5 +1,6 @@
 <?php
 
+// ✅ PERBAIKAN: Namespace menggunakan backslash (\), bukan titik (.)
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,7 +31,7 @@ class Order extends Model
         'service_fee',
         'total',
         'status',
-        'payment_method', // <-- DITAMBAHKAN
+        'payment_method',
         'payment_status',
         'order_date',
         'order_number',
@@ -54,12 +55,9 @@ class Order extends Model
         parent::boot();
         
         static::creating(function ($order) {
-            // Generate UUID untuk ID jika belum ada
             if (empty($order->id)) {
                 $order->id = (string) Str::uuid();
             }
-            
-            // Generate order number jika belum ada
             if (empty($order->order_number)) {
                 $order->order_number = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(substr(str_replace('-', '', $order->id), 0, 6));
             }
@@ -67,9 +65,11 @@ class Order extends Model
     }
 
     /**
-     * Relasi ke OrderItems
+     * ✅ PERBAIKAN FINAL:
+     * Nama relasi untuk OrderItem kita standarkan menjadi "items".
+     * Ini adalah satu-satunya nama yang akan kita gunakan di seluruh aplikasi.
      */
-    public function orderItems(): HasMany
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }

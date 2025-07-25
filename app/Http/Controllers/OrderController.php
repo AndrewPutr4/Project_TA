@@ -17,7 +17,6 @@ class OrderController extends Controller
      */
     public function processCheckout(Request $request)
     {
-        // 1. Validasi Input Manual
         $request->validate([
             'customer_name'  => 'required|string|max:255',
             'table_number'   => 'nullable|integer',
@@ -32,11 +31,23 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
-            // 2. Kalkulasi Total
             $subtotal = 0;
+            $orderItemsData = []; // Siapkan array untuk item
+
+            // 2. Kalkulasi Total dan siapkan data item dalam satu loop
             foreach ($cart as $id => $details) {
                 if (isset($details['menu']) && is_object($details['menu'])) {
-                    $subtotal += $details['menu']->price * $details['quantity'];
+                    $itemTotal = $details['menu']->price * $details['quantity'];
+                    $subtotal += $itemTotal;
+                    
+                    // Tambahkan data item ke array
+                    $orderItemsData[] = [
+                        'menu_id'   => $id,
+                        'menu_name' => $details['menu']->name,
+                        'quantity'  => $details['quantity'],
+                        'price'     => $details['menu']->price,
+                        'subtotal'  => $itemTotal,
+                    ];
                 }
             }
             $serviceFee = 2000;
@@ -44,7 +55,6 @@ class OrderController extends Controller
 
             // 3. Buat Pesanan
             $order = Order::create([
-                'user_id'        => null,
                 'order_number'   => 'ORD-' . strtoupper(uniqid()),
                 'customer_name'  => $request->customer_name,
                 'table_number'   => $request->table_number,
@@ -58,30 +68,14 @@ class OrderController extends Controller
                 'order_date'     => now(),
             ]);
 
-            // 4. Simpan Item Pesanan
-            foreach ($cart as $id => $details) {
-                if (isset($details['menu']) && is_object($details['menu'])) {
-                    OrderItem::create([
-                        'order_id'  => $order->id,
-                        'menu_id'   => $id,
-                        'menu_name' => $details['menu']->name,
-                        'quantity'  => $details['quantity'],
-                        'price'     => $details['menu']->price,
-                        'subtotal'  => $details['menu']->price * $details['quantity'],
-                    ]);
-                }
-            }
+            // 4. ✅ PERBAIKAN: Simpan semua item sekaligus menggunakan relasi
+            $order->items()->createMany($orderItemsData);
 
-            // 5. ✅ PERBAIKAN: Cara yang benar untuk menyimpan ID ke session
-            // Ambil array yang sudah ada, atau buat array baru jika belum ada.
+            // 5. Simpan ID pesanan ke session
             $orderIds = $request->session()->get('customer_order_ids', []);
-            // Tambahkan ID baru ke array tersebut.
             $orderIds[] = $order->id;
-            // Simpan kembali array yang sudah diperbarui ke dalam session.
             $request->session()->put('customer_order_ids', $orderIds);
 
-
-            // 6. Selesaikan Proses
             session()->forget('cart');
             DB::commit();
 
@@ -94,8 +88,8 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("Order Checkout Error: " . $e->getMessage() . " at line " . $e->getLine());
-            return redirect()->back()->with('error', 'Terjadi kesalahan sistem saat memproses pesanan.');
+            Log::error("Order Checkout Error: " . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan sistem.');
         }
     }
 
@@ -105,16 +99,13 @@ class OrderController extends Controller
     public function history(Request $request)
     {
         $orderIds = $request->session()->get('customer_order_ids', []);
-
         if (empty($orderIds)) {
             return view('customer.orders.history', ['orders' => collect()]);
         }
-
         $orders = Order::whereIn('id', $orderIds)
-                       ->with('orderItems.menu')
+                       ->with('items.menu')
                        ->latest()
                        ->get();
-
         return view('customer.orders.history', compact('orders'));
     }
 
@@ -127,6 +118,7 @@ class OrderController extends Controller
         if (!in_array($order->id, $orderIds)) {
             abort(403, 'AKSES DITOLAK.');
         }
+        $order->load('items');
         return view('customer.orders.show', compact('order'));
     }
 
@@ -139,29 +131,8 @@ class OrderController extends Controller
         if (!in_array($order->id, $orderIds)) {
             abort(403);
         }
+        $order->load('items');
         return view('order.success', compact('order'));
-    }
-
-    /**
-     * Menyiapkan item untuk Midtrans.
-     */
-    private function prepareItemDetails($cart, $serviceFee)
-    {
-        $items = [];
-        foreach ($cart as $id => $details) {
-            if (isset($details['menu']) && is_object($details['menu'])) {
-                $items[] = [
-                    'id'       => $id,
-                    'price'    => $details['menu']->price,
-                    'quantity' => $details['quantity'],
-                    'name'     => substr($details['menu']->name, 0, 50),
-                ];
-            }
-        }
-        $items[] = [
-            'id' => 'SERVICE_FEE', 'price' => $serviceFee, 'quantity' => 1, 'name' => 'Biaya Layanan',
-        ];
-        return $items;
     }
 
     /**
@@ -174,16 +145,35 @@ class OrderController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
+        // ✅ PERBAIKAN: Sertakan detail item untuk Midtrans
+        $order->load('items');
+        $item_details = $order->items->map(function($item) {
+            return [
+                'id'       => $item->menu_id,
+                'price'    => (int) $item->price,
+                'quantity' => $item->quantity,
+                'name'     => $item->menu_name,
+            ];
+        })->toArray();
+
+        if ($order->service_fee > 0) {
+            $item_details[] = [
+                'id' => 'SERVICE_FEE', 'price' => (int) $order->service_fee,
+                'quantity' => 1, 'name' => 'Biaya Layanan',
+            ];
+        }
+
         $params = [
             'transaction_details' => [
                 'order_id'     => $order->order_number,
-                'gross_amount' => $order->total,
+                'gross_amount' => (int) $order->total,
             ],
             'customer_details' => [
                 'first_name' => $request->customer_name,
                 'email'      => 'guest@example.com',
                 'phone'      => '081234567890',
             ],
+            'item_details' => $item_details,
         ];
 
         return Snap::getSnapToken($params);

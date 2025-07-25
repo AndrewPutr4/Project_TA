@@ -3,22 +3,19 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Kasir\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\Kasir;
 use App\Http\Middleware\KasirMiddleware;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Kasir\DashboardController as KasirDashboardController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\ShiftController;
-use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\Admin\KasirController;
 use App\Http\Controllers\Admin\Auth\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\Auth\ForgotPasswordController as AdminForgotPasswordController;
 use App\Http\Controllers\Kasir\AuthController as KasirAuthController;
+use App\Http\Controllers\Kasir\DashboardController;
 use App\Http\Controllers\Kasir\ShiftController as KasirShiftController;
 use App\Http\Controllers\Kasir\MidtransCallbackController;
+// ✅ PERBAIKAN: Tambahkan use statement untuk Admin ProfileController
+use App\Http\Controllers\Admin\ProfileController; // Pastikan ini mengacu pada ProfileController yang diperbarui
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +39,7 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 // Rute untuk Proses Checkout
 Route::post('/order/checkout', [OrderController::class, 'processCheckout'])->name('order.checkout');
 Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+Route::get('/order/{order}', [OrderController::class, 'show'])->name('order.show'); // Rute ini sudah ada
 Route::get('/my-orders', [OrderController::class, 'history'])->name('orders.history');
 Route::get('/checkout', function() {
     return view('customer.checkout');
@@ -66,6 +63,13 @@ Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+    // Rute password reset
+    Route::get('/password/forgot', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('admin.password.request');
+    Route::post('/password/email', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('admin.password.email');
+    Route::get('/password/reset', [AdminForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset.form');
+    Route::post('/password/reset', [AdminForgotPasswordController::class, 'resetPassword'])->name('admin.password.update');
+
 
     // Rute yang dilindungi otentikasi admin
     Route::middleware('auth:admin')->group(function () {
@@ -91,6 +95,8 @@ Route::prefix('admin')->group(function () {
             'destroy' => 'admin.shifts.destroy'
         ]);
 
+        Route::get('transactions/export', [Admin\TransactionController::class, 'export'])->name('admin.transactions.export');
+
         Route::resource('transactions', Admin\TransactionController::class)->names([
             'index' => 'admin.transactions.index',
             'create' => 'admin.transactions.create',
@@ -100,6 +106,12 @@ Route::prefix('admin')->group(function () {
             'update' => 'admin.transactions.update',
             'destroy' => 'admin.transactions.destroy'
         ]);
+
+        // ✅ PERBAIKAN: Tambahkan rute untuk Admin Profile
+        Route::prefix('profile')->name('admin.profile.')->group(function () {
+            Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+            Route::put('/password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
+        });
 
         // Manajemen Kasir
         Route::resource('kasir', Admin\KasirController::class)
@@ -124,7 +136,7 @@ Route::prefix('kasir')->group(function() {
     Route::post('logout', [KasirAuthController::class, 'logout'])->name('kasir.logout');
     
     // Protected Routes - Menggunakan middleware kasir
-    Route::middleware(['auth', 'kasir'])->group(function () {
+    Route::middleware(['auth:kasir', KasirMiddleware::class])->group(function () {
         // Dashboard POS
         Route::get('dashboard', [DashboardController::class, 'index'])->name('kasir.dashboard');
         Route::get('pos', [DashboardController::class, 'index'])->name('kasir.pos');
@@ -135,23 +147,24 @@ Route::prefix('kasir')->group(function() {
         Route::post('shift/end', [KasirShiftController::class, 'endShift'])->name('kasir.shift.end');
         
         // Order Management
-        Route::get('orders', [OrderController::class, 'index'])->name('kasir.orders.index');
-        Route::get('orders/{order}', [OrderController::class, 'show'])->name('kasir.orders.show');
-        Route::post('orders/create', [OrderController::class, 'storeTakeawayOrder'])->name('kasir.orders.storeTakeaway');
-        Route::post('orders/{order}/confirm', [OrderController::class, 'confirm'])->name('kasir.orders.confirm');
-        Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->name('kasir.orders.cancel');
-        Route::post('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('kasir.orders.updateStatus');
+        Route::get('orders', [Kasir\OrderController::class, 'index'])->name('kasir.orders.index');
+        Route::get('orders/{order}', [Kasir\OrderController::class, 'show'])->name('kasir.orders.show');
+        Route::post('orders/create', [Kasir\OrderController::class, 'storeTakeawayOrder'])->name('kasir.orders.storeTakeaway');
+        Route::post('orders/{order}/confirm', [Kasir\OrderController::class, 'confirm'])->name('kasir.orders.confirm');
+        Route::post('orders/{order}/cancel', [Kasir\OrderController::class, 'cancel'])->name('kasir.orders.cancel');
+        Route::post('orders/{order}/status', [Kasir\OrderController::class, 'updateStatus'])->name('kasir.orders.updateStatus');
         
         // Transaction Management
-        Route::get('transactions', [TransactionController::class, 'index'])->name('kasir.transactions.index');
-        Route::get('orders/{order}/payment', [TransactionController::class, 'create'])->name('kasir.transactions.create');
-        Route::post('orders/{order}/payment', [TransactionController::class, 'store'])->name('kasir.transactions.store');
-        Route::get('transactions/{transaction}/receipt', [TransactionController::class, 'receipt'])->name('kasir.transactions.receipt');
-        Route::post('orders/{order}/midtrans-token', [TransactionController::class, 'createMidtransSnapToken'])->name('kasir.transactions.createMidtransSnapToken');
+        Route::get('transactions', [Kasir\TransactionController::class, 'index'])->name('kasir.transactions.index');
+        Route::get('transactions/{transaction}', [Kasir\TransactionController::class, 'show'])->name('kasir.transactions.show');
+        Route::get('orders/{order}/payment', [Kasir\TransactionController::class, 'create'])->name('kasir.transactions.create');
+        Route::post('orders/{order}/payment', [Kasir\TransactionController::class, 'store'])->name('kasir.transactions.store');
+        Route::get('transactions/{transaction}/receipt', [Kasir\TransactionController::class, 'receipt'])->name('kasir.transactions.receipt');
+        Route::post('orders/{order}/midtrans-token', [Kasir\TransactionController::class, 'createMidtransSnapToken'])->name('kasir.transactions.createMidtransSnapToken');
         
         // API Routes
-        Route::get('api/orders/stats', [OrderController::class, 'todayStats'])->name('kasir.api.orders.stats');
-        Route::get('api/transactions/stats', [TransactionController::class, 'todayStats'])->name('kasir.api.transactions.stats');
+        Route::get('api/orders/stats', [Kasir\OrderController::class, 'todayStats'])->name('kasir.api.orders.stats');
+        Route::get('api/transactions/stats', [Kasir\TransactionController::class, 'todayStats'])->name('kasir.api.transactions.stats');
     });
 });
 /*

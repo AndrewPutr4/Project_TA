@@ -16,7 +16,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::with(['orderItems'])
+        // Menggunakan relasi 'items'
+        $query = Order::with(['items'])
             ->orderBy('created_at', 'desc');
         
         // Apply filters
@@ -48,6 +49,7 @@ class OrderController extends Controller
             });
         }
         
+        // Menggunakan $query yang sudah difilter
         $orders = $query->paginate(15);
         
         return view('kasir.orders.index', compact('orders'));
@@ -58,7 +60,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load(['orderItems']);
+        $order->load(['items']);
         return view('kasir.orders.show', compact('order'));
     }
     
@@ -113,11 +115,11 @@ class OrderController extends Controller
                 'status'         => 'confirmed', // Langsung confirmed untuk kasir
                 'payment_status' => 'unpaid',
                 'order_date'     => now(),
-                'kasir_id'       => auth('kasir')->id(), // <-- INI PERBAIKANNYA
+                'kasir_id'       => auth('kasir')->id(),
             ]);
             
             // Simpan order items
-            $order->orderItems()->createMany($orderItemsData);
+            $order->items()->createMany($orderItemsData);
             
             DB::commit();
             

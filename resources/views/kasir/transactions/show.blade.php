@@ -45,7 +45,7 @@
                         <label>Customer</label>
                         <span>{{ $transaction->customer_name }}</span>
                     </div>
-                     
+                    
                     <div class="info-item">
                         <label>Metode Pembayaran</label>
                         <span>{{ ucfirst($transaction->payment_method) }}</span>
@@ -74,13 +74,13 @@
                         <span>Total</span>
                         <span>Rp {{ number_format($transaction->total, 0, ',', '.') }}</span>
                     </div>
-                     
+                    
                     @if($transaction->payment_method == 'cash')
                     <div class="summary-item">
                         <span>Uang Diterima</span>
                         <span>Rp {{ number_format($transaction->cash_received, 0, ',', '.') }}</span>
                     </div>
-                     
+                    
                     <div class="summary-item">
                         <span>Kembalian</span>
                         <span>Rp {{ number_format($transaction->change_amount, 0, ',', '.') }}</span>
@@ -93,11 +93,13 @@
         <div class="order-items-card">
             <div class="card-header">
                 <h2>Item yang Dibeli</h2>
-                <span class="item-count">{{ $transaction->order->orderItems->count() }} item</span>
+                {{-- ✅ PERBAIKAN: Ganti orderItems menjadi items --}}
+                <span class="item-count">{{ $transaction->order->items->count() }} item</span>
             </div>
             <div class="card-content">
                 <div class="items-list">
-                    @foreach($transaction->order->orderItems as $item)
+                    {{-- ✅ PERBAIKAN: Ganti orderItems menjadi items --}}
+                    @foreach($transaction->order->items as $item)
                     <div class="order-item">
                         <div class="item-info">
                             <h3 class="item-name">{{ $item->menu_name }}</h3>
@@ -116,7 +118,7 @@
 </div>
 
 <style>
-/* Tema Kuning/Amber untuk Detail Transaksi */
+/* ... (CSS Anda tidak perlu diubah) ... */
 .order-detail-container {
     max-width: 1400px;
     margin: 0 auto;

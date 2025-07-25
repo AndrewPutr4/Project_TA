@@ -131,14 +131,18 @@
                         </td>
                         <td class="order-items">
                             <div class="items-summary">
-                                {{ $order->orderItems->count() }} item(s)
+                                {{-- PERBAIKAN DI SINI --}}
+                                {{ $order->items->count() }} item(s)
                             </div>
                             <div class="items-preview">
-                                @foreach($order->orderItems->take(2) as $item)
+                                {{-- PERBAIKAN DI SINI --}}
+                                @foreach($order->items->take(2) as $item)
                                     <div class="item-preview">{{ $item->menu_name }} ({{ $item->quantity }}x)</div>
-                                @endforeach
-                                @if($order->orderItems->count() > 2)
-                                    <div class="more-items">+{{ $order->orderItems->count() - 2 }} lainnya</div>
+                                @endforeach  
+                                {{-- PERBAIKAN DI SINI --}}
+                                @if($order->items->count() > 2
+                                    {{-- PERBAIKAN DI SINI --}}
+                                    <div class="more-items">+{{ $order->items->count() - 2 }} lainnya</div>
                                 @endif
                             </div>
                         </td>

@@ -65,7 +65,8 @@
             {{-- Items List --}}
             <div class="items-section">
                 <h3 class="section-title">DETAIL PESANAN</h3>
-                @foreach($transaction->order->orderItems as $item)
+                {{-- ✅ PERBAIKAN: Ganti orderItems menjadi items --}}
+                @foreach($transaction->order->items as $item)
                     <div class="item-row">
                         <div class="item-info">
                             <div class="item-name">{{ $item->menu_name }}</div>

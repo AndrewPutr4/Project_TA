@@ -14,23 +14,19 @@ class Authenticate extends Middleware
     protected function redirectTo(Request $request): ?string
     {
         dd('Middleware Saya Dijalankan');
-        // If the request doesn't expect a JSON response...
-        if (! $request->expectsJson()) {
-            
-            // If the user is trying to access an admin route...
-            if ($request->routeIs('admin.*')) {
-                // ...redirect them to the admin login page.
-                return route('admin.login');
-            }
-
-            // If the user is trying to access a cashier route...
-            if ($request->routeIs('kasir.*')) {
-                // ...redirect them to the cashier login page.
-                return route('kasir.login');
-            }
+            if (! $request->expectsJson()) {
+        
+        // Jika mencoba akses rute admin, arahkan ke login admin
+        if ($request->routeIs('admin.*')) {
+            return route('admin.login');
         }
 
+        // Jika mencoba akses rute kasir, arahkan ke login kasir
+        if ($request->routeIs('kasir.*')) {
+            return route('kasir.login');
+        }
+    }
         // For any other case, or for JSON requests, do nothing.
-        return null;
+        return route('login');
     }
 }
