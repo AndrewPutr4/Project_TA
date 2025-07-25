@@ -18,6 +18,9 @@
     
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
     
+    <!-- Add this line to render pushed styles -->
+    @stack('styles')
+    
     <style>
         /* Header dengan tema kuning */
         #header {
@@ -27,16 +30,13 @@
         }
         
         .logo h1.sitename {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1e293b; /* Changed to a dark black/charcoal color */
             font-weight: 800;
             font-size: 1.8rem;
         }
         
         .logo span {
-            color: #f59e0b;
+            color: #1e293b; /* Changed to a dark black/charcoal color */
             font-weight: 800;
         }
         

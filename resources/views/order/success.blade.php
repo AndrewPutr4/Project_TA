@@ -68,8 +68,8 @@
                                 <strong>📋 Langkah Selanjutnya:</strong>
                                 @if($order->payment_method == 'cash')
                                     <ul class="list-unstyled mt-2 mb-0 text-start">
-                                        <li><i class="bi bi-check2 me-2"></i>Pesanan Anda sedang diproses oleh dapur.</li>
-                                        <li><i class="bi bi-cash me-2"></i>Silakan menuju ke kasir untuk melakukan pembayaran tunai.</li>
+                                        <li><i class="bi bi-check2 me-2"></i>Mohon selesaikan pembayaran tunai di kasir terlebih dahulu.</li>
+                                        <li><i class="bi bi-cash me-2"></i>Pesanan Anda akan diproses setelah pembayaran tunai selesai.</li>
                                     </ul>
                                 @else {{-- Untuk 'cashless' / QRIS --}}
                                     <p class="mt-2 mb-0">Pembayaran Anda berhasil! Pesanan Anda sedang kami proses. Silakan tunggu.</p>
@@ -77,13 +77,17 @@
                             </div>
                         </div>
 
-                        <div class="action-buttons">
-                            <a href="{{ route('customer.welcome') }}" class="btn btn-warning btn-lg me-2">
-                                <i class="bi bi-arrow-left me-1"></i> 🍜 Pesan Lagi
-                            </a>
-                            <a href="{{ route('order.show', $order->id) }}" class="btn btn-outline-primary btn-lg">
-                                <i class="bi bi-receipt me-1"></i> 📄 Lihat Detail
-                            </a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <div class="action-buttons">
+                                <a href="{{ route('order.show', $order->id) }}" class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-receipt me-1"></i> 📄 Lihat Detail
+                                </a>
+                            </div>
+                            <div class="action-buttons">
+                                <a href="{{ route('customer.welcome') }}" class="btn btn-warning btn-lg">
+                                    <i class="bi bi-arrow-left me-1"></i> 🍜 Pesan Lagi
+                                </a>
+                            </div>
                         </div>
                         
                         <div class="contact-info mt-4">
