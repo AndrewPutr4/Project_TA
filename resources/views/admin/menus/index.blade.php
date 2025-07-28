@@ -560,7 +560,7 @@
         padding: 25px 30px;
         border-top: 1px solid #fed7aa;
         display: flex;
-        justify-content: between;
+        justify-content: space-between; /* Changed from 'between' to 'space-between' */
         align-items: center;
         flex-wrap: wrap;
         gap: 20px;
@@ -720,6 +720,73 @@
         background-size: 200px 100%;
         animation: shimmer 1.5s infinite;
     }
+
+    /* Delete Confirmation Modal Styles */
+    .delete-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+    }
+
+    .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .modal-body {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .warning-text {
+        color: #ef4444;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
 </style>
 
 
@@ -768,6 +835,7 @@
                 @endforeach
             </select>
             <input type="hidden" name="search" value="{{ request('search') }}">
+            <input type="hidden" name="per_page" value="{{ request('per_page') }}"> {{-- Added per_page --}}
         </form>
 
         @if(request('search') || request('category'))
@@ -873,14 +941,11 @@
                                     <i class='bx bx-edit'></i>
                                     Edit
                                 </a>
-                                <form action="{{ route('admin.menus.destroy', $menu) }}" method="POST" style="display: inline;">
-                                    @csrf 
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Apakah Anda yakin ingin menghapus menu {{ $menu->name }}?')">
-                                        <i class='bx bx-trash'></i>
-                                        Hapus
-                                    </button>
-                                </form>
+                                <button type="button" class="btn-delete" 
+                                        onclick="showDeleteModal('{{ $menu->id }}', '{{ $menu->name }}')">
+                                    <i class='bx bx-trash'></i>
+                                    Hapus
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -982,106 +1047,169 @@
         </div>
         @endif
     </div>
-</div>
+
+    {{-- Delete Confirmation Modal --}}
+    <div class="delete-modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class='bx bx-error-circle warning-icon'></i>
+                <h3>Konfirmasi Hapus</h3>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus menu "<span id="menuToDelete"></span>"?</p>
+                <p class="warning-text">Tindakan ini tidak dapat dibatalkan!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+                    <i class='bx bx-x'></i> Batal
+                </button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf 
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">
+                        <i class='bx bx-trash'></i> Hapus Menu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> {{-- Close menu-container div --}}
 
 <script>
-// Add loading animation to buttons
-document.querySelectorAll('.btn-add, .btn-edit, .btn-delete').forEach(btn => {
-    btn.addEventListener('click', function() {
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 150);
+    // Add loading animation to buttons
+    document.querySelectorAll('.btn-add, .btn-edit, .btn-delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
     });
-});
 
-// Image error handling
-document.querySelectorAll('.menu-image').forEach(img => {
-    img.addEventListener('error', function() {
-        this.style.display = 'none';
-        const noImageDiv = document.createElement('div');
-        noImageDiv.className = 'no-image';
-        noImageDiv.innerHTML = '<i class="bx bx-image"></i>';
-        this.parentNode.appendChild(noImageDiv);
+    // Image error handling
+    document.querySelectorAll('.menu-image').forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const noImageDiv = document.createElement('div');
+            noImageDiv.className = 'no-image';
+            noImageDiv.innerHTML = '<i class="bx bx-image"></i>';
+            this.parentNode.appendChild(noImageDiv);
+        });
     });
-});
 
-// Animate statistics on page load
-function animateStats() {
-    const statNumbers = document.querySelectorAll('.stat-info h3');
-    statNumbers.forEach(stat => {
-        const finalNumber = parseInt(stat.textContent.replace(/[^0-9]/g, '')) || 0;
-        let currentNumber = 0;
-        const increment = finalNumber / 30;
-        const timer = setInterval(() => {
-            currentNumber += increment;
-            if (currentNumber >= finalNumber) {
-                currentNumber = finalNumber;
-                clearInterval(timer);
+    // Animate statistics on page load
+    function animateStats() {
+        const statNumbers = document.querySelectorAll('.stat-info h3');
+        statNumbers.forEach(stat => {
+            const finalNumber = parseInt(stat.textContent.replace(/[^0-9]/g, '')) || 0;
+            let currentNumber = 0;
+            const increment = finalNumber / 30;
+            const timer = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= finalNumber) {
+                    currentNumber = finalNumber;
+                    clearInterval(timer);
+                }
+                if (stat.textContent.includes('Rp')) {
+                    stat.textContent = 'Rp ' + Math.floor(currentNumber).toLocaleString('id-ID');
+                } else {
+                    stat.textContent = Math.floor(currentNumber);
+                }
+            }, 50);
+        });
+    }
+
+    // Run animation when page loads
+    window.addEventListener('load', animateStats);
+
+    // Auto-submit search form on input
+    let searchTimeout;
+    document.querySelector('input[name="search"]').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            this.form.submit();
+        }, 500);
+    });
+
+    // Add smooth scroll to top functionality
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        if (scrollTop > 300) {
+            if (!document.querySelector('.scroll-top')) {
+                const scrollBtn = document.createElement('button');
+                scrollBtn.className = 'scroll-top';
+                scrollBtn.innerHTML = '<i class="bx bx-up-arrow-alt"></i>';
+                scrollBtn.style.cssText = `
+                    position: fixed;
+                    bottom: 30px;
+                    right: 30px;
+                    width: 50px;
+                    height: 50px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    z-index: 1000;
+                    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+                    transition: all 0.3s ease;
+                `;
+                scrollBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                scrollBtn.addEventListener('mouseenter', () => {
+                    scrollBtn.style.transform = 'translateY(-3px)';
+                    scrollBtn.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
+                });
+                scrollBtn.addEventListener('mouseleave', () => {
+                    scrollBtn.style.transform = 'translateY(0)';
+                    scrollBtn.style.boxShadow = '0 5px 20px rgba(102, 126, 234, 0.3)';
+                });
+                document.body.appendChild(scrollBtn);
             }
-            if (stat.textContent.includes('Rp')) {
-                stat.textContent = 'Rp ' + Math.floor(currentNumber).toLocaleString('id-ID');
-            } else {
-                stat.textContent = Math.floor(currentNumber);
+        } else {
+            const scrollBtn = document.querySelector('.scroll-top');
+            if (scrollBtn) {
+                scrollBtn.remove();
             }
-        }, 50);
-    });
-}
-
-// Run animation when page loads
-window.addEventListener('load', animateStats);
-
-// Auto-submit search form on input
-let searchTimeout;
-document.querySelector('input[name="search"]').addEventListener('input', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        this.form.submit();
-    }, 500);
-});
-
-// Add smooth scroll to top functionality
-window.addEventListener('scroll', function() {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrollTop > 300) {
-        if (!document.querySelector('.scroll-top')) {
-            const scrollBtn = document.createElement('button');
-            scrollBtn.className = 'scroll-top';
-            scrollBtn.innerHTML = '<i class="bx bx-up-arrow-alt"></i>';
-            scrollBtn.style.cssText = `
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                width: 50px;
-                height: 50px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                z-index: 1000;
-                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
-                transition: all 0.3s ease;
-            `;
-            scrollBtn.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-            scrollBtn.addEventListener('mouseenter', () => {
-                scrollBtn.style.transform = 'translateY(-3px)';
-                scrollBtn.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.4)';
-            });
-            scrollBtn.addEventListener('mouseleave', () => {
-                scrollBtn.style.transform = 'translateY(0)';
-                scrollBtn.style.boxShadow = '0 5px 20px rgba(102, 126, 234, 0.3)';
-            });
-            document.body.appendChild(scrollBtn);
         }
-    } else {
-        const scrollBtn = document.querySelector('.scroll-top');
-        if (scrollBtn) {
-            scrollBtn.remove();
+    });
+
+    /* Delete Confirmation Modal Script */
+    function showDeleteModal(menuId, menuName) {
+        const modal = document.getElementById('deleteModal');
+        const menuToDelete = document.getElementById('menuToDelete');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        menuToDelete.textContent = menuName;
+        deleteForm.action = `/admin/menus/${menuId}`;
+        modal.style.display = 'flex'; // Changed to 'flex' for centering
+        
+        // Prevent page scrolling when modal is open
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'none';
+        
+        // Restore page scrolling
+        document.body.style.overflow = '';
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('deleteModal');
+        if (event.target == modal) {
+            closeDeleteModal();
         }
     }
-});
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeDeleteModal();
+        }
+    });
 </script>
 @endsection

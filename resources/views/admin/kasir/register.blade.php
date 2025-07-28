@@ -336,6 +336,206 @@
             flex-direction: column;
         }
     }
+
+    .delete-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+    }
+
+    .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .modal-body {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .warning-text {
+        color: #ef4444;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .edit-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .edit-modal .modal-content {
+        background: white;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3);
+        border: 2px solid #fed7aa;
+        overflow: hidden;
+    }
+
+    .edit-modal .modal-header {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: 2px solid #fde68a;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .edit-modal .modal-header h4 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .edit-modal .modal-body {
+        padding: 2rem;
+    }
+
+    .edit-modal .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-modal .form-label {
+        display: block;
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 0.5rem;
+    }
+
+    .edit-modal .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #fed7aa;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        background: #fffbeb;
+    }
+
+    .edit-modal .form-control:focus {
+        border-color: #f59e0b;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        background: white;
+    }
+
+    .edit-modal .form-hint {
+        font-size: 0.85rem;
+        color: #92400e;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        opacity: 0.8;
+    }
+
+    .edit-modal .modal-footer {
+        padding: 1.5rem 2rem;
+        background: #fffbeb;
+        border-top: 2px solid #fed7aa;
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    .edit-modal .btn-cancel {
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 2px solid #fed7aa;
+        color: #92400e;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .edit-modal .btn-cancel:hover {
+        background: #fffbeb;
+        border-color: #f59e0b;
+        transform: translateY(-2px);
+    }
+
+    .edit-modal .btn-save {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .edit-modal .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-60px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .edit-modal .modal-content {
+        animation: slideIn 0.3s ease-out;
+    }
 </style>
 
 <div class="kasir-container">
@@ -448,16 +648,12 @@
                                         </svg>
                                         Edit
                                     </button>
-                                    <form method="POST" action="{{ route('admin.kasir.destroy', $kasir->id) }}" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus kasir {{ $kasir->name }}?')" class="btn btn-danger btn-sm">
-                                            <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                                            </svg>
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <button onclick="showDeleteConfirm('{{ $kasir->id }}', '{{ addslashes($kasir->name) }}')" class="btn btn-danger btn-sm">
+                                        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -480,13 +676,11 @@
 </div>
 
 <!-- Edit Modal -->
-<div id="editModal" class="modal">
+<div id="editModal" class="edit-modal">
     <div class="modal-content">
         <div class="modal-header">
             <h4>
-                <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                </svg>
+                <i class='fas fa-user-edit'></i>
                 Edit Data Kasir
             </h4>
         </div>
@@ -494,33 +688,59 @@
             <form id="editForm" method="POST">
                 @csrf
                 @method('PUT')
-                <div class="modal-form-group">
-                    <label for="editName">Nama Lengkap</label>
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
                     <input type="text" id="editName" name="name" class="form-control" required>
                 </div>
-                <div class="modal-form-group">
-                    <label for="editEmail">Email</label>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
                     <input type="email" id="editEmail" name="email" class="form-control" required>
                 </div>
-                <div class="modal-form-group">
-                    <label for="editPassword">Password Baru</label>
-                    <input type="password" id="editPassword" name="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah password">
-                    <small style="color: #92400e; font-size: 0.85rem; margin-top: 5px; display: block;">Kosongkan jika tidak ingin mengubah password</small>
+                <div class="form-group">
+                    <label class="form-label">Password Baru</label>
+                    <input type="password" id="editPassword" name="password" class="form-control" 
+                           placeholder="Masukkan jika ingin mengubah password">
+                    <div class="form-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Kosongkan jika tidak ingin mengubah password
+                    </div>
                 </div>
-                <div class="modal-actions">
-                    <button type="button" onclick="hideEdit()" class="btn btn-danger">
-                        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                        </svg>
-                        Batal
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                        </svg>
-                        Simpan Perubahan
-                    </button>
-                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-cancel" onclick="hideEdit()">
+                <i class="fas fa-times"></i>
+                Batal
+            </button>
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i>
+                Simpan Perubahan
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="delete-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class='fas fa-exclamation-triangle warning-icon'></i>
+            <h4>Konfirmasi Hapus Kasir</h4>
+        </div>
+        <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus kasir "<span id="kasirToDelete"></span>"?</p>
+            <p class="warning-text">Tindakan ini tidak dapat dibatalkan!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i> Batal
+            </button>
+            <form id="deleteForm" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Hapus Kasir
+                </button>
             </form>
         </div>
     </div>
@@ -539,6 +759,23 @@ function hideEdit() {
     document.getElementById('editModal').style.display = 'none';
 }
 
+function showDeleteConfirm(kasirId, kasirName) {
+    const modal = document.getElementById('deleteModal');
+    const kasirToDelete = document.getElementById('kasirToDelete');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    kasirToDelete.textContent = kasirName;
+    deleteForm.action = `/admin/kasir/${kasirId}`;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
 // Close modal when clicking outside
 document.getElementById('editModal').addEventListener('click', function(e) {
     if (e.target === this) {
@@ -550,6 +787,21 @@ document.getElementById('editModal').addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         hideEdit();
+    }
+});
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
     }
 });
 

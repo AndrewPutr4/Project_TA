@@ -265,6 +265,108 @@
         box-shadow: none !important;
     }
 
+    /* Delete Modal Styles */
+    .delete-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 25px 50px rgba(245, 158, 11, 0.3);
+        border: 2px solid #fed7aa;
+        overflow: hidden;
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: 2px solid #fecaca;
+        text-align: center;
+    }
+
+    .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .modal-body {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .modal-warning {
+        color: #ef4444;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    .modal-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-cancel {
+        background: white;
+        border: 2px solid #e5e7eb;
+        color: #374151;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        border-color: #d1d5db;
+        background: #f9fafb;
+    }
+
+    .btn-confirm-delete {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-confirm-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-60px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
         main {
@@ -350,18 +452,10 @@
                         <span class="time-cell time-end">{{ $shift->end_time ?? '-' }}</span>
                     </td>
                     <td>
-                        <a href="{{ route('admin.shifts.edit', $shift) }}" class="btn-action btn-edit">
-                            <i class='bx bx-edit'></i>
-                            Edit
-                        </a>
-                        <form action="{{ route('admin.shifts.destroy', $shift) }}" method="POST" style="display:inline;">
-                            @csrf 
-                            @method('DELETE')
-                            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Yakin ingin menghapus shift ini?')">
-                                <i class='bx bx-trash'></i>
-                                Hapus
-                            </button>
-                        </form>
+                        <button type="button" class="btn-action btn-delete" onclick="showDeleteModal('{{ $shift->id }}', '{{ $shift->kasir_name }}')">
+                            <i class='bx bx-trash'></i>
+                            Hapus
+                        </button>
                     </td>
                 </tr>
                 @empty
@@ -373,6 +467,32 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="delete-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class='bx bx-error-circle warning-icon'></i>
+                <h3>Konfirmasi Hapus Shift</h3>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin menghapus shift untuk kasir "<span id="kasirToDelete"></span>"?</p>
+                <p class="modal-warning">Tindakan ini tidak dapat dibatalkan!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeDeleteModal()">
+                    <i class='bx bx-x'></i> Batal
+                </button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    @csrf 
+                    @method('DELETE')
+                    <button type="submit" class="btn-confirm-delete">
+                        <i class='bx bx-trash'></i> Hapus Shift
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </main>
 
@@ -402,6 +522,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     console.log('✅ Shifts page loaded with yellow theme');
+});
+
+function showDeleteModal(shiftId, kasirName) {
+    const modal = document.getElementById('deleteModal');
+    const kasirToDelete = document.getElementById('kasirToDelete');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    kasirToDelete.textContent = kasirName;
+    deleteForm.action = `/admin/shifts/${shiftId}`;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
+    }
 });
 </script>
 @endsection

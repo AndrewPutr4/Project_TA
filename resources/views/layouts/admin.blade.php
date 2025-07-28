@@ -441,30 +441,38 @@
             font-weight: 600;
         }
 
-        /* Modal Profile */
+        /* Modal Base Styles */
         .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
+            display: none; /* Hidden by default, will be changed to flex by JS */
+            position: fixed; /* Stay in place */
+            z-index: 9999; /* Sit on top */
             left: 0;
             top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
+            width: 100vw; /* Full width */
+            height: 100vh; /* Full height */
+            background: rgba(0,0,0,0.5); /* Black w/ opacity */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            backdrop-filter: blur(5px); /* Blur background */
+            opacity: 0; /* Start invisible for animation */
+            transition: opacity 0.3s ease; /* Fade in animation */
+        }
+
+        /* Show modal when 'show' class is added */
+        .modal.show {
+            opacity: 1; 
+            display: flex; /* Ensure it's flex when shown */
         }
 
         .modal-content {
             background: #fff;
             border-radius: 18px;
             max-width: 400px;
-            width: 90%;
-            margin: auto;
+            width: 90%; /* Responsive width */
+            margin: auto; /* Center horizontally */
             padding: 0;
             box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
-            animation: modalSlideIn 0.3s ease;
+            animation: modalSlideIn 0.3s ease forwards; /* Apply animation */
             border: 2px solid var(--warning-border);
         }
 
@@ -480,11 +488,12 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Red gradient for logout header */
             color: white;
             padding: 25px 30px;
             border-radius: 16px 16px 0 0;
             position: relative;
+            text-align: center; /* Center header text */
         }
 
         .modal-header h4 {
@@ -492,6 +501,12 @@
             font-size: 1.3rem;
             font-weight: 600;
         }
+        .modal-header .warning-icon { /* Specific style for the icon in logout modal header */
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
 
         .modal-header button {
             position: absolute;
@@ -545,8 +560,12 @@
         .modal-actions {
             display: flex;
             gap: 12px;
-            justify-content: flex-end;
+            justify-content: center; /* Center buttons */
             margin-top: 25px;
+            padding: 1.5rem; /* Add padding for better spacing */
+            border-top: 1px solid #e5e7eb; /* Separator line */
+            background: #f8fafc; /* Light background for footer */
+            border-radius: 0 0 16px 16px; /* Rounded bottom corners */
         }
 
         .modal-actions button {
@@ -557,16 +576,31 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1rem;
+            display: flex; /* For icon alignment */
+            align-items: center;
+            gap: 8px;
         }
 
-        .modal-actions button[type="submit"] {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        .modal-actions .btn-cancel { /* Specific style for cancel button */
+            background: #6c757d; /* Gray color */
             color: white;
         }
 
-        .modal-actions button[type="submit"]:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #b45309 100%);
+        .modal-actions .btn-cancel:hover {
+            background: #5a6268; /* Darker gray on hover */
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .modal-actions .btn-danger { /* Specific style for danger button */
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .modal-actions .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
         }
 
         /* Responsive Design */
@@ -803,13 +837,11 @@
         </ul>
         <ul class="side-menu bottom">
             <li>
-                <form method="POST" action="{{ route('admin.logout') }}">
-                    @csrf
-                    <button type="submit">
-                        <i class='bx bxs-log-out-circle'></i>
-                        <span class="text">Logout</span>
-                    </button>
-                </form>
+                {{-- Tombol Logout yang akan memicu modal --}}
+                <button type="button" id="logoutBtn">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </button>
             </li>
         </ul>
     </section>
@@ -840,14 +872,13 @@
             <div class="modal-body">
                 <form method="POST" action="{{ route('admin.profile.updatePassword') }}">
                     @csrf
-                    @method('PUT') {{-- Added PUT method --}}
-                    {{-- Removed current_password field as requested --}}
+                    @method('PUT')
                     <div class="modal-form-group">
-                        <label for="password">Password Baru</label> {{-- Renamed to 'password' --}}
+                        <label for="password">Password Baru</label>
                         <input type="password" id="password" name="password" required minlength="6" placeholder="Minimal 6 karakter">
                     </div>
                     <div class="modal-form-group">
-                        <label for="password_confirmation">Konfirmasi Password</label> {{-- Renamed to 'password_confirmation' --}}
+                        <label for="password_confirmation">Konfirmasi Password</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required minlength="6" placeholder="Ulangi password baru">
                     </div>
                     <div class="modal-actions">
@@ -858,7 +889,33 @@
         </div>
     </div>
 
+    {{-- Modal Konfirmasi Logout --}}
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                <i class='bx bx-log-out-circle warning-icon'></i>
+                <h4>Konfirmasi Logout</h4>
+            </div>
+            <div class="modal-body" style="text-align: center;"> {{-- Centered text in body --}}
+                <p>Apakah Anda yakin ingin logout?</p>
+                <p class="warning-text">Anda akan keluar dari sesi admin.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center; gap: 1rem;"> {{-- Centered buttons and added gap --}}
+                <button type="button" class="btn btn-secondary btn-cancel" onclick="closeLogoutModal()">
+                    <i class='bx bx-x'></i> Batal
+                </button>
+                <form id="logoutForm" method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
+                    @csrf 
+                    <button type="submit" class="btn btn-danger">
+                        <i class='bx bx-log-out'></i> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Sidebar toggle logic
         const sidebar = document.getElementById('sidebar');
         const menuButton = document.querySelector('#content nav .bx-menu');
         
@@ -872,22 +929,11 @@
         const sidebarLinks = document.querySelectorAll('#sidebar .side-menu a');
         sidebarLinks.forEach(link => {
             link.addEventListener('click', function() {
-                // Only auto-close on mobile/tablet
                 if (window.innerWidth <= 900) {
                     sidebar.classList.add('hide');
                 }
             });
         });
-
-        // Auto-close sidebar on mobile when logout button is clicked
-        const logoutButton = document.querySelector('#sidebar .side-menu button[type="submit"]');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', function() {
-                if (window.innerWidth <= 900) {
-                    sidebar.classList.add('hide');
-                }
-            });
-        }
 
         // Profile modal logic
         const profileBtn = document.getElementById('profileBtn');
@@ -917,8 +963,7 @@
                 const sidebar = document.getElementById('sidebar');
                 const menuButton = document.querySelector('#content nav .bx-menu');
                 
-                // Check if click is outside sidebar and not on menu button
-                if (!sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+                if (!sidebar.contains(e.target) && !menuButton.contains(e.target) && !sidebar.classList.contains('hide')) {
                     sidebar.classList.add('hide');
                 }
             }
@@ -928,10 +973,8 @@
         window.addEventListener('resize', function() {
             const sidebar = document.getElementById('sidebar');
             if (window.innerWidth > 900) {
-                // On desktop, show sidebar
                 sidebar.classList.remove('hide');
             } else {
-                // On mobile, hide sidebar by default
                 sidebar.classList.add('hide');
             }
         });
@@ -951,6 +994,28 @@
 
         // Add smooth transition for better UX
         sidebar.style.transition = 'left 0.3s ease';
+
+        // Logout Confirmation Modal Logic
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutModal = document.getElementById('logoutModal');
+
+        if (logoutBtn && logoutModal) {
+            logoutBtn.addEventListener('click', () => {
+                logoutModal.classList.add('show'); // Use class to show modal
+            });
+
+            window.closeLogoutModal = function() {
+                logoutModal.classList.remove('show'); // Use class to hide modal
+            };
+
+            logoutModal.addEventListener('click', function(e) {
+                if (e.target === logoutModal) closeLogoutModal();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeLogoutModal();
+            });
+        }
 
         console.log('✅ Admin layout loaded with yellow theme, responsive design, and auto-close sidebar');
     </script>

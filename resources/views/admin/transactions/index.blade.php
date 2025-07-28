@@ -612,7 +612,112 @@
     .filter-section {
         animation: fadeInUp 0.4s ease forwards;
     }
+
+    /* Delete Confirmation Modal Styles */
+    .delete-modal {
+        visibility: hidden; /* Controlled by JS */
+        opacity: 0; /* Controlled by JS for fade effect */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex; /* Always flex, visibility/opacity controls show/hide */
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+        transition: visibility 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+    }
+
+    .delete-modal.show { /* Class added by JS to show the modal */
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .delete-modal .modal-content {
+        background: white;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        animation: modalSlideIn 0.3s ease forwards; /* Animation for content */
+        border: 2px solid var(--warning-border);
+        overflow: hidden; /* Ensures rounded corners on children */
+    }
+
+    .delete-modal .modal-header {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Red gradient */
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+        position: relative;
+    }
+
+    .delete-modal .warning-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .delete-modal .modal-body {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .delete-modal .warning-text {
+        color: #ef4444;
+        font-weight: 600;
+        margin-top: 1rem;
+    }
+
+    .delete-modal .modal-footer {
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center; /* Center buttons */
+        gap: 1rem; /* Space between buttons */
+        border-top: 1px solid #e5e7eb;
+        background: #f8fafc; /* Light background for footer */
+        border-radius: 0 0 15px 15px; /* Match content border-radius */
+    }
+
+    .delete-modal .modal-footer .btn { /* General button style within modal footer */
+        padding: 12px 24px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .delete-modal .modal-footer .btn-secondary { /* Style for 'Batal' button */
+        background: #6c757d; /* Gray */
+        color: white;
+    }
+
+    .delete-modal .modal-footer .btn-secondary:hover {
+        background: #5a6268; /* Darker gray on hover */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .delete-modal .modal-footer .btn-danger { /* Style for 'Hapus Menu' button */
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Red gradient */
+        color: white;
+    }
+
+    .delete-modal .modal-footer .btn-danger:hover {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); /* Darker red on hover */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
 </style>
+
 
 <main>
     <div class="head-title">
@@ -683,15 +788,10 @@
                         <td data-label="Total">Rp {{ number_format($transaction->total, 0, ',', '.') }}</td>
                         <td data-label="Tanggal">{{ $transaction->created_at->format('d-m-Y H:i') }}</td>
                         <td data-label="Aksi">
-                            <a href="{{ route('admin.transactions.edit', $transaction) }}">
-                                <i class='bx bx-edit'></i>Edit
-                            </a>
-                            <form action="{{ route('admin.transactions.destroy', $transaction) }}" method="POST" style="display:inline;">
-                                @csrf @method('DELETE')
-                                <button type="submit" onclick="return confirm('Yakin hapus transaksi ini?')">
-                                    <i class='bx bx-trash'></i>Hapus
-                                </button>
-                            </form>
+                            {{-- Modifikasi tombol hapus untuk memicu modal --}}
+                            <button type="button" class="btn-delete" onclick="showDeleteModal('{{ $transaction->id }}', '{{ $transaction->transaction_number }}')">
+                                <i class='bx bx-trash'></i>Hapus
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -708,6 +808,32 @@
         </div>
     </div>
 </main>
+
+{{-- Delete Confirmation Modal --}}
+<div class="delete-modal" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <i class='bx bx-error-circle warning-icon'></i>
+            <h3>Konfirmasi Hapus</h3>
+        </div>
+        <div class="modal-body">
+            <p>Apakah Anda yakin ingin menghapus transaksi "<span id="transactionToDelete"></span>"?</p>
+            <p class="warning-text">Tindakan ini tidak dapat dibatalkan!</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-cancel" onclick="closeDeleteModal()">
+                <i class='bx bx-x'></i> Batal
+            </button>
+            <form id="deleteForm" method="POST" style="display: inline;">
+                @csrf 
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">
+                    <i class='bx bx-trash'></i> Hapus Transaksi
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
 // Add loading animation to buttons
@@ -824,6 +950,39 @@ document.querySelector('.filter-form').addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Tanggal mulai tidak boleh lebih besar dari tanggal akhir!');
         return false;
+    }
+});
+
+// Delete Confirmation Modal Script
+function showDeleteModal(transactionId, transactionNumber) {
+    const modal = document.getElementById('deleteModal');
+    const transactionToDelete = document.getElementById('transactionToDelete');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    transactionToDelete.textContent = '#' + transactionNumber; // Display transaction number
+    deleteForm.action = `/admin/transactions/${transactionId}`; // Set form action
+    modal.classList.add('show'); // Show modal with animation
+    document.body.style.overflow = 'hidden'; // Prevent page scrolling
+}
+
+function closeDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.remove('show'); // Hide modal with animation
+    document.body.style.overflow = ''; // Restore page scrolling
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDeleteModal();
     }
 });
 
