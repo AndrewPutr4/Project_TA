@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: project-ta # Anda bisa ganti nama ini
+    env: php                  # INI BAGIAN PALING PENTING
+    region: singapore
+    plan: free
+    buildCommand: "composer install --no-dev --optimize-autoloader && npm install && npm run build"
+    startCommand: "heroku-php-apache2 public/"
+    healthCheckPath: "/"
