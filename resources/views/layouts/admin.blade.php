@@ -91,7 +91,14 @@
         #sidebar .side-menu {
             padding: 20px 10px 10px 10px;
             flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.3) transparent;
         }
+        
+        #sidebar .side-menu::-webkit-scrollbar { width: 6px; }
+        #sidebar .side-menu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 8px; }
+        #sidebar .side-menu::-webkit-scrollbar-track { background: transparent; }
 
         #sidebar .side-menu li {
             margin-bottom: 6px;
@@ -156,27 +163,7 @@
         #sidebar .side-menu.bottom li {
             margin-bottom: 0;
         }
-
-        /* Scrollbar sidebar */
-        #sidebar .side-menu {
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.3) transparent;
-        }
-
-        #sidebar .side-menu::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #sidebar .side-menu::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
-            border-radius: 8px;
-        }
-
-        #sidebar .side-menu::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
+        
         /* --- CONTENT --- */
         #content {
             position: relative;
@@ -252,230 +239,13 @@
             color: var(--warning-text);
         }
 
+        /* --- MAIN CONTENT (Yielded) --- */
         main {
             padding: 32px 24px;
             min-height: calc(100vh - var(--navbar-height));
         }
 
-        /* --- STYLING KONTEN (DASHBOARD) --- */
-        .head-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 32px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: var(--border-radius-lg);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.3);
-        }
-
-        .head-title .left h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-            margin: 0;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .breadcrumb li a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .breadcrumb li a:hover,
-        .breadcrumb li a.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .breadcrumb li i {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .btn-download {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--white);
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-download:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
-
-        .box-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .box-info li {
-            background: var(--white);
-            padding: 32px 24px;
-            border-radius: var(--border-radius-lg);
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            border: 2px solid var(--warning-border);
-            transition: all 0.3s ease;
-        }
-
-        .box-info li:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
-        }
-
-        .box-info li i {
-            font-size: 3rem;
-            padding: 20px;
-            border-radius: 50%;
-            color: var(--white);
-        }
-
-        .box-info li:nth-child(1) i { 
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); 
-        }
-        .box-info li:nth-child(2) i { 
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
-        }
-        .box-info li:nth-child(3) i { 
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
-        }
-
-        .box-info li .text h3 { 
-            font-size: 2rem; 
-            font-weight: 700; 
-            color: var(--warning-text);
-        }
-        .box-info li .text p { 
-            font-size: 1rem; 
-            color: #92400e;
-            opacity: 0.8;
-        }
-
-        .table-data {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .table-data > div {
-            flex-grow: 1;
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            border: 2px solid var(--warning-border);
-        }
-
-        .table-data .order { flex-basis: 60%; }
-
-        .table-data .head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 24px;
-            border-bottom: 1px solid var(--warning-border);
-            background: var(--warning-bg);
-        }
-
-        .table-data .head h3 {
-            color: var(--warning-text);
-            font-weight: 700;
-        }
-
-        .table-data table { 
-            width: 100%; 
-            border-collapse: collapse; 
-        }
-
-        .table-data th, .table-data td { 
-            padding: 16px 24px; 
-            text-align: left; 
-        }
-
-        .table-data th {
-            background: var(--warning-bg);
-            color: var(--warning-text);
-            font-weight: 600;
-            border-bottom: 2px solid var(--warning-border);
-        }
-
-        .table-data td {
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .table-data tbody tr:hover {
-            background: var(--warning-bg);
-        }
-
-        .status.process {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            background: var(--warning-bg);
-            color: var(--warning-text);
-            border: 1px solid var(--warning-border);
-            font-weight: 600;
-        }
-
-        /* Modal Base Styles */
-        .modal {
-            display: none; /* Hidden by default, will be changed to flex by JS */
-            position: fixed; /* Stay in place */
-            z-index: 9999; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100vw; /* Full width */
-            height: 100vh; /* Full height */
-            background: rgba(0,0,0,0.5); /* Black w/ opacity */
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            backdrop-filter: blur(5px); /* Blur background */
-            opacity: 0; /* Start invisible for animation */
-            transition: opacity 0.3s ease; /* Fade in animation */
-        }
-
-        /* Show modal when 'show' class is added */
-        .modal.show {
-            opacity: 1; 
-            display: flex; /* Ensure it's flex when shown */
-        }
-
-        .modal-content {
-            background: #fff;
-            border-radius: 18px;
-            max-width: 400px;
-            width: 90%; /* Responsive width */
-            margin: auto; /* Center horizontally */
-            padding: 0;
-            box-shadow: 0 20px 60px rgba(245, 158, 11, 0.3);
-            animation: modalSlideIn 0.3s ease forwards; /* Apply animation */
-            border: 2px solid var(--warning-border);
-        }
-
+        /* --- Animation for Modal Content --- */
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
@@ -487,88 +257,228 @@
             }
         }
 
-        .modal-header {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Red gradient for logout header */
-            color: white;
-            padding: 25px 30px;
-            border-radius: 16px 16px 0 0;
-            position: relative;
-            text-align: center; /* Center header text */
+        /* --- KODE CSS UNTUK KONTEN DASHBOARD --- */
+
+/* Style untuk Judul Halaman dan Breadcrumb */
+.head-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.head-title .left h1 {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.head-title .left .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.head-title .left .breadcrumb li a {
+    color: #888;
+}
+.head-title .left .breadcrumb li a.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Style untuk Kotak Info (Orders, Visitors, Sales) */
+.box-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 36px;
+}
+.box-info li {
+    padding: 24px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border: 2px solid var(--warning-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.box-info li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.1);
+}
+.box-info li i {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    font-size: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.box-info li:nth-child(1) i { background: #3b82f6; } /* Biru */
+.box-info li:nth-child(2) i { background: #10b981; } /* Hijau */
+.box-info li:nth-child(3) i { background: var(--primary-dark); } /* Oranye */
+
+.box-info li .text h3 {
+    font-size: 24px;
+    font-weight: 600;
+}
+.box-info li .text p {
+    color: #555;
+}
+
+/* Style untuk Tabel Data */
+.table-data {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    width: 100%;
+}
+.table-data > .order {
+    flex-grow: 1;
+    border-radius: 20px;
+    background: white;
+    padding: 24px;
+    overflow-x: auto;
+    border: 2px solid var(--warning-border);
+}
+.table-data .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.table-data .head h3 {
+    margin-right: auto;
+    font-size: 24px;
+    font-weight: 600;
+}
+.table-data table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table-data table th {
+    padding-bottom: 12px;
+    font-size: 13px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+.table-data table td {
+    padding: 16px 0;
+}
+.table-data table tr:hover {
+    background: #f9f9f9;
+}
+.table-data .status {
+    font-size: 10px;
+    padding: 6px 16px;
+    color: white;
+    border-radius: 20px;
+    font-weight: 700;
+    background: #10b981;
+}
+
+/* Style Responsif untuk Konten Dashboard */
+@media (max-width: 900px) {
+    .box-info {
+        grid-template-columns: 1fr;
+    }
+    .table-data {
+        flex-direction: column;
+    }
+}
+@media (max-width: 600px) {
+    .box-info li {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .head-title .left h1 {
+        font-size: 1.75rem;
+    }
+}
+
+        /* --- LOGOUT MODAL STYLES (New) --- */
+        .logout-modal {
+            visibility: hidden;
+            opacity: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            transition: visibility 0.3s ease, opacity 0.3s ease;
         }
 
-        .modal-header h4 {
-            margin: 0;
-            font-size: 1.3rem;
-            font-weight: 600;
+        .logout-modal.show {
+            visibility: visible;
+            opacity: 1;
         }
-        .modal-header .warning-icon { /* Specific style for the icon in logout modal header */
+
+        .logout-modal .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 450px;
+            animation: modalSlideIn 0.3s ease forwards;
+            border: 2px solid #ef4444; /* Red border for warning */
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .logout-modal .modal-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .logout-modal .modal-header .warning-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
             display: block;
         }
-
-
-        .modal-header button {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: none;
-            border: none;
+        
+        .logout-modal .modal-header h3 {
+            margin: 0;
             font-size: 1.5rem;
-            color: rgba(255,255,255,0.8);
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-weight: 700;
         }
 
-        .modal-header button:hover {
-            color: white;
-            transform: scale(1.1);
+        .logout-modal .modal-body {
+            padding: 2rem;
+            text-align: center;
+            color: #4b5563;
+        }
+        
+        .logout-modal .modal-body p:first-child {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
         }
 
-        .modal-body {
-            padding: 30px;
-        }
-
-        .modal-form-group {
-            margin-bottom: 20px;
-        }
-
-        .modal-form-group label {
+        .logout-modal .warning-text {
+            color: #ef4444;
             font-weight: 600;
-            color: var(--warning-text);
-            font-size: 0.95rem;
-            display: block;
-            margin-bottom: 8px;
+            margin-top: 1rem;
         }
 
-        .modal-form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid var(--warning-border);
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .modal-form-group input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
-        }
-
-        .modal-actions {
+        .logout-modal .modal-footer {
+            padding: 1.5rem;
             display: flex;
-            gap: 12px;
-            justify-content: center; /* Center buttons */
-            margin-top: 25px;
-            padding: 1.5rem; /* Add padding for better spacing */
-            border-top: 1px solid #e5e7eb; /* Separator line */
-            background: #f8fafc; /* Light background for footer */
-            border-radius: 0 0 16px 16px; /* Rounded bottom corners */
+            justify-content: center;
+            gap: 1rem;
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
         }
 
-        .modal-actions button {
+        .logout-modal .modal-footer .btn {
             padding: 12px 24px;
             border: none;
             border-radius: 10px;
@@ -576,77 +486,37 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1rem;
-            display: flex; /* For icon alignment */
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .logout-modal .modal-footer .btn:hover {
+             transform: translateY(-2px);
         }
 
-        .modal-actions .btn-cancel { /* Specific style for cancel button */
-            background: #6c757d; /* Gray color */
+        .logout-modal .modal-footer .btn-secondary {
+            background: #6c757d;
             color: white;
         }
 
-        .modal-actions .btn-cancel:hover {
-            background: #5a6268; /* Darker gray on hover */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        .logout-modal .modal-footer .btn-secondary:hover {
+            background: #5a6268;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
         }
 
-        .modal-actions .btn-danger { /* Specific style for danger button */
+        .logout-modal .modal-footer .btn-danger {
             background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
             color: white;
         }
 
-        .modal-actions .btn-danger:hover {
+        .logout-modal .modal-footer .btn-danger:hover {
             background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
         }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            #sidebar {
-                width: 240px;
-            }
-            #content {
-                width: calc(100% - 240px);
-                left: 240px;
-            }
-            #sidebar.hide ~ #content {
-                width: calc(100% - var(--sidebar-collapsed-width));
-                left: var(--sidebar-collapsed-width);
-            }
-        }
-
-        @media (max-width: 1024px) {
-            main {
-                padding: 24px 20px;
-            }
-            #content nav {
-                padding: 0 20px; /* Adjusted padding for smaller screens */
-            }
-            .head-title {
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-                padding: 1.5rem;
-            }
-            .head-title .left h1 {
-                font-size: 2rem;
-            }
-            .btn-download {
-                width: 100%;
-                justify-content: center;
-            }
-            .box-info {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
-            }
-            .table-data {
-                flex-direction: column;
-            }
-        }
-
+        
+        /* --- Responsive Design --- */
         @media (max-width: 900px) {
             #sidebar {
                 width: 85vw;
@@ -654,146 +524,10 @@
                 left: -85vw;
                 transition: left 0.3s ease;
             }
-            #sidebar:not(.hide) {
-                left: 0;
-            }
-            #sidebar.hide {
-                left: -85vw;
-            }
-            #content {
-                left: 0;
-                width: 100vw;
-            }
-            #sidebar.hide ~ #content {
-                left: 0;
-                width: 100vw;
-            }
-            
-            /* Overlay for mobile */
-            #sidebar:not(.hide)::after {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 85vw;
-                width: 15vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.5);
-                z-index: -1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            main {
-                padding: 20px 16px;
-            }
-            #content nav {
-                padding: 0 16px;
-            }
-            .head-title {
-                padding: 1.25rem;
-            }
-            .head-title .left h1 {
-                font-size: 1.75rem;
-            }
-            .box-info {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .box-info li {
-                padding: 24px 20px;
-                flex-direction: column;
-                text-align: center;
-            }
-            .box-info li i {
-                font-size: 2.5rem;
-                padding: 16px;
-            }
-            .table-data .head {
-                padding: 20px;
-            }
-            .table-data th, .table-data td {
-                padding: 12px 16px;
-                font-size: 0.9rem;
-            }
-            .modal-content {
-                margin: 20px;
-                width: calc(100% - 40px);
-            }
-            .modal-body {
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            main {
-                padding: 16px 12px;
-            }
-            #content nav {
-                padding: 0 12px;
-            }
-            .head-title {
-                padding: 1rem;
-            }
-            .head-title .left h1 {
-                font-size: 1.5rem;
-            }
-            .box-info li {
-                padding: 20px 16px;
-            }
-            .box-info li .text h3 {
-                font-size: 1.5rem;
-            }
-            .table-data .head {
-                padding: 16px;
-            }
-            .table-data th, .table-data td {
-                padding: 10px 12px;
-                font-size: 0.85rem;
-            }
-            #content nav .profile span {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            #sidebar {
-                width: 100vw;
-                left: -100vw;
-            }
-            #sidebar:not(.hide) {
-                left: 0;
-            }
-            #sidebar.hide {
-                left: -100vw;
-            }
-            main {
-                padding: 12px 8px;
-            }
-            .head-title {
-                padding: 0.75rem;
-            }
-            .head-title .left h1 {
-                font-size: 1.25rem;
-            }
-            .box-info li {
-                padding: 16px 12px;
-            }
-            .modal-content {
-                margin: 10px;
-                width: calc(100% - 20px);
-            }
-        }
-
-        /* Touch improvements */
-        @media (hover: none) and (pointer: coarse) {
-            #sidebar .side-menu li a:hover,
-            #sidebar .side-menu li button:hover {
-                background: none;
-            }
-            #sidebar .side-menu li a:active,
-            #sidebar .side-menu li button:active {
-                background: rgba(255, 255, 255, 0.2);
-            }
+            #sidebar:not(.hide) { left: 0; }
+            #sidebar.hide { left: -85vw; }
+            #content { left: 0; width: 100%; }
+            #sidebar.hide ~ #content { left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -837,8 +571,8 @@
         </ul>
         <ul class="side-menu bottom">
             <li>
-                {{-- Tombol Logout yang akan memicu modal --}}
-                <button type="button" id="logoutBtn">
+                {{-- Button to trigger the logout modal --}}
+                <button type="button" onclick="showLogoutModal()">
                     <i class='bx bxs-log-out-circle'></i>
                     <span class="text">Logout</span>
                 </button>
@@ -851,7 +585,7 @@
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">@yield('title', 'Page')</a>
             <div style="margin-left: auto;"></div>
-            <div class="profile" id="profileBtn" style="cursor:pointer;">
+            <div class="profile" style="cursor:pointer;">
                 <img src="{{ asset('img/people.png') }}" alt="Profile">
                 <span>{{ auth()->user()->name ?? 'Admin' }}</span>
             </div>
@@ -862,52 +596,25 @@
         </main>
     </section>
 
-    <!-- Modal Profile -->
-    <div id="profileModal" class="modal">
+    {{-- Logout Confirmation Modal (New Structure) --}}
+    <div id="logoutModal" class="logout-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>{{ auth()->user()->name ?? 'Admin' }}</h4>
-                <button onclick="closeProfileModal()">&times;</button>
+                <i class='bx bx-error-circle warning-icon'></i>
+                <h3>Konfirmasi Logout</h3>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('admin.profile.updatePassword') }}">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-form-group">
-                        <label for="password">Password Baru</label>
-                        <input type="password" id="password" name="password" required minlength="6" placeholder="Minimal 6 karakter">
-                    </div>
-                    <div class="modal-form-group">
-                        <label for="password_confirmation">Konfirmasi Password</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" required minlength="6" placeholder="Ulangi password baru">
-                    </div>
-                    <div class="modal-actions">
-                        <button type="submit">Update Password</button>
-                    </div>
-                </form>
+                <p>Apakah Anda yakin ingin mengakhiri sesi ini?</p>
+                <p class="warning-text">Anda akan diminta untuk login kembali.</p>
             </div>
-        </div>
-    </div>
-
-    {{-- Modal Konfirmasi Logout --}}
-    <div id="logoutModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                <i class='bx bx-log-out-circle warning-icon'></i>
-                <h4>Konfirmasi Logout</h4>
-            </div>
-            <div class="modal-body" style="text-align: center;"> {{-- Centered text in body --}}
-                <p>Apakah Anda yakin ingin logout?</p>
-                <p class="warning-text">Anda akan keluar dari sesi admin.</p>
-            </div>
-            <div class="modal-footer" style="justify-content: center; gap: 1rem;"> {{-- Centered buttons and added gap --}}
-                <button type="button" class="btn btn-secondary btn-cancel" onclick="closeLogoutModal()">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLogoutModal()">
                     <i class='bx bx-x'></i> Batal
                 </button>
                 <form id="logoutForm" method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
                     @csrf 
                     <button type="submit" class="btn btn-danger">
-                        <i class='bx bx-log-out'></i> Logout
+                        <i class='bx bxs-log-out-circle'></i> Logout
                     </button>
                 </form>
             </div>
@@ -925,99 +632,53 @@
             });
         }
 
-        // Auto-close sidebar on mobile when menu item is clicked
-        const sidebarLinks = document.querySelectorAll('#sidebar .side-menu a');
-        sidebarLinks.forEach(link => {
+        // Auto-close sidebar on mobile when an item is clicked
+        document.querySelectorAll('#sidebar .side-menu a').forEach(link => {
             link.addEventListener('click', function() {
-                if (window.innerWidth <= 900) {
+                if (window.innerWidth <= 900 && !sidebar.classList.contains('hide')) {
                     sidebar.classList.add('hide');
                 }
             });
-        });
-
-        // Profile modal logic
-        const profileBtn = document.getElementById('profileBtn');
-        const profileModal = document.getElementById('profileModal');
-        
-        if(profileBtn && profileModal) {
-            profileBtn.addEventListener('click', () => {
-                profileModal.style.display = 'flex';
-            });
-
-            window.closeProfileModal = function() {
-                profileModal.style.display = 'none';
-            };
-
-            profileModal.addEventListener('click', function(e) {
-                if(e.target === profileModal) closeProfileModal();
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if(e.key === 'Escape') closeProfileModal();
-            });
-        }
-
-        // Close sidebar on mobile when clicking outside
-        document.addEventListener('click', function(e) {
-            if(window.innerWidth <= 900) {
-                const sidebar = document.getElementById('sidebar');
-                const menuButton = document.querySelector('#content nav .bx-menu');
-                
-                if (!sidebar.contains(e.target) && !menuButton.contains(e.target) && !sidebar.classList.contains('hide')) {
-                    sidebar.classList.add('hide');
-                }
-            }
-        });
-
-        // Handle window resize - ensure proper state
-        window.addEventListener('resize', function() {
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth > 900) {
-                sidebar.classList.remove('hide');
-            } else {
-                sidebar.classList.add('hide');
-            }
         });
 
         // Initialize sidebar state based on screen size
         function initializeSidebar() {
-            const sidebar = document.getElementById('sidebar');
             if (window.innerWidth <= 900) {
                 sidebar.classList.add('hide');
             } else {
                 sidebar.classList.remove('hide');
             }
         }
-
-        // Run initialization when DOM is loaded
         document.addEventListener('DOMContentLoaded', initializeSidebar);
+        window.addEventListener('resize', initializeSidebar);
 
-        // Add smooth transition for better UX
-        sidebar.style.transition = 'left 0.3s ease';
-
-        // Logout Confirmation Modal Logic
-        const logoutBtn = document.getElementById('logoutBtn');
+        // --- Logout Confirmation Modal Logic (New & Improved) ---
         const logoutModal = document.getElementById('logoutModal');
 
-        if (logoutBtn && logoutModal) {
-            logoutBtn.addEventListener('click', () => {
-                logoutModal.classList.add('show'); // Use class to show modal
-            });
+        function showLogoutModal() {
+            if (logoutModal) logoutModal.classList.add('show');
+        }
 
-            window.closeLogoutModal = function() {
-                logoutModal.classList.remove('show'); // Use class to hide modal
-            };
+        function closeLogoutModal() {
+            if (logoutModal) logoutModal.classList.remove('show');
+        }
 
+        // Event listeners to close the modal
+        if (logoutModal) {
+            // Close by clicking on the background overlay
             logoutModal.addEventListener('click', function(e) {
                 if (e.target === logoutModal) closeLogoutModal();
             });
 
+            // Close by pressing the Escape key
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeLogoutModal();
+                if (e.key === 'Escape' && logoutModal.classList.contains('show')) {
+                    closeLogoutModal();
+                }
             });
         }
 
-        console.log('✅ Admin layout loaded with yellow theme, responsive design, and auto-close sidebar');
+        console.log('✅ Admin layout loaded with yellow theme and consistent modals.');
     </script>
     @stack('scripts')
 </body>

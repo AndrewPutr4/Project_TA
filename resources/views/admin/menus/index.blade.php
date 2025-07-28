@@ -777,6 +777,46 @@
         border-top: 1px solid #e5e7eb;
     }
 
+    /* --- TAMBAHKAN BLOK CSS INI --- */
+.delete-modal .modal-footer .btn-secondary,
+.delete-modal .modal-footer .btn-danger {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.delete-modal .modal-footer button:hover {
+    transform: translateY(-2px);
+}
+
+.delete-modal .modal-footer .btn-secondary {
+    background: #6c757d; /* Abu-abu */
+    color: white;
+}
+
+.delete-modal .modal-footer .btn-secondary:hover {
+    background: #5a6268;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.delete-modal .modal-footer .btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); /* Gradasi Merah */
+    color: white;
+}
+
+.delete-modal .modal-footer .btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
     @keyframes modalSlideIn {
         from {
             transform: translateY(-50px);
