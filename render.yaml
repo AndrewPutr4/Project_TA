@@ -1,9 +1,10 @@
 services:
   - type: web
-    name: project-ta # Anda bisa ganti nama ini
-    env: php                  # INI BAGIAN PALING PENTING
+    name: project-ta
+    env: docker
     region: singapore
     plan: free
-    buildCommand: "composer install --no-dev --optimize-autoloader && npm install && npm run build"
-    startCommand: "heroku-php-apache2 public/"
+    dockerfilePath: ./Dockerfile
+    buildCommand: ""
+    startCommand: ""
     healthCheckPath: "/"
