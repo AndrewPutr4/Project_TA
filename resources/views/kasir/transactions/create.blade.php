@@ -141,8 +141,7 @@
                             </label>
                             <div class="input-wrapper">
                                 <span class="input-prefix">Rp</span>
-                                <input type="number" name="cash_received" id="cash_received" 
-                                       class="form-input" placeholder="0" step="1000" min="0">
+                                <input type="number" name="cash_received" id="cash_received" class="form-input" placeholder="0" step="1" min="0">
                             </div>
                             @error('cash_received')
                                 <span class="error-message">

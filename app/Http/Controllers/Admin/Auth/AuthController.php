@@ -17,20 +17,32 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        // 1. Validasi input seperti biasa
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
-        $credentials['role'] = 'admin'; // Pastikan hanya user dengan role admin yang bisa login
+        // 2. Cari user berdasarkan email
+        $user = User::where('email', $credentials['email'])->first();
 
-        if (Auth::guard('admin')->attempt($credentials)) {
+        // 3. Lakukan pengecekan:
+        //    - Apakah user ada?
+        //    - Apakah password cocok?
+        //    - Apakah rolenya adalah 'admin'?
+        if ($user && Hash::check($credentials['password'], $user->password) && $user->role === 'admin') {
+            
+            // 4. Jika semua benar, login menggunakan guard 'admin'
+            Auth::guard('admin')->login($user);
+            
             $request->session()->regenerate();
+            
             return redirect()->intended('admin/dashboard');
         }
 
+        // 5. Jika salah satu kondisi tidak terpenuhi, kembalikan error
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Kredensial yang diberikan tidak cocok atau Anda bukan admin.',
         ])->onlyInput('email');
     }
 
@@ -52,9 +64,10 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             // tambahkan kolom role jika ada, misal: 'role' => 'admin'
+            'role' => 'admin',
         ]);
 
-        Auth::login($user);
+        Auth::guard('admin')->login($user);
 
         return redirect('/admin/dashboard');
     }

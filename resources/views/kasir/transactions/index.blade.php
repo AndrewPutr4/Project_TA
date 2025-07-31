@@ -10,10 +10,10 @@
             <h1 class="page-title">Daftar Transaksi</h1>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="refreshTransactions()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="23,4 23,10 17,10"></polyline>
-                        <polyline points="1,20 1,14 7,14"></polyline>
-                        <path d="M20.49,9A9,9,0,0,0,5.64,5.64L1,10m22,4L18.36,18.36A9,9,0,0,1,3.51,15"></path>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.51L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
                     </svg>
                     Refresh
                 </button>
@@ -25,7 +25,7 @@
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                     <line x1="1" y1="10" x2="23" y2="10"></line>
                 </svg>
@@ -38,7 +38,7 @@
 
         <div class="stat-card">
             <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="1" x2="12" y2="23"></line>
                     <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
@@ -51,10 +51,8 @@
 
         <div class="stat-card">
             <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
-                    <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
-                    <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                     <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
                 </svg>
             </div>
             <div class="stat-content">
@@ -65,7 +63,7 @@
 
         <div class="stat-card">
             <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                     <line x1="8" y1="21" x2="16" y2="21"></line>
                     <line x1="12" y1="17" x2="12" y2="21"></line>
@@ -185,7 +183,55 @@
     <!-- Pagination -->
     @if($transactions->hasPages())
     <div class="pagination-wrapper">
-        {{ $transactions->appends(request()->query())->links() }}
+        <div class="pagination-info">
+            <div class="pagination-summary">
+                <div class="info-text">
+                    <i class="fas fa-info-circle"></i>
+                    Menampilkan {{ $transactions->firstItem() }} - {{ $transactions->lastItem() }} dari {{ $transactions->total() }} transaksi
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination-controls">
+            <nav class="pagination-nav">
+                {{-- Previous Page Link --}}
+                @if ($transactions->onFirstPage())
+                    <span class="pagination-btn disabled">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Sebelumnya</span>
+                    </span>
+                @else
+                    <a href="{{ $transactions->previousPageUrl() }}" class="pagination-btn">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Sebelumnya</span>
+                    </a>
+                @endif
+                
+                {{-- Pagination Elements --}}
+                <div class="pagination-numbers">
+                    @foreach ($transactions->getUrlRange(1, $transactions->lastPage()) as $page => $url)
+                        @if ($page == $transactions->currentPage())
+                            <span class="pagination-number active">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}" class="pagination-number">{{ $page }}</a>
+                        @endif
+                    @endforeach
+                </div>
+                
+                {{-- Next Page Link --}}
+                @if ($transactions->hasMorePages())
+                    <a href="{{ $transactions->nextPageUrl() }}" class="pagination-btn">
+                        <span>Selanjutnya</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                @else
+                    <span class="pagination-btn disabled">
+                        <span>Selanjutnya</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                @endif
+            </nav>
+        </div>
     </div>
     @endif
 </div>
@@ -200,6 +246,11 @@
         --warning-text: #92400e;
         --success-color: #10b981;
         --danger-color: #ef4444;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
     }
 
     .transactions-container {
@@ -517,6 +568,7 @@
         margin-bottom: 0.5rem;
     }
 
+    /* ===== MULAI: STYLE PAGINATION BARU ===== */
     .pagination-wrapper {
         background: white;
         border: 2px solid var(--warning-border);
@@ -524,6 +576,111 @@
         padding: 1.5rem;
         margin-top: 2rem;
     }
+
+    .pagination-info {
+        margin-bottom: 1rem;
+    }
+
+    .pagination-summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .info-text {
+        color: var(--gray-800);
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-text i {
+        color: var(--primary-color);
+    }
+
+    .pagination-controls {
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination-nav {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: 8px;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .pagination-btn:hover:not(.disabled) {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+    }
+
+    .pagination-btn.disabled {
+        color: var(--gray-400);
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .pagination-numbers {
+        display: flex;
+        gap: 0.375rem;
+    }
+
+    .pagination-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--gray-300);
+        border-radius: 8px;
+        color: var(--gray-700);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        background: white;
+    }
+
+    .pagination-number:hover {
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+    }
+
+    .pagination-number.active {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-color: var(--primary-color);
+        font-weight: 700;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    /* ===== SELESAI: STYLE PAGINATION BARU ===== */
 
     @media (max-width: 768px) {
         .stats-grid {
@@ -555,6 +712,18 @@
         
         .transaction-actions {
             justify-content: space-between;
+        }
+
+        .pagination-nav {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .pagination-numbers {
+            order: -1;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 1rem;
         }
     }
 </style>

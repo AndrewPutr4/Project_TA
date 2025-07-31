@@ -8,6 +8,13 @@ use App\Models\User;
 
 class ForgotPasswordController extends Controller
 {
+    public function showLinkRequestForm()
+    {
+        // ✅ UBAH INI: dari 'admin.auth.password.email' 
+        // menjadi 'admin.auth.forgot-password' agar sesuai dengan nama file Anda.
+        return view('admin.auth.forgot-password'); 
+    }
+
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);

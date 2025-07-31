@@ -259,147 +259,147 @@
 
         /* --- KODE CSS UNTUK KONTEN DASHBOARD --- */
 
-/* Style untuk Judul Halaman dan Breadcrumb */
-.head-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-.head-title .left h1 {
-    font-size: 36px;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-.head-title .left .breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.head-title .left .breadcrumb li a {
-    color: #888;
-}
-.head-title .left .breadcrumb li a.active {
-    color: var(--primary-color);
-    font-weight: 600;
-}
+        /* Style untuk Judul Halaman dan Breadcrumb */
+        .head-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .head-title .left h1 {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .head-title .left .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .head-title .left .breadcrumb li a {
+            color: #888;
+        }
+        .head-title .left .breadcrumb li a.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
 
-/* Style untuk Kotak Info (Orders, Visitors, Sales) */
-.box-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    margin-top: 36px;
-}
-.box-info li {
-    padding: 24px;
-    background: white;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    border: 2px solid var(--warning-border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.box-info li:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(245, 158, 11, 0.1);
-}
-.box-info li i {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    font-size: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-.box-info li:nth-child(1) i { background: #3b82f6; } /* Biru */
-.box-info li:nth-child(2) i { background: #10b981; } /* Hijau */
-.box-info li:nth-child(3) i { background: var(--primary-dark); } /* Oranye */
+        /* Style untuk Kotak Info (Orders, Visitors, Sales) */
+        .box-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 36px;
+        }
+        .box-info li {
+            padding: 24px;
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border: 2px solid var(--warning-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .box-info li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.1);
+        }
+        .box-info li i {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            font-size: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .box-info li:nth-child(1) i { background: #3b82f6; } /* Biru */
+        .box-info li:nth-child(2) i { background: #10b981; } /* Hijau */
+        .box-info li:nth-child(3) i { background: var(--primary-dark); } /* Oranye */
 
-.box-info li .text h3 {
-    font-size: 24px;
-    font-weight: 600;
-}
-.box-info li .text p {
-    color: #555;
-}
+        .box-info li .text h3 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .box-info li .text p {
+            color: #555;
+        }
 
-/* Style untuk Tabel Data */
-.table-data {
-    display: flex;
-    gap: 24px;
-    margin-top: 24px;
-    width: 100%;
-}
-.table-data > .order {
-    flex-grow: 1;
-    border-radius: 20px;
-    background: white;
-    padding: 24px;
-    overflow-x: auto;
-    border: 2px solid var(--warning-border);
-}
-.table-data .head {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-.table-data .head h3 {
-    margin-right: auto;
-    font-size: 24px;
-    font-weight: 600;
-}
-.table-data table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.table-data table th {
-    padding-bottom: 12px;
-    font-size: 13px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-}
-.table-data table td {
-    padding: 16px 0;
-}
-.table-data table tr:hover {
-    background: #f9f9f9;
-}
-.table-data .status {
-    font-size: 10px;
-    padding: 6px 16px;
-    color: white;
-    border-radius: 20px;
-    font-weight: 700;
-    background: #10b981;
-}
+        /* Style untuk Tabel Data */
+        .table-data {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            width: 100%;
+        }
+        .table-data > .order {
+            flex-grow: 1;
+            border-radius: 20px;
+            background: white;
+            padding: 24px;
+            overflow-x: auto;
+            border: 2px solid var(--warning-border);
+        }
+        .table-data .head {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .table-data .head h3 {
+            margin-right: auto;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .table-data table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-data table th {
+            padding-bottom: 12px;
+            font-size: 13px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .table-data table td {
+            padding: 16px 0;
+        }
+        .table-data table tr:hover {
+            background: #f9f9f9;
+        }
+        .table-data .status {
+            font-size: 10px;
+            padding: 6px 16px;
+            color: white;
+            border-radius: 20px;
+            font-weight: 700;
+            background: #10b981;
+        }
 
-/* Style Responsif untuk Konten Dashboard */
-@media (max-width: 900px) {
-    .box-info {
-        grid-template-columns: 1fr;
-    }
-    .table-data {
-        flex-direction: column;
-    }
-}
-@media (max-width: 600px) {
-    .box-info li {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .head-title .left h1 {
-        font-size: 1.75rem;
-    }
-}
+        /* Style Responsif untuk Konten Dashboard */
+        @media (max-width: 900px) {
+            .box-info {
+                grid-template-columns: 1fr;
+            }
+            .table-data {
+                flex-direction: column;
+            }
+        }
+        @media (max-width: 600px) {
+            .box-info li {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .head-title .left h1 {
+                font-size: 1.75rem;
+            }
+        }
 
-        /* --- LOGOUT MODAL STYLES (New) --- */
+        /* --- MODAL STYLES --- */
         .logout-modal {
             visibility: hidden;
             opacity: 0;
@@ -412,7 +412,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 3000; /* Pastikan modal di atas segalanya */
             backdrop-filter: blur(5px);
             transition: visibility 0.3s ease, opacity 0.3s ease;
         }
@@ -428,13 +428,13 @@
             width: 90%;
             max-width: 450px;
             animation: modalSlideIn 0.3s ease forwards;
-            border: 2px solid #ef4444; /* Red border for warning */
+            border: 2px solid var(--modal-border-color, #ef4444); /* Default ke merah */
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
         }
 
         .logout-modal .modal-header {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: var(--modal-header-bg, linear-gradient(135deg, #ef4444 0%, #dc2626 100%));
             color: white;
             padding: 1.5rem;
             text-align: center;
@@ -493,7 +493,7 @@
         }
         
         .logout-modal .modal-footer .btn:hover {
-             transform: translateY(-2px);
+            transform: translateY(-2px);
         }
 
         .logout-modal .modal-footer .btn-secondary {
@@ -507,12 +507,12 @@
         }
 
         .logout-modal .modal-footer .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: var(--modal-header-bg, linear-gradient(135deg, #ef4444 0%, #dc2626 100%));
             color: white;
         }
 
         .logout-modal .modal-footer .btn-danger:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            background: var(--modal-header-bg, linear-gradient(135deg, #dc2626 0%, #b91c1c 100%));
             box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
         }
         
@@ -529,6 +529,29 @@
             #content { left: 0; width: 100%; }
             #sidebar.hide ~ #content { left: 0; width: 100%; }
         }
+
+        /* --- CSS Tambahan untuk Pesan Error/Status di dalam Modal --- */
+        .error-message, .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: left;
+            border: 1px solid;
+            font-weight: 500;
+        }
+        .error-message {
+            background: #fee2e2; border-color: #fca5a5; color: #b91c1c;
+        }
+        .error-message ul {
+            padding-left: 20px;
+        }
+        .status-message {
+            background: #dcfce7; border-color: #86efac; color: #15803d;
+        }
+        .form-control {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db;
+        }
+
     </style>
 </head>
 <body>
@@ -585,10 +608,11 @@
             <i class='bx bx-menu'></i>
             <a href="#" class="nav-link">@yield('title', 'Page')</a>
             <div style="margin-left: auto;"></div>
-            <div class="profile" style="cursor:pointer;">
+            {{-- ✅ PERBAIKAN: Ini sudah menjadi tombol pemicu modal --}}
+            <button type="button" onclick="showChangePasswordModal()" class="profile" style="background:none; border:none; cursor:pointer;">
                 <img src="{{ asset('img/people.png') }}" alt="Profile">
-                <span>{{ auth()->user()->name ?? 'Admin' }}</span>
-            </div>
+                <span>{{ auth()->guard('admin')->user()->name ?? 'Admin' }}</span>
+            </button>
         </nav>
 
         <main>
@@ -596,7 +620,7 @@
         </main>
     </section>
 
-    {{-- Logout Confirmation Modal (New Structure) --}}
+    {{-- Logout Confirmation Modal --}}
     <div id="logoutModal" class="logout-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -620,6 +644,64 @@
             </div>
         </div>
     </div>
+
+    {{-- ✅ KODE HTML MODAL GANTI PASSWORD DITARUH DI SINI --}}
+    <div id="changePasswordModal" class="logout-modal" style="--modal-border-color: #3b82f6; --modal-header-bg: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+        <div class="modal-content">
+            <form id="changePasswordForm" method="POST" action="{{ route('admin.profile.updatePassword') }}">
+                @csrf
+                @method('PUT')
+
+                <div class="modal-header" style="background: var(--modal-header-bg);">
+                    <i class='bx bxs-key warning-icon'></i>
+                    <h3>Ganti Password</h3>
+                </div>
+                <div class="modal-body" style="text-align: left;">
+                    
+                    {{-- Menampilkan pesan error validasi jika ada --}}
+                    @if ($errors->any())
+                        <div class="error-message">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    {{-- Menampilkan pesan sukses --}}
+                    @if (session('status'))
+                         <div class="status-message">{{ session('status') }}</div>
+                    @endif
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="current_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Password Saat Ini</label>
+                        <input type="password" name="current_password" required class="form-control">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="new_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Password Baru</label>
+                        <input type="password" name="new_password" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new_confirm_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Konfirmasi Password Baru</label>
+                        <input type="password" name="new_confirm_password" required class="form-control">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeChangePasswordModal()">
+                        <i class='bx bx-x'></i> Batal
+                    </button>
+                    <button type="submit" class="btn btn-danger" style="background: var(--modal-header-bg);">
+                        <i class='bx bx-save'></i> Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <script>
         // Sidebar toggle logic
@@ -652,31 +734,44 @@
         document.addEventListener('DOMContentLoaded', initializeSidebar);
         window.addEventListener('resize', initializeSidebar);
 
-        // --- Logout Confirmation Modal Logic (New & Improved) ---
+        // --- Logout Confirmation Modal Logic ---
         const logoutModal = document.getElementById('logoutModal');
-
-        function showLogoutModal() {
-            if (logoutModal) logoutModal.classList.add('show');
-        }
-
-        function closeLogoutModal() {
-            if (logoutModal) logoutModal.classList.remove('show');
-        }
-
-        // Event listeners to close the modal
+        function showLogoutModal() { if (logoutModal) logoutModal.classList.add('show'); }
+        function closeLogoutModal() { if (logoutModal) logoutModal.classList.remove('show'); }
         if (logoutModal) {
-            // Close by clicking on the background overlay
-            logoutModal.addEventListener('click', function(e) {
-                if (e.target === logoutModal) closeLogoutModal();
-            });
-
-            // Close by pressing the Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && logoutModal.classList.contains('show')) {
-                    closeLogoutModal();
-                }
-            });
+            logoutModal.addEventListener('click', function(e) { if (e.target === logoutModal) closeLogoutModal(); });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && logoutModal.classList.contains('show')) closeLogoutModal(); });
         }
+
+        // ✅ KODE JAVASCRIPT GANTI PASSWORD DITARUH DI SINI
+        const passwordModal = document.getElementById('changePasswordModal');
+    function showChangePasswordModal() { if (passwordModal) passwordModal.classList.add('show'); }
+    function closeChangePasswordModal() { if (passwordModal) passwordModal.classList.remove('show'); }
+    if (passwordModal) {
+        passwordModal.addEventListener('click', function(e) { if (e.target === passwordModal) closeChangePasswordModal(); });
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && passwordModal.classList.contains('show')) closeChangePasswordModal(); });
+    }
+
+    // --- Logic to run after the page is fully loaded ---
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeSidebar(); // Initialize sidebar state on load
+
+        // Check if change password modal should be shown due to errors
+        @if ($errors->any())
+            showChangePasswordModal();
+        @endif
+        
+        // Check if change password modal should be shown due to a success message
+        @if (session('status'))
+            showChangePasswordModal();
+            setTimeout(function() {
+                closeChangePasswordModal();
+            }, 3000); // Auto-close after 3 seconds
+        @endif
+    });
+
+    // Also re-check sidebar state on window resize
+    window.addEventListener('resize', initializeSidebar);
 
         console.log('✅ Admin layout loaded with yellow theme and consistent modals.');
     </script>
