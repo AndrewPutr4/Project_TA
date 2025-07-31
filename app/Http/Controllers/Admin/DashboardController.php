@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB; // FIXED: Added import for DB Facade
 use App\Models\Order;                 // FIXED: Added import for Order Model
 use App\Models\User;                  // FIXED: Added import for User Model
 use App\Models\Shift;                 // This was already correct
+use App\Models\Transaction;
 
 class DashboardController extends Controller
 {

@@ -16,7 +16,7 @@ use App\Http\Controllers\Kasir\ShiftController as KasirShiftController;
 use App\Http\Controllers\Kasir\MidtransCallbackController;
 // ✅ PERBAIKAN: Tambahkan use statement untuk Admin ProfileController
 use App\Http\Controllers\Admin\ProfileController; // Pastikan ini mengacu pada ProfileController yang diperbarui
-
+use App\Http\Controllers\Admin\TransactionExportController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -68,6 +68,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/password/forgot', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('admin.password.request');
     Route::post('/password/email', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('admin.password.email');
     Route::get('/password/reset', [AdminForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset.form');
+    Route::get('/password/reset', [AdminForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset');
     Route::post('/password/reset', [AdminForgotPasswordController::class, 'resetPassword'])->name('admin.password.update');
 
 
@@ -123,6 +124,7 @@ Route::prefix('admin')->group(function () {
                 'update' => 'admin.kasir.update',
                 'destroy' => 'admin.kasir.destroy'
             ]);
+            Route::get('/admin/transactions/export', [TransactionExportController::class, 'export'])->name('admin.transactions.export');
     });
 });
 

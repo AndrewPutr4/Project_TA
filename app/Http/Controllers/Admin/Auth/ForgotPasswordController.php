@@ -25,7 +25,7 @@ class ForgotPasswordController extends Controller
         }
 
         // Redirect ke halaman reset password, bawa email sebagai parameter
-        return redirect()->route('admin.password.reset.form', ['email' => $user->email]);
+        return redirect()->route('admin.password.reset', ['email' => $user->email]);
     }
 
     public function showResetForm(Request $request)

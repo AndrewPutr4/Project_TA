@@ -528,6 +528,15 @@
                                    autocomplete="off">
                         </div>
                     </div>
+                    
+                    <div class="form-group" style="--delay: 2">
+                        <label for="description">Deskripsi Menu (Opsional)</label>
+                        <textarea id="description"
+                                name="description"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Masukkan deskripsi singkat tentang menu ini..."></textarea>
+                    </div>
 
                     <div class="form-group" style="--delay: 2">
                         <label for="category">Kategori Menu</label>

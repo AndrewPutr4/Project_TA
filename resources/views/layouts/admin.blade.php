@@ -635,7 +635,7 @@
                 <button type="button" class="btn btn-secondary" onclick="closeLogoutModal()">
                     <i class='bx bx-x'></i> Batal
                 </button>
-                <form id="logoutForm" method="POST" action="{{ route('admin.logout') }}" style="display: inline;">
+                <form id="logoutForm" method="POST" action="{{ route('admin.logout') }}">
                     @csrf 
                     <button type="submit" class="btn btn-danger">
                         <i class='bx bxs-log-out-circle'></i> Logout
