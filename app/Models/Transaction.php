@@ -29,6 +29,7 @@ class Transaction extends Model
         'status',
         'notes',
         'transaction_date',
+        'payment_gateway_reference',
     ];
 
     protected $casts = [

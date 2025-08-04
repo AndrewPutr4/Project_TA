@@ -8,6 +8,7 @@ use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Transaction;
 
 class OrderController extends Controller
 {
@@ -100,8 +101,7 @@ class OrderController extends Controller
                 ];
             }
             
-            // Hitung biaya layanan (10%)
-            $serviceFee = $subtotal * 0.10;
+            $serviceFee = 2000;
             $total = $subtotal + $serviceFee;
             
             // Buat order baru
@@ -112,7 +112,7 @@ class OrderController extends Controller
                 'subtotal'       => $subtotal,
                 'service_fee'    => $serviceFee,
                 'total'          => $total,
-                'status'         => 'confirmed', // Langsung confirmed untuk kasir
+                'status'         => 'preparing', // Langsung confirmed untuk kasir
                 'payment_status' => 'unpaid',
                 'order_date'     => now(),
                 'kasir_id'       => auth('kasir')->id(),

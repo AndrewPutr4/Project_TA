@@ -175,3 +175,8 @@ Route::prefix('kasir')->group(function() {
 |--------------------------------------------------------------------------
 */
 Route::post('/midtrans/callback', [MidtransCallbackController::class, 'handle'])->name('midtrans.callback');
+
+Route::post('/test-csrf', function () {
+    Log::info('CSRF TEST SUKSES! Notifikasi bisa masuk.');
+    return response()->json(['message' => 'CSRF Berhasil dilewati!']);
+});

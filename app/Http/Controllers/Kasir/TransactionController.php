@@ -50,7 +50,7 @@ class TransactionController extends Controller
         }
         
         // Mengambil data transaksi dengan paginasi
-        $transactions = $query->paginate(20);
+        $transactions = $query->paginate(5);
         
         return view('kasir.transactions.index', compact('transactions'));
     }
@@ -127,7 +127,7 @@ class TransactionController extends Controller
             $transaction = Transaction::create($transactionData);
             
             // Memperbarui status pembayaran dan status order
-            $order->update(['payment_status' => 'paid', 'status' => 'completed']);
+            $order->update(['payment_status' => 'paid']);
             
             DB::commit(); // Menyimpan perubahan ke database
             
@@ -208,10 +208,11 @@ class TransactionController extends Controller
             ];
         }
 
+        $uniqueOrderIdForMidtrans = $order->order_number . '-' . time();
         // Parameter untuk Midtrans Snap
         $params = [
             'transaction_details' => [
-                'order_id' => $order->order_number, 
+                'order_id' => $uniqueOrderIdForMidtrans, 
                 'gross_amount' => (int) $order->total
             ],
             'customer_details' => [

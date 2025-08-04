@@ -12,6 +12,7 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'midtrans/callback' // <-- PASTIKAN BARIS INI ADA
+        'midtrans/callback',
+        'test-csrf' // <-- PASTIKAN BARIS INI ADA
     ];
 }

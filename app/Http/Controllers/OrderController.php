@@ -63,12 +63,12 @@ class OrderController extends Controller
                 'service_fee'    => $serviceFee,
                 'total'          => $total,
                 'payment_method' => $request->payment_method,
-                'payment_status' => ($request->payment_method == 'cash') ? 'paid' : 'unpaid',
-                'status'         => ($request->payment_method == 'cash') ? 'completed' : 'pending',
+                'payment_status' => 'unpaid',
+                'status'         => 'pending',
                 'order_date'     => now(),
             ]);
 
-            // 4. ✅ PERBAIKAN: Simpan semua item sekaligus menggunakan relasi
+            // 4. PERBAIKAN: Simpan semua item sekaligus menggunakan relasi
             $order->items()->createMany($orderItemsData);
 
             // 5. Simpan ID pesanan ke session

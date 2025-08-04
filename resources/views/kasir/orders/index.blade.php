@@ -311,28 +311,34 @@
                         
                         <td class="order-actions">
                             <div class="action-buttons">
+                                
+                                {{-- Tombol Detail: Selalu tampil --}}
                                 <a href="{{ route('kasir.orders.show', $order) }}"
-                                   class="btn btn-sm btn-outline action-btn" title="Lihat Detail">
+                                class="btn btn-sm btn-outline action-btn" title="Lihat Detail">
                                     <i class="fas fa-eye"></i>
                                     <span class="btn-text">Detail</span>
                                 </a>
                                 
-                                @if($order->status == 'pending')
+                                {{-- Tombol Bayar: Tampil jika belum lunas & belum dibatalkan --}}
+                                @if($order->payment_status == 'unpaid' && $order->status != 'cancelled')
+                                    <a href="{{ route('kasir.transactions.create', $order) }}"
+                                    class="btn btn-sm btn-warning action-btn" title="Proses Pembayaran">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span class="btn-text">Bayar</span>
+                                    </a>
+                                @endif
+                                
+                                {{-- Tombol Konfirmasi: Tampil HANYA jika status pending & pembayaran sudah lunas --}}
+                                {{-- (misalnya, untuk order online yang sudah bayar tapi butuh konfirmasi manual) --}}
+                                @if($order->status == 'pending' && $order->payment_status == 'paid')
                                     <button onclick="confirmOrder('{{ $order->id }}')"
                                             class="btn btn-sm btn-success action-btn" title="Konfirmasi Order">
                                         <i class="fas fa-check"></i>
                                         <span class="btn-text">Konfirmasi</span>
                                     </button>
                                 @endif
-                                
-                                @if($order->status == 'ready' && $order->payment_status == 'unpaid')
-                                    <a href="{{ route('kasir.transactions.create', $order) }}"
-                                       class="btn btn-sm btn-warning action-btn" title="Proses Pembayaran">
-                                        <i class="fas fa-credit-card"></i>
-                                        <span class="btn-text">Bayar</span>
-                                    </a>
-                                @endif
-                                
+
+                                {{-- Tombol Batal: Tampil jika order belum selesai atau belum dibatalkan --}}
                                 @if($order->status != 'completed' && $order->status != 'cancelled')
                                     <button onclick="cancelOrder('{{ $order->id }}')"
                                             class="btn btn-sm btn-danger action-btn" title="Batalkan Order">
@@ -340,6 +346,7 @@
                                         <span class="btn-text">Batal</span>
                                     </button>
                                 @endif
+
                             </div>
                         </td>
                     </tr>
