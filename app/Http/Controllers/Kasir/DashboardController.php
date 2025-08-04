@@ -21,8 +21,8 @@ class DashboardController extends Controller
                 ->with('warning', 'Silakan mulai shift terlebih dahulu sebelum melakukan transaksi.');
         }
 
-        // Query menu dengan filter is_available
-        $foodsQuery = Menu::where('is_available', true);
+            
+        $foodsQuery = Menu::query();
         
         // Filter berdasarkan kategori
         if ($request->filled('category')) {
