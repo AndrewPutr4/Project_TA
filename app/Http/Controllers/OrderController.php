@@ -63,8 +63,8 @@ class OrderController extends Controller
                 'service_fee'    => $serviceFee,
                 'total'          => $total,
                 'payment_method' => $request->payment_method,
-                'payment_status' => 'unpaid',
-                'status'         => 'pending',
+                'payment_status' => $request->payment_method === 'cash' ? 'unpaid' : 'paid',
+                'status'         => $request->payment_method === 'cash' ? 'pending' : 'preparing',
                 'order_date'     => now(),
             ]);
 
@@ -177,5 +177,20 @@ class OrderController extends Controller
         ];
 
         return Snap::getSnapToken($params);
+    }
+
+    /**
+     * Update status pembayaran pesanan.
+     */
+    public function updatePaymentStatus(Order $order)
+    {
+        if ($order->payment_method === 'cash') {
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'preparing'
+            ]);
+        }
+        
+        return redirect()->back()->with('success', 'Status pembayaran diperbarui.');
     }
 }
