@@ -827,6 +827,63 @@
             opacity: 1;
         }
     }
+
+.availability-toggle {
+    min-width: 140px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: none;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.availability-toggle.available {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.availability-toggle.unavailable {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(107, 114, 128, 0.2);
+}
+
+.availability-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggle-switch {
+    width: 36px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    position: relative;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.availability-toggle.available .toggle-switch::after {
+    transform: translateX(16px);
+}
 </style>
 
 
@@ -977,15 +1034,25 @@
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="{{ route('admin.menus.edit', $menu) }}" class="btn-edit">
-                                    <i class='bx bx-edit'></i>
-                                    Edit
-                                </a>
-                                <button type="button" class="btn-delete" 
-                                        onclick="showDeleteModal('{{ $menu->id }}', '{{ $menu->name }}')">
-                                    <i class='bx bx-trash'></i>
-                                    Hapus
+                                <button onclick="toggleAvailability('{{ $menu->id }}')"
+                                        class="availability-toggle {{ $menu->is_available ? 'available' : 'unavailable' }}"
+                                        data-id="{{ $menu->id }}"
+                                        title="{{ $menu->is_available ? 'Menu Tersedia' : 'Menu Tidak Tersedia' }}">
+                                    <span class="toggle-switch"></span>
+                                    <span class="status-text">{{ $menu->is_available ? 'Tersedia' : 'Tidak Tersedia' }}</span>
                                 </button>
+
+                                <a href="{{ route('admin.menus.edit', $menu->id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+
+                                <form action="{{ route('admin.menus.destroy', $menu->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus menu ini?')">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -1251,5 +1318,47 @@
             closeDeleteModal();
         }
     });
+
+    function toggleAvailability(id) {
+        const button = event.target.closest('.availability-toggle');
+        const originalHtml = button.innerHTML;
+        const isCurrentlyAvailable = button.classList.contains('available');
+        
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        button.disabled = true;
+
+        fetch(`/admin/menus/${id}/toggle-availability`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                button.classList.toggle('available');
+                button.classList.toggle('unavailable');
+                button.innerHTML = `
+                    <span class="toggle-switch"></span>
+                    ${data.is_available ? 'Menu Tersedia' : 'Tidak Tersedia'}
+                `;
+                
+                const toast = document.createElement('div');
+                toast.className = `toast-notification ${data.is_available ? 'success' : 'warning'}`;
+                toast.textContent = data.message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => toast.remove(), 3000);
+            }
+            button.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            button.innerHTML = originalHtml;
+            button.disabled = false;
+            alert('Terjadi kesalahan saat mengubah status menu');
+        });
+    }
 </script>
 @endsection

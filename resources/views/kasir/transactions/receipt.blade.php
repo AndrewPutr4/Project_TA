@@ -344,6 +344,7 @@
             font-size: 9pt;
             color: #000 !important;
             -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
         
         /* --- Sembunyikan Elemen Layar --- */

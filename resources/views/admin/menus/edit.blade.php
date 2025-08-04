@@ -812,13 +812,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="--delay: 4.5">
-                        <label for="is_available">
-                            <input type="checkbox" id="is_available" name="is_available" value="1" {{ $menu->is_available ? 'checked' : '' }}>
-                            Tersedia untuk dipesan
-                        </label>
-                    </div>
-
                     <div class="form-actions">
                         <button type="submit" class="btn-download btn-update" id="btnUpdateMenu">
                             <i class='bx bx-save'></i>

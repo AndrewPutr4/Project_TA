@@ -125,6 +125,9 @@ Route::prefix('admin')->group(function () {
                 'destroy' => 'admin.kasir.destroy'
             ]);
             Route::get('/admin/transactions/export', [TransactionExportController::class, 'export'])->name('admin.transactions.export');
+
+            Route::post('/admin/menus/{id}/toggle-availability', [Admin\MenuController::class, 'toggleAvailability'])
+         ->name('admin.menus.toggle-availability');
     });
 });
 
