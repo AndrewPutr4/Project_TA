@@ -13,8 +13,9 @@ class Menu extends Model
         'name',
         'description', 
         'price',
-        'image',
         'category_id',
+        'image',
+        'slug',
         'is_available'
     ];
 

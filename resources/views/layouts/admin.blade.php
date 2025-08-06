@@ -7,6 +7,7 @@
     
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <style>
         :root {
@@ -646,23 +647,23 @@
     </div>
 
     {{-- ✅ KODE HTML MODAL GANTI PASSWORD DITARUH DI SINI --}}
-    <div id="changePasswordModal" class="logout-modal" style="--modal-border-color: #3b82f6; --modal-header-bg: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+    <div id="changePasswordModal" class="logout-modal" style="--modal-border-color: var(--primary-light); --modal-header-bg: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);">
         <div class="modal-content">
             <form id="changePasswordForm" method="POST" action="{{ route('admin.profile.updatePassword') }}">
                 @csrf
                 @method('PUT')
 
-                <div class="modal-header" style="background: var(--modal-header-bg);">
+                <div class="modal-header">
                     <i class='bx bxs-key warning-icon'></i>
                     <h3>Ganti Password</h3>
                 </div>
                 <div class="modal-body" style="text-align: left;">
                     
                     {{-- Menampilkan pesan error validasi jika ada --}}
-                    @if ($errors->any())
+                    @if ($errors->updatePassword->any())
                         <div class="error-message">
                             <ul>
-                                @foreach ($errors->all() as $error)
+                                @foreach ($errors->updatePassword->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
@@ -671,13 +672,10 @@
                     
                     {{-- Menampilkan pesan sukses --}}
                     @if (session('status'))
-                         <div class="status-message">{{ session('status') }}</div>
+                        <div class="status-message">{{ session('status') }}</div>
                     @endif
 
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <label for="current_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Password Saat Ini</label>
-                        <input type="password" name="current_password" required class="form-control">
-                    </div>
+                    {{-- Input "Password Saat Ini" sudah dihapus --}}
 
                     <div class="form-group" style="margin-bottom: 1rem;">
                         <label for="new_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Password Baru</label>
@@ -685,8 +683,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="new_confirm_password" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Konfirmasi Password Baru</label>
-                        <input type="password" name="new_confirm_password" required class="form-control">
+                        <label for="new_password_confirmation" style="font-weight: 600; color: #4b5563; margin-bottom: 0.5rem; display: block;">Konfirmasi Password Baru</label>
+                        {{-- Nama input disesuaikan dengan standar validasi Laravel --}}
+                        <input type="password" name="new_password_confirmation" required class="form-control">
                     </div>
 
                 </div>
@@ -756,18 +755,24 @@
     document.addEventListener('DOMContentLoaded', function() {
         initializeSidebar(); // Initialize sidebar state on load
 
-        // Check if change password modal should be shown due to errors
-        @if ($errors->any())
-            showChangePasswordModal();
-        @endif
+        // Variabel untuk mengecek error SPESIFIK dari form ganti password
+        const passwordUpdateHasErrors = "{{ $errors->updatePassword->any() ? 'true' : 'false' }}";
         
-        // Check if change password modal should be shown due to a success message
-        @if (session('status'))
+        // Variabel untuk mengecek status sukses
+        const passwordUpdateHasStatus = "{{ session('status') ? 'true' : 'false' }}";
+
+        // HANYA tampilkan modal jika ada error dari form ganti password
+        if (passwordUpdateHasErrors === 'true') {
+            showChangePasswordModal();
+        }
+        
+        // HANYA tampilkan modal jika ada pesan sukses, lalu tutup otomatis
+        if (passwordUpdateHasStatus === 'true') {
             showChangePasswordModal();
             setTimeout(function() {
                 closeChangePasswordModal();
-            }, 3000); // Auto-close after 3 seconds
-        @endif
+            }, 3000); // Tutup otomatis setelah 3 detik
+        }
     });
 
     // Also re-check sidebar state on window resize

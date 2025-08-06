@@ -115,4 +115,24 @@ class MenuController extends Controller
         return redirect()->route('admin.menus.index')
                         ->with('success', 'Menu berhasil dihapus!');
     }
+
+    public function toggleAvailability(Menu $menu)
+    {
+        try {
+            $menu->update([
+                'is_available' => !$menu->is_available
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => $menu->is_available ? 'Menu berhasil diaktifkan' : 'Menu berhasil dinonaktifkan',
+                'is_available' => $menu->is_available
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengubah status menu'
+            ], 500);
+        }
+    }
 }

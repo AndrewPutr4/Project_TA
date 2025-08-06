@@ -22,7 +22,7 @@ class DashboardController extends Controller
         }
 
             
-        $foodsQuery = Menu::query();
+        $foodsQuery = Menu::where('is_available', true);
         
         // Filter berdasarkan kategori
         if ($request->filled('category')) {

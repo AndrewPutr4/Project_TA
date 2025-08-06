@@ -101,7 +101,7 @@ class OrderController extends Controller
                 ];
             }
             
-            $serviceFee = 2000;
+            $serviceFee = 0.10 * $subtotal; // 10% biaya layanan
             $total = $subtotal + $serviceFee;
             
             // Buat order baru

@@ -1322,7 +1322,6 @@
     function toggleAvailability(id) {
         const button = event.target.closest('.availability-toggle');
         const originalHtml = button.innerHTML;
-        const isCurrentlyAvailable = button.classList.contains('available');
         
         button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
         button.disabled = true;
@@ -1330,34 +1329,67 @@
         fetch(`/admin/menus/${id}/toggle-availability`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'same-origin'
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                // Jika respons server tidak ok (misal: 500, 403), lemparkan error
+                throw new Error('Gagal menghubungi server.');
+            }
+            return response.json();
+        })
         .then(data => {
+            // Tangani data JSON dari server
             if (data.success) {
+                // 1. Ubah tampilan tombol
                 button.classList.toggle('available');
                 button.classList.toggle('unavailable');
                 button.innerHTML = `
                     <span class="toggle-switch"></span>
-                    ${data.is_available ? 'Menu Tersedia' : 'Tidak Tersedia'}
+                    <span class="status-text">${data.is_available ? 'Tersedia' : 'Tidak Tersedia'}</span>
                 `;
-                
-                const toast = document.createElement('div');
-                toast.className = `toast-notification ${data.is_available ? 'success' : 'warning'}`;
-                toast.textContent = data.message;
-                document.body.appendChild(toast);
-                
-                setTimeout(() => toast.remove(), 3000);
+
+                // 2. Gunakan Swal untuk notifikasi sukses (LEBIH BAIK DARI ALERT)
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        timer: 1500, // Notifikasi hilang setelah 1.5 detik
+                        showConfirmButton: false // Tidak perlu tombol OK
+                    });
+                } else {
+                    alert(data.message); // Fallback jika Swal tidak ada
+                }
+            } else {
+                // Jika server mengembalikan { success: false }, lemparkan error
+                throw new Error(data.message || 'Operasi gagal.');
             }
-            button.disabled = false;
         })
         .catch(error => {
+            // Tangani semua error (jaringan atau dari server)
             console.error('Error:', error);
-            button.innerHTML = originalHtml;
-            button.disabled = false;
-            alert('Terjadi kesalahan saat mengubah status menu');
+            button.innerHTML = originalHtml; // Kembalikan tombol ke state awal
+            
+            // Tampilkan notifikasi error dengan Swal
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan saat mengubah status menu.'
+                });
+            } else {
+                alert('Terjadi kesalahan saat mengubah status menu.');
+            }
+        })
+        .finally(() => {
+            // 3. SELALU AKTIFKAN KEMBALI TOMBOL DI SINI
+            // Kode ini akan jalan baik saat SUKSES maupun GAGAL.
+            button.disabled = false; 
         });
     }
 </script>

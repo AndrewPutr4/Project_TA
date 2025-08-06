@@ -86,6 +86,9 @@ Route::prefix('admin')->group(function () {
             'destroy' => 'admin.menus.destroy'
         ]);
 
+        Route::post('/menus/{menu}/toggle-availability', [Admin\MenuController::class, 'toggleAvailability'])
+    ->name('admin.menus.toggle-availability');
+
         Route::resource('shifts', Admin\ShiftController::class)->names([
             'index' => 'admin.shifts.index',
             'create' => 'admin.shifts.create',

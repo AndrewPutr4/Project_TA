@@ -40,13 +40,15 @@ class HomeController extends Controller
         $cartCount = array_sum(array_column($cart, 'quantity'));
         
         // ✅ Mengambil makanan dan minuman berdasarkan nama kategori
-        $foods = Menu::whereHas('category', function ($query) {
-            $query->where('name', 'Makanan');
-        })->get();
+        $foods = Menu::where('is_available', true) // <-- TAMBAHKAN INI
+            ->whereHas('category', function ($query) {
+                $query->where('name', 'Makanan');
+            })->get();
 
-        $drinks = Menu::whereHas('category', function ($query) {
-            $query->where('name', 'Minuman');
-        })->get();
+        $drinks = Menu::where('is_available', true) // <-- TAMBAHKAN INI
+            ->whereHas('category', function ($query) {
+                $query->where('name', 'Minuman');
+            })->get();
 
         return view('customer.welcome', compact('categories', 'menus', 'selectedCategory', 'cartCount', 'foods', 'drinks'));
     }

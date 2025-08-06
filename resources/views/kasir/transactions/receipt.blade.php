@@ -43,8 +43,8 @@
                 <div class="store-header">
                     <h2 class="store-name">WARUNG BAKSO SELINGSING</h2>
                     <div class="store-info">
-                        <p class="store-address">Jl. Contoh No. 123, Kota Contoh</p>
-                        <p class="store-contact">Telp: (021) 1234-5678</p>
+                        <p class="store-address">Jl. Raya Abianbase No.80, Dalung</p>
+                        <p class="store-contact">Telp: 0813-5375-9061</p>
                     </div>
                     <div class="receipt-divider"></div>
                 </div>
@@ -121,7 +121,7 @@
                         </div>
                         @if($transaction->service_fee > 0)
                             <div class="summary-row">
-                                <span class="label">Biaya Layanan</span>
+                                <span class="label">TAX</span>
                                 <span class="value">Rp {{ number_format($transaction->service_fee, 0, ',', '.') }}</span>
                             </div>
                         @endif
@@ -330,143 +330,127 @@
 
     /* ===== MULAI: STYLE CETAK BARU UNTUK PRINTER THERMAL 58mm ===== */
     @media print {
-        /* --- Reset Dasar --- */
-        body, html {
-            width: 58mm;
-            background: #fff !important;
+        /* --- Reset dasar untuk kertas 58mm --- */
+        @page {
+            size: 58mm auto; /* Menentukan lebar kertas */
+            margin: 3mm; /* Margin di sekeliling kertas */
         }
-        .receipt-container {
+        body, html {
             width: 100%;
-            margin: 0 !important;
-            padding: 0 !important;
+            margin: 0;
+            padding: 0;
             background: #fff !important;
-            font-family: 'Courier New', monospace !important;
-            font-size: 9pt;
+            font-family: 'Courier New', monospace, sans-serif !important; /* Font klasik untuk struk */
+            font-size: 9pt; /* Ukuran font dasar */
             color: #000 !important;
+            line-height: 1.4;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
-        
-        /* --- Sembunyikan Elemen Layar --- */
+
+        /* --- Sembunyikan semua elemen yang tidak perlu dicetak --- */
         .page-header, .receipt-actions, .item-count {
             display: none !important;
         }
 
-        /* --- Hapus Efek Visual Layar --- */
-        .receipt-wrapper, .receipt-card {
-            width: 100%;
+        /* --- Hilangkan semua style visual dari layar --- */
+        .receipt-container, .receipt-wrapper, .receipt-card {
             box-shadow: none !important;
-            border-radius: 0 !important;
             border: none !important;
-            padding: 0 3mm !important; /* Beri sedikit padding kiri-kanan */
+            border-radius: 0 !important;
+            padding: 0 !important;
             margin: 0 !important;
             animation: none !important;
             color: #000 !important;
+            background: #fff !important;
         }
 
-        /* --- Sederhanakan Semua Bagian --- */
+        /* --- Atur ulang semua section --- */
         .store-header, .transaction-info, .items-section, .summary-section, .payment-section, .receipt-footer {
-            margin: 0;
-            padding: 0;
+            margin-bottom: 3mm;
             text-align: center;
         }
-        h3, .section-title, .transaction-header h3, .payment-header h3 {
+        .store-name { font-size: 12pt; font-weight: bold; margin: 0; }
+        .store-address, .store-contact { font-size: 8pt; margin: 0; }
+        h3 {
             font-size: 10pt;
             font-weight: bold;
-            text-align: center;
             margin: 4mm 0 2mm 0;
-            padding: 0;
             text-transform: uppercase;
-            border: none;
-            background: none;
-            color: #000 !important;
         }
-
-        /* --- Tipografi Cetak --- */
-        .store-name { font-size: 12pt; font-weight: bold; margin: 3mm 0 1mm 0; }
-        .store-address, .store-contact { font-size: 8pt; margin: 0; line-height: 1.2; }
-        
-        /* --- Pemisah/Garis --- */
         .receipt-divider {
             border-top: 1px dashed #000;
             margin: 3mm 0;
         }
-        .receipt-divider::before, .receipt-divider::after {
-            display: none !important;
-        }
-        
-        /* --- Tata Letak Baris Info --- */
-        .info-grid, .summary-rows, .payment-info, .items-list {
-            display: block;
-            gap: 0;
-        }
+        .receipt-divider::before, .receipt-divider::after { display: none !important; }
+
+        /* --- Tata Letak Info Transaksi --- */
         .info-row, .summary-row, .payment-row {
             display: flex;
             justify-content: space-between;
             font-size: 9pt;
-            padding: 0.5mm 0;
-            background: none !important;
-            border: none !important;
         }
-        .label { font-weight: normal; }
 
-        /* --- Spesifik Daftar Item --- */
-        .items-list { gap: 0; }
+        /* --- ✅ PERBAIKAN UTAMA: TATA LETAK DETAIL PESANAN --- */
+        .items-list { display: flex; flex-direction: column; }
         .item-row {
-            display: block;
+            display: grid;
+            grid-template-columns: 1fr auto; /* Kolom 1: nama & detail, Kolom 2: total */
+            grid-template-rows: auto auto; /* 2 baris */
+            align-items: center;
             padding: 1.5mm 0;
             margin: 0;
-            page-break-inside: avoid;
+            page-break-inside: avoid; /* Mencegah item terpotong di halaman berbeda */
             text-align: left;
-            background: none !important;
-            border: none !important;
+            border-bottom: 1px dotted #ccc;
         }
-        .item-name {
-            font-size: 9pt;
-            font-weight: normal;
+        .item-row:last-child { border-bottom: none; }
+        .item-info {
+            grid-column: 1 / 2; /* Mengisi kolom pertama */
+            grid-row: 1 / 2; /* Mengisi baris pertama */
         }
+        .item-name { font-weight: normal; margin: 0; display: block; }
         .item-detail {
+            grid-column: 1 / 2; /* Mengisi kolom pertama */
+            grid-row: 2 / 3; /* Mengisi baris kedua */
             font-size: 8pt;
-            display: block;
-            margin-left: 10px; /* Sedikit indentasi untuk detail */
+            margin-left: 10px; /* Indentasi agar lebih rapi */
             color: #000 !important;
         }
-        .item-detail .quantity { background: none !important; color: #000 !important; padding: 0; }
         .item-total {
+            grid-column: 2 / 3; /* Mengisi kolom kedua */
+            grid-row: 1 / 3; /* Mengisi kedua baris */
             text-align: right;
             font-weight: bold;
-            font-size: 9pt;
-            margin: 0;
+            padding-left: 10px;
+        }
+        .quantity, .price {
+            background: none !important;
+            color: #000 !important;
+            padding: 0;
+            font-weight: normal;
         }
 
-        /* --- Hapus Style Warna/Background --- */
+        /* --- Tata Letak Total & Pembayaran --- */
         .total-row, .change-row {
             background: none !important;
             color: #000 !important;
-            padding: 1mm 0 !important;
-            border: none !important;
             font-weight: bold;
-            margin-top: 2mm;
+            border: none !important;
+            padding: 0.5mm 0 !important;
         }
         .total-row {
             border-top: 1px solid #000;
             padding-top: 2mm !important;
+            margin-top: 2mm;
+            font-size: 11pt;
         }
 
-        /* --- Footer --- */
+        /* --- Footer Struk --- */
         .thank-you { font-size: 10pt; font-weight: bold; margin: 5mm 0; }
-        .notes-section {
-            background: none !important;
-            border: none !important;
-            border-top: 1px dashed #000;
-            padding: 3mm 0 0 0;
-            margin-top: 3mm;
-            text-align: center;
-        }
-        .notes-header { display: none; }
-        .notes-text { font-style: normal; font-size: 8pt; }
+        .notes-section, .notes-header { display: none; } /* Sembunyikan catatan untuk struk thermal */
         
-        /* --- Sembunyikan semua ikon --- */
+        /* Sembunyikan semua ikon */
         i.fas { display: none !important; }
     }
     /* ===== SELESAI: STYLE CETAK BARU ===== */
